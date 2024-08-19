@@ -1,10 +1,15 @@
 import Home from './pages/home/Home'
+import Workspace from './pages/workspace/Workspace'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <>
-      <Home />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/workspace" element={<Workspace />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

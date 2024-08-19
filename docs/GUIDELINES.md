@@ -33,10 +33,10 @@
    *
    * @param {string} name The user's name.
    * @param {number} id User's ID.
-   * @returns {ReactNode} A React element that renders a greeting to the user.
+   * @returns {ReactNode} Rendered div component
    */
   function Greeting({ name, id }) {
-    return <div>Hello, {name}, you are our {id}'s user!</div>;
+    return <div>Hello {name}, you are our {id}-th user!</div>;
   }
   ```
 

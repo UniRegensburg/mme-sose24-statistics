@@ -2,7 +2,14 @@ import { useState } from 'react'
 import reactLogo from '../../../assets/react.svg'
 import viteLogo from '/vite.svg'
 import './Home.css'
+import { Link } from 'react-router-dom'
 
+
+/**
+ * Main component for home page.
+ * 
+ * @returns Rendered react component.
+ */
 function Home() {
   const [count, setCount] = useState(0)
 
@@ -24,6 +31,14 @@ function Home() {
         <p>
           Edit <code>src/app/pages/home/Home.jsx</code> and save to test HMR
         </p>
+
+        {/* use Link for redirecting */}
+        <Link to="/workspace">
+          <button>
+            Go to workspace
+          </button>
+        </Link>
+        
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
