@@ -44,13 +44,13 @@ class UserInfo {
 class SUSResult {
     constructor(userID) {
         this.userID = userID;  // Reference to class UserInfo
-        this.susScores = Array(10).fill(null);  // Array to hold scores for the 10 SUS questions (1 to 5 scale)
+        this.susScores = Array(10).fill(null);  // Array of scores for the 10 SUS questions (1-5)
     }
 
     /**
      * Set a SUS score for a specific question.
-     * @param {number} questionNr - Index of the question (0-9)
-     * @param {number} score - Score for the question (1-5)
+     * @param {number} questionNr - Nr of question (0-9)
+     * @param {number} score - Score of question (1-5)
      */
     setSUSScore(questionNr, score) {
         if (questionNr >= 0 && questionNr < 10 && score >= 1 && score <= 5) {
