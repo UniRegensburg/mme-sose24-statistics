@@ -56,7 +56,7 @@ class SUSResult {
         if (questionNr >= 0 && questionNr < 10 && score >= 1 && score <= 5) {
             this.susScores[questionNr] = score;
         } else {
-            console.error("Problem by the SUS-Structure");
+            console.error("Problem by SUS-Structure");
         }
     }
 }
