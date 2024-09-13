@@ -1,4 +1,4 @@
-import QUESTIONNAIRE_TYPE from "../constants/questionnaire-type"
+import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 import { InvalidDataInputError } from "../exceptions/DataExceptions"
 
 

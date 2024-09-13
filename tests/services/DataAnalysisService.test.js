@@ -1,5 +1,5 @@
 import { test, expect, assert } from "vitest";
-import QUESTIONNAIRE_TYPE from "../../src/constants/questionnaire-type";
+import QUESTIONNAIRE_TYPE from "../../src/constants/QuestionnaireType";
 import { DataEntity, UserInfo } from "../../src/entities/DataEntity";
 import dataAnalysisService from "../../src/services/data-analysis-service/DataAnalysisService";
 import { experimental_extendTheme } from "@mui/material";

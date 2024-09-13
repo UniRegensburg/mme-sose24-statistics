@@ -1,6 +1,6 @@
 import { test, expect } from "vitest"
 import { DataEntity } from "../../src/entities/DataEntity"
-import QUESTIONNAIRE_TYPE from "../../src/constants/questionnaire-type"
+import QUESTIONNAIRE_TYPE from "../../src/constants/QuestionnaireType"
 import { InvalidDataInputError } from "../../src/exceptions/DataExceptions"
 
 
