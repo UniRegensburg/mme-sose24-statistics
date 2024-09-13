@@ -42,8 +42,8 @@ QUESTIONNAIRE_TYPE.SUS = {
     let score = 0;
 
     // SUS-Score
-    for (let i = 0; i < 10; i++) {
-      if (i % 2 === 0) {  // Fragen 1, 3, 5, 7, 9
+    for (let i = 1; i <= 10; i++) {
+      if (i % 2 === 1) {  // Fragen 1, 3, 5, 7, 9
         score += susResult[`Q${i}`] - 1;  // Rules for odd-numbered
       } else {  // Fragen 2, 4, 6, 8, 10
         score += 5 - susResult[`Q${i}`];  // Rules for even-numbered

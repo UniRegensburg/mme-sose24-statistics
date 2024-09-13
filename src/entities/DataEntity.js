@@ -14,7 +14,7 @@ class DataEntity {
    * @param {UserInfo[]} userInfos A list of users' information. `null` by default.
    * @param {object[]} results A list of questionnaire results. `null` by default.
    */
-  constructor(type = QUESTIONNAIRE_TYPE.NONE, userInfos = [], results = []) {
+  constructor(type=QUESTIONNAIRE_TYPE.NONE, userInfos=[], results=[]) {
     this.type = type
     this.userInfos = userInfos
     this.results = results
@@ -23,7 +23,7 @@ class DataEntity {
   /**
    * Set questionnaire result value.
    * @param {number} rowNr Target row.
-   * @param {number} questionNr Target question number.
+   * @param {number} questionNr Target question number, starting from 1.
    * @param {number} value Value to change to.
    * @returns 
    */
@@ -32,9 +32,9 @@ class DataEntity {
       throw new InvalidDataInputError(`Error at row ${rowNr}. Input value should be between 
         ${this.type.minValue} and ${this.type.maxValue}. Your input value was ${value}.`)
     }
-    if (questionNr < 0 || this.type.numOfQuestions <= questionNr) {
+    if (questionNr <= 0 || this.type.numOfQuestions < questionNr) {
       throw new InvalidDataInputError(`Error at row ${rowNr}. Question number should be bewteen 
-        0 and ${this.type.numOfQuestions - 1}. Your question number was ${questionNr}.`)
+        1 and ${this.type.numOfQuestions}. Your question number was ${questionNr}.`)
     }
     this.results[rowNr][`Q${questionNr}`] = value
   }

@@ -20,7 +20,9 @@ test(
 test(
   "DataEntity throws exception when question number is outside of range.",
   () => {
-    expect(() => susDataEntity.setResultValue(0, 10, 5))
+    expect(() => susDataEntity.setResultValue(0, 11, 5))
+      .toThrow(InvalidDataInputError)
+    expect(() => susDataEntity.setResultValue(0, 0, 5))
       .toThrow(InvalidDataInputError)
   }
 )

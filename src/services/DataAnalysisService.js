@@ -1,5 +1,5 @@
-import { DataEntity } from "../../entities/DataEntity"
-import { average } from "../../utils/MathUtils"
+import { DataEntity } from "../entities/DataEntity"
+import { average } from "../utils/MathUtils"
 
 
 class DataAnalysisService {
@@ -11,7 +11,6 @@ class DataAnalysisService {
   calculateScore(dataEntity) {
     const calculator = dataEntity.type.scoreCalculator
     const scores = dataEntity.results.map(calculator)
-    console.log(`scores are ${scores}`)
     return average(scores)
   }
 }

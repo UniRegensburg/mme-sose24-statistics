@@ -1,8 +1,7 @@
 import { test, expect, assert } from "vitest";
 import QUESTIONNAIRE_TYPE from "../../src/constants/QuestionnaireType";
-import { DataEntity, UserInfo } from "../../src/entities/DataEntity";
-import dataAnalysisService from "../../src/services/data-analysis-service/DataAnalysisService";
-import { experimental_extendTheme } from "@mui/material";
+import { DataEntity } from "../../src/entities/DataEntity";
+import dataAnalysisService from "../../src/services/DataAnalysisService";
 import { UndefinedEvaluationError } from "../../src/exceptions/DataExceptions";
 
 
@@ -38,7 +37,7 @@ test(
 /**
  * A helper function for generating DataEntity.
  * @param {object} type Type of questionnaire.
- * @param {number[][]} valueMatrix An matrix of result value.
+ * @param {number[][]} valueMatrix An matrix of result values.
  */
 function generateDataEntity(type, valueMatrix) {
   const userInfos = []
@@ -47,7 +46,7 @@ function generateDataEntity(type, valueMatrix) {
   valueMatrix.forEach((arr) => {
     let result = {}
     arr.forEach((value, index) => {
-      result[`Q${index}`] = value
+      result[`Q${index + 1}`] = value
     })
 
     userInfos.push({})
