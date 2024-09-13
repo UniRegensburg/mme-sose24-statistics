@@ -1,29 +1,64 @@
+import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
+import { InvalidDataInputError } from "../exceptions/DataExceptions"
+
+
 /**
- * A class for representing questionnaire data.
+ * A class for representing a series of questionnaire data.
+ * 
  */
 class DataEntity {
 
-    /**
-     * Construct empty DataEntity
-     */
-    constructor() {
-        this.type = null
-        this.userInfo = null
-        this.result = null
-    }
+  /**
+   * Constructor
+   * @param {object} type Type of questionnaire. `DATA_TYPE.NONE` by default.
+   * @param {UserInfo[]} userInfos A list of users' information. `null` by default.
+   * @param {object[]} results A list of questionnaire results. `null` by default.
+   */
+  constructor(type = QUESTIONNAIRE_TYPE.NONE, userInfos = [], results = []) {
+    this.type = type
+    this.userInfos = userInfos
+    this.results = results
+  }
 
-    /**
-     * Check if the data is valid according to the type.
-     * DO WE NEED THAT??
-     * @return {boolean}
-     */
-    dataIsValid() {
-        if (this.type && this.userInfo && this.result) {
-            return true;
-        }
-        return false;
+  /**
+   * Set questionnaire result value.
+   * @param {number} rowNr Target row.
+   * @param {number} questionNr Target question number.
+   * @param {number} value Value to change to.
+   * @returns 
+   */
+  setResultValue(rowNr, questionNr, value) {
+    if (value < this.type.minValue || this.type.maxValue < value) {
+      throw new InvalidDataInputError(`Error at row ${rowNr}. Input value should be between 
+        ${this.type.minValue} and ${this.type.maxValue}. Your input value was ${value}.`)
     }
-    
+    if (questionNr < 0 || this.type.numOfQuestions <= questionNr) {
+      throw new InvalidDataInputError(`Error at row ${rowNr}. Question number should be bewteen 
+        0 and ${this.type.numOfQuestions - 1}. Your question number was ${questionNr}.`)
+    }
+    this.results[rowNr][`Q${questionNr}`] = value
+  }
+
+  insertEmptyRow(index) {
+    this.userInfos.splice(index, 0, {})
+    this.results.splice(index, 0, {})
+  }
+
+  getSize() {
+    return this.userInfos.length
+  }
+  
+
+  /**
+   * Check if the data is valid according to the type.
+   * @return {boolean}
+   */
+  isValid() {
+    return (
+      this.userInfos.length === this.results.length
+    )
+  }
+
 }
 
 
@@ -31,43 +66,16 @@ class DataEntity {
  * A class that contains information about users who took
  * the questionnaire.
  */
-class UserInfo {
-    constructor(userID, age, gender, education) {
-        this.userID = userID;
-        this.age = age;
-        this.gender = gender;
-        this.education = education;
-    }
+// class UserInfo {
 
-}
+//   constructor(userID=null, age=null, gender=null, education=null) {
+//     this.userID = userID;
+//     this.age = age;
+//     this.gender = gender;
+//     this.education = education;
+//   }
 
-class SUSResult {
-    constructor(userID) {
-        this.userID = userID;  // Reference to class UserInfo
-        this.susScores = Array(10).fill(null);  // Array of scores for the 10 SUS questions (1-5)
-    }
-
-    /**
-     * Set a SUS score for a specific question.
-     * @param {number} questionNr - Nr of question (0-9)
-     * @param {number} score - Score of question (1-5)
-     */
-    setSUSScore(questionNr, score) {
-        if (questionNr >= 0 && questionNr < 10 && score >= 1 && score <= 5) {
-            this.susScores[questionNr] = score;
-        } else {
-            console.error("Problem by SUS-Structure");
-        }
-    }
-}
-
-class Result {
-    constructor(userID, susResult) {
-        this.userID = userID;
-        this.susResult = susResult; 
-    }
-}
-    
+// }
 
 
-export {DataEntity, UserInfo, SUSResult, Result};
+export { DataEntity };
