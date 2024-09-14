@@ -5,17 +5,27 @@ import { average } from "../utils/MathUtils"
 class DataAnalysisService {
 
   /**
+   * Calculate an array of score of a DataEntity according to its questionnaire type.
+   * @param {DataEntity} dataEntity 
+   */
+  calculateScores(dataEntity) {
+    const calculator = dataEntity.type.scoreCalculator
+    return dataEntity.results.map(calculator)
+  }
+
+
+  /**
    * Calculate average score of a DataEntity according to its questionnaire type.
    * @param {DataEntity} dataEntity 
    */
-  calculateScore(dataEntity) {
-    const calculator = dataEntity.type.scoreCalculator
-    const scores = dataEntity.results.map(calculator)
-    return average(scores)
+  calculateAverageScore(dataEntity) {
+    return average(this.calculateScores(dataEntity))
   }
+
 }
 
-const dataAnalysisService = new DataAnalysisService()
 
+
+const dataAnalysisService = new DataAnalysisService()
 
 export default dataAnalysisService

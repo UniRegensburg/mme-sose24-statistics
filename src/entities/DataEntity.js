@@ -1,5 +1,6 @@
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
-import { InvalidDataInputError } from "../exceptions/DataExceptions"
+import { InvalidDataInputError, QuestionnaireTypeError } from "../exceptions/DataExceptions"
+import { generateEmptyRow, generateResultColumns } from "../utils/DataUtils"
 
 
 /**
@@ -18,6 +19,37 @@ class DataEntity {
     this.type = type
     this.userInfos = userInfos
     this.results = results
+
+    if (!this.userInfos || userInfos.length === 0) this.userInfosColumns = []
+    else this.userInfosColumns = Object.keys(userInfos[0])
+
+    if (!this.results || this.results.length === 0) this.resultsColumns = generateResultColumns(type)
+    else this.resultsColumns = Object.keys(results[0])
+  }
+
+  addQuestions(numOfNewQuestions=1) {
+    if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
+      throw new QuestionnaireTypeError("Only NONE-type data allows adding new questions.")
+    }
+    for (let i = 0; i < numOfNewQuestions; i++) {
+      const newCol = `Q${this.numOfQuestions + 1}`
+      this.resultsColumns.push(newCol)
+      this.results.forEach(row => row[newCol] = null)
+    }
+  }
+
+  /**
+   * Given a string or an array of string, add new strings among them as user info columns.
+   * @param {string | string[]} newColumns 
+   */
+  addUserInfoColumns(newColumns) {
+    if (typeof newColumns === "string") newColumns = [newColumns]
+    newColumns = newColumns.filter(col => !this.userInfosColumns.includes(col))
+    
+    this.userInfosColumns = this.userInfosColumns.concat(newColumns)
+    newColumns.forEach(col => {
+      this.userInfos.forEach(row => row[col] = null)
+    })
   }
 
   /**
@@ -27,25 +59,39 @@ class DataEntity {
    * @param {number} value Value to change to.
    * @returns 
    */
-  setResultValue(rowNr, questionNr, value) {
-    if (value < this.type.minValue || this.type.maxValue < value) {
-      throw new InvalidDataInputError(`Error at row ${rowNr}. Input value should be between 
-        ${this.type.minValue} and ${this.type.maxValue}. Your input value was ${value}.`)
-    }
-    if (questionNr <= 0 || this.type.numOfQuestions < questionNr) {
+  setResultValue(rowNr, questionNr, value) { 
+    if (questionNr <= 0 || this.numOfQuestions < questionNr) {
       throw new InvalidDataInputError(`Error at row ${rowNr}. Question number should be bewteen 
-        1 and ${this.type.numOfQuestions}. Your question number was ${questionNr}.`)
+        1 and ${this.numOfQuestions}. Your question number was ${questionNr}.`)
     }
-    this.results[rowNr][`Q${questionNr}`] = value
+    if (value < this.type.minValue || this.type.maxValue < value) {
+        throw new InvalidDataInputError(`Error at row ${rowNr}. Input value should be between 
+          ${this.type.minValue} and ${this.type.maxValue}. Your input value was ${value}.`)
+    }
+    const targetColumn = `Q${questionNr}`
+    this.results[rowNr][targetColumn] = value
+  }
+
+  addEmptyRows(numberOfRows=1) {
+    for (let i = 0; i < numberOfRows; i++) {
+      this.userInfos.push(generateEmptyRow(this.userInfosColumns))
+      this.results.push(generateEmptyRow(this.resultsColumns))
+    }
   }
 
   insertEmptyRow(index) {
-    this.userInfos.splice(index, 0, {})
-    this.results.splice(index, 0, {})
+    const newUserInfoRow = generateEmptyRow(this.userInfosColumns)
+    const newResultRow = generateEmptyRow(this.resultsColumns)
+    this.userInfos.splice(index, 0, newUserInfoRow)
+    this.results.splice(index, 0, newResultRow)
   }
 
-  getSize() {
+  get size() {
     return this.userInfos.length
+  }
+
+  get numOfQuestions() {
+    return this.resultsColumns.length
   }
   
 

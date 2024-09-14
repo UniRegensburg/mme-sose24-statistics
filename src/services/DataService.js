@@ -1,48 +1,44 @@
 import { csvParse } from "d3"
-import { readFileSync } from "fs"
+import { readFileSync, write, writeFileSync } from "fs"
 import { DataEntity } from "../entities/DataEntity"
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
+import { infoResultSplit } from "../utils/DataUtils"
 
 
 class DataService {
 
-	importData(filePath, type=QUESTIONNAIRE_TYPE.NONE) {
+  importData(filePath, type=QUESTIONNAIRE_TYPE.NONE) {
     const rawData = csvParse(readFileSync(filePath).toString())
     const [userInfos, results] = infoResultSplit(rawData)
     return new DataEntity(type, userInfos, results)
-	}
+  }
 
-}
+  exportData(filePath, dataEntity) {
+    writeFileSync(filePath, this.stringify(dataEntity))
+  }
 
+  /**
+   * Return a string of CSV format representing the data entity.
+   * @param {DataEntity} dataEntity 
+   */
+  stringify(dataEntity) {
+    const headers = dataEntity.userInfosColumns
+                      .concat(dataEntity.resultsColumns)
+                      .toString()
 
-/**
- * Splitting raw questionnaire data object into user info object and result object.
- * @param {object} rawData 
- * @returns {[object, object]}
- */
-function infoResultSplit(rawData) {
-  const isInfoColumn = rawData.columns.map((value) => value.match(/Q[1-9][0-9]*/g))
+    const lines = Array(dataEntity.size)
+    for (let row = 0; row < dataEntity.size; row++) {
+      let userInfoLine = Object.values(dataEntity.userInfos[row]).toString()
+      let resultLine = Object.values(dataEntity.results[row]).toString()
 
-  const userInfos = []
-  const results = []
+      if (!resultLine) lines[row] = userInfoLine
+      else if (!userInfoLine) lines[row] = resultLine
+      else lines[row] = `${userInfoLine},${resultLine}`
+    }
 
-  rawData.forEach((row) => {
-    const userInfoRow = {}
-    const resultRow = {}
+    return `${headers}\r\n${lines.join("\r\n")}`
+  }
 
-    rawData.columns.forEach((value, index) => {
-      if (isInfoColumn[index]) {
-        userInfoRow[value] = row[value]
-      }
-      else {
-        resultRow[value] = row[value]
-      }
-    })
-    userInfos.push(userInfoRow)
-    results.push(resultRow)
-  })
-
-  return [userInfos, results]
 }
 
 
