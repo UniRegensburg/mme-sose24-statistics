@@ -5,7 +5,7 @@ class InvalidDataInputError extends Error {
   }
 }
 
-class UndefinedEvaluationError extends Error {
+class QuestionnaireTypeError extends Error {
   constructor(message) {
     super(message)
     this.name = this.constructor.name
@@ -14,5 +14,5 @@ class UndefinedEvaluationError extends Error {
 
 export {
   InvalidDataInputError,
-  UndefinedEvaluationError
+  QuestionnaireTypeError
 }

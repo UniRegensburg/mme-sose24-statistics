@@ -2,7 +2,7 @@ import { test, expect, assert } from "vitest";
 import QUESTIONNAIRE_TYPE from "../../src/constants/QuestionnaireType";
 import { DataEntity } from "../../src/entities/DataEntity";
 import dataAnalysisService from "../../src/services/DataAnalysisService";
-import { UndefinedEvaluationError } from "../../src/exceptions/DataExceptions";
+import { QuestionnaireTypeError } from "../../src/exceptions/DataExceptions";
 
 
 test(
@@ -12,8 +12,8 @@ test(
       QUESTIONNAIRE_TYPE.NONE,
       [[5,5,5,5,5,5,5,5,5,5,5,5,5]]
     )
-    expect(() => dataAnalysisService.calculateScore(testDataEntity))
-      .toThrow(UndefinedEvaluationError)
+    expect(() => dataAnalysisService.calculateAverageScore(testDataEntity))
+      .toThrow(QuestionnaireTypeError)
   }
 )
 
@@ -28,7 +28,7 @@ test(
         [5,5,5,5,5,5,5,5,5,5]
       ]
     )
-    const susScore = dataAnalysisService.calculateScore(testDataEntity)
+    const susScore = dataAnalysisService.calculateAverageScore(testDataEntity)
     assert(susScore === 50, "Test SUS data should have SUS score 50.")
   }
 )

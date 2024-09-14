@@ -1,4 +1,4 @@
-import { UndefinedEvaluationError } from "../exceptions/DataExceptions";
+import { QuestionnaireTypeError } from "../exceptions/DataExceptions";
 
 
 /**
@@ -24,10 +24,10 @@ QUESTIONNAIRE_TYPE.NONE = {
   minValue: Number.MIN_SAFE_INTEGER,
   maxValue: Number.MAX_SAFE_INTEGER,
   scoreCalculator: () => {
-    throw new UndefinedEvaluationError("Score calculator is not defined for NONE-type questionnaire.")
+    throw new QuestionnaireTypeError("Score calculator is not defined for NONE-type questionnaire.")
   },
   scoreInterpretor: () => {
-    throw new UndefinedEvaluationError("Score interpretor is not defined for NONE-type questionnaire.")
+    throw new QuestionnaireTypeError("Score interpretor is not defined for NONE-type questionnaire.")
   }
 }
 
