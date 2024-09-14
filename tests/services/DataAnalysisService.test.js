@@ -1,8 +1,8 @@
 import { test, expect, assert } from "vitest";
 import QUESTIONNAIRE_TYPE from "../../src/constants/QuestionnaireType";
-import { DataEntity } from "../../src/entities/DataEntity";
 import dataAnalysisService from "../../src/services/DataAnalysisService";
 import { QuestionnaireTypeError } from "../../src/exceptions/DataExceptions";
+import { generateDataEntity } from "../TestUtils";
 
 
 test(
@@ -34,28 +34,3 @@ test(
 )
 
 
-/**
- * A helper function for generating DataEntity.
- * @param {object} type Type of questionnaire.
- * @param {number[][]} valueMatrix An matrix of result values.
- */
-function generateDataEntity(type, valueMatrix) {
-  const userInfos = []
-  const results = []
-
-  valueMatrix.forEach((arr) => {
-    let result = {}
-    arr.forEach((value, index) => {
-      result[`Q${index + 1}`] = value
-    })
-
-    userInfos.push({})
-    results.push(result)
-  })
-
-  return new DataEntity(
-    type,
-    userInfos,
-    results
-  )
-}
