@@ -1,6 +1,6 @@
 import { csvParse } from "d3"
-import { readFileSync, write, writeFileSync } from "fs"
-import { DataEntity } from "../entities/DataEntity"
+import { readFileSync, writeFileSync } from "fs"
+import DataEntity from "../entities/DataEntity"
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 import { infoResultSplit } from "../utils/DataUtils"
 

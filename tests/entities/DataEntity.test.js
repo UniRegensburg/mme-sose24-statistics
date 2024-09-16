@@ -1,5 +1,5 @@
 import { test, expect, assert } from "vitest"
-import { DataEntity } from "../../src/entities/DataEntity"
+import DataEntity from "../../src/entities/DataEntity"
 import QUESTIONNAIRE_TYPE from "../../src/constants/QuestionnaireType"
 import { InvalidDataInputError, QuestionnaireTypeError } from "../../src/exceptions/DataExceptions"
 import { arraysEqual } from "../TestUtils"
@@ -34,6 +34,20 @@ test(
     assert(noneData.size === 0)
     noneData.addEmptyRows(2)
     assert(noneData.size === 2)
+  }
+)
+
+test(
+  "Getter and setter working correctly.",
+  () => {
+    noneData.setValue(0, "Q1", 5)
+    noneData.setValue(0, "age", 50)
+    assert(noneData.loc(0, "Q1") === 5)
+    assert(noneData.loc(0, "age") === 50)
+    expect(() => noneData.setValue(0, "Q100", 1))
+      .toThrow(InvalidDataInputError)
+    expect(() => noneData.setValue(0, "Age", 1))
+      .toThrow(InvalidDataInputError)
   }
 )
 

@@ -1,4 +1,4 @@
-import { DataEntity } from "../src/entities/DataEntity"
+import DataEntity from "../src/entities/DataEntity"
 
 function arraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) return false
