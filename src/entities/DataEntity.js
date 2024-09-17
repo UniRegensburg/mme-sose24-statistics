@@ -7,7 +7,7 @@ import { generateEmptyRow, generateResultColumns, isQuestionColumn } from "../ut
  * A class for representing a series of questionnaire data.
  * 
  */
-class DataEntity {
+export default class DataEntity {
 
   /**
    * Constructor
@@ -31,9 +31,9 @@ class DataEntity {
 
 
 
-  /**
+  /*************************
    * Column operations
-   */
+   *************************/
 
   /**
    * Add given number of new questions to the questionnaire.
@@ -102,9 +102,11 @@ class DataEntity {
   }
 
 
+
   /**
+  /*************************
    * Row operations
-   */
+   *************************/
 
   /**
    * Append given number of empty rows to the data.
@@ -129,9 +131,10 @@ class DataEntity {
   }
 
 
-  /**
+
+  /*************************
    * Data manipulation
-   */
+   *************************/
 
   /**
    * Set questionnaire result value.
@@ -182,9 +185,10 @@ class DataEntity {
   }
 
 
-  /**
+
+  /*************************
    * Getters
-   */
+   *************************/
 
   get size() {
     return this.userInfos.length
@@ -229,6 +233,3 @@ class DataEntity {
 //   }
 
 // }
-
-
-export default DataEntity;
