@@ -1,56 +1,133 @@
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 import { InvalidDataInputError, QuestionnaireTypeError } from "../exceptions/DataExceptions"
-import { generateEmptyRow, generateResultColumns } from "../utils/DataUtils"
+import { generateEmptyRow, generateResultColumns, isQuestionColumn } from "../utils/DataUtils"
 
 
 /**
  * A class for representing a series of questionnaire data.
  * 
  */
-class DataEntity {
+export default class DataEntity {
 
   /**
    * Constructor
    * @param {object} type Type of questionnaire. `DATA_TYPE.NONE` by default.
-   * @param {UserInfo[]} userInfos A list of users' information. `null` by default.
-   * @param {object[]} results A list of questionnaire results. `null` by default.
+   * @param {UserInfo[]} userInfos A list of users' information.
+   * @param {object[]} results A list of questionnaire results.
    */
-  constructor(type=QUESTIONNAIRE_TYPE.NONE, userInfos=[], results=[]) {
+  constructor(type=QUESTIONNAIRE_TYPE.NONE, data=[]) {
     this.type = type
-    this.userInfos = userInfos
-    this.results = results
+    this.data = data
+    this.columns = { userInfo: [], questions: [] }
 
-    if (!this.userInfos || userInfos.length === 0) this.userInfosColumns = []
-    else this.userInfosColumns = Object.keys(userInfos[0])
-
-    if (!this.results || this.results.length === 0) this.resultsColumns = generateResultColumns(type)
-    else this.resultsColumns = Object.keys(results[0])
+    if (data.length === 0) { return }
+    this.columns.questions = Object.keys(data[0]).filter(isQuestionColumn)
+    this.columns.userInfo = Object.keys(data[0]).filter(k => !isQuestionColumn(k))
   }
 
-  addQuestions(numOfNewQuestions=1) {
+
+
+  /*************************
+   * Column operations
+   *************************/
+
+  /**
+   * Add given number of new questions to the questionnaire.
+   * @param {number} numOfQuestions 
+   */
+  addQuestions(numOfQuestions=1) {
     if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
       throw new QuestionnaireTypeError("Only NONE-type data allows adding new questions.")
     }
-    for (let i = 0; i < numOfNewQuestions; i++) {
+    for (let i = 0; i < numOfQuestions; i++) {
       const newCol = `Q${this.numOfQuestions + 1}`
-      this.resultsColumns.push(newCol)
-      this.results.forEach(row => row[newCol] = null)
+      this.columns.questions.push(newCol)
+      this.data.forEach(row => row[newCol] = null)
     }
   }
 
   /**
-   * Given a string or an array of string, add new strings among them as user info columns.
-   * @param {string | string[]} newColumns 
+   * Delete given number of new questions to the questionnaire.
+   * @param {number} numOfQuestions 
    */
-  addUserInfoColumns(newColumns) {
-    if (typeof newColumns === "string") newColumns = [newColumns]
-    newColumns = newColumns.filter(col => !this.userInfosColumns.includes(col))
+  deleteQuestions(numOfQuestions=1) {
+    if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
+      throw new QuestionnaireTypeError("Only NONE-type data allows deleting questions.")
+    }
+    for (let i = 0; i < numOfQuestions; i++) {
+      const deletedCol = this.columns.questions.pop()
+      this.data.forEach(row => delete row[deletedCol])
+    }
+  }
+
+  setNumOfQUestions(numOfQuestions) {
+    if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
+      throw new QuestionnaireTypeError("Only NONE-type data allows setting number of questions.")
+    }
+    const difference = numOfQuestions - this.numOfQuestions
+    if (difference === 0) { return }
+    if (difference >= 0) { this.addQuestions(difference) }
+    else { this.deleteQuestions(difference) }
+  }
+
+  /**
+   * Given a string or an array of strings, add new strings among them as user info columns.
+   * @param {string | string[]} columns 
+   */
+  addUserInfoColumns(columns) {
+    if (typeof columns === "string") { columns = [columns] }
+    columns = columns.filter(col => !this.userInfoColumns.includes(col))
     
-    this.userInfosColumns = this.userInfosColumns.concat(newColumns)
-    newColumns.forEach(col => {
-      this.userInfos.forEach(row => row[col] = null)
+    this.columns.userInfo = this.columns.userInfo.concat(columns)
+    columns.forEach(col => {
+      this.data.forEach(row => row[col] = null)
     })
   }
+
+  /**
+   * Given a string or an array of strings, delete user info columns of those names.
+   * @param {string | string[]} columns 
+   */
+  deleteUserInfoColumns(columns) {
+    if (typeof columns === "string") { columns = [columns] }
+    
+    this.userInfoColumns = this.userInfoColumns.filter(col => !columns.includes(col))
+    columns.forEach(col => {
+      this.data.forEach(row => delete row[col])
+    })
+  }
+
+
+
+  /**
+  /*************************
+   * Row operations
+   *************************/
+
+  /**
+   * Append given number of empty rows to the data.
+   * @param {number} numberOfRows 
+   */
+  addEmptyRows(numberOfRows=1) {
+    for (let i = 0; i < numberOfRows; i++) {
+      this.data.push(generateEmptyRow(this.allColumns))
+    }
+  }
+
+  /**
+   * In sert 1 empty row at the given index.
+   * @param {number} index 
+   */
+  insertEmptyRow(index) {
+    const newRow = generateEmptyRow(this.allColumns)
+    this.data.splice(index, 0, newRow)
+  }
+
+
+
+  /*************************
+   * Data manipulation
+   *************************/
 
   /**
    * Set questionnaire result value.
@@ -69,42 +146,57 @@ class DataEntity {
           ${this.type.minValue} and ${this.type.maxValue}. Your input value was ${value}.`)
     }
     const targetColumn = `Q${questionNr}`
-    this.results[rowNr][targetColumn] = value
+    this.data[rowNr][targetColumn] = value
   }
-
-  addEmptyRows(numberOfRows=1) {
-    for (let i = 0; i < numberOfRows; i++) {
-      this.userInfos.push(generateEmptyRow(this.userInfosColumns))
-      this.results.push(generateEmptyRow(this.resultsColumns))
-    }
-  }
-
-  insertEmptyRow(index) {
-    const newUserInfoRow = generateEmptyRow(this.userInfosColumns)
-    const newResultRow = generateEmptyRow(this.resultsColumns)
-    this.userInfos.splice(index, 0, newUserInfoRow)
-    this.results.splice(index, 0, newResultRow)
-  }
-
-  get size() {
-    return this.userInfos.length
-  }
-
-  get numOfQuestions() {
-    return this.resultsColumns.length
-  }
-  
 
   /**
-   * Check if the data is valid according to the type.
-   * @return {boolean}
+   * Set user info value.
+   * @param {number} rowNr 
+   * @param {string} column 
+   * @param {number} value 
    */
-  isValid() {
-    return (
-      this.userInfos.length === this.results.length
-    )
+  setUserInfoValue(rowNr, column, value) {
+    if (!this.userInfoColumns.includes(column)) {
+      throw new InvalidDataInputError(`User info column "${column}" does not exist. Valid columns
+        are [${this.userInfoColumns}]`)
+    }
+    this.data[rowNr][column] = value
   }
 
+  /**
+   * Set value at given column and row number.
+   * @param {number} rowNr
+   * @param {string} column 
+   * @param {number} value 
+   */
+  setValue(rowNr, column, value) {
+    if (isQuestionColumn(column)) {
+      const questionNr = parseInt(column.substring(1))
+      this.setResultValue(rowNr, questionNr, value)
+    }
+    else { this.setUserInfoValue(rowNr, column, value) }
+  }
+
+
+
+  /*************************
+   * Getters
+   *************************/
+
+  get size() { return this.data.length }
+
+  get numOfQuestions() { return this.questionColumns.length }
+
+  get allColumns() {return this.userInfoColumns.concat(this.questionColumns)}
+
+  get userInfoColumns() { return this.columns.userInfo}
+
+  get questionColumns() { return this.columns.questions }
+
+  row(rowNumber) { return this.data[rowNumber] }
+
+  loc(rowNr, column) { return this.data[rowNr][column] }
+  
 }
 
 
@@ -122,6 +214,3 @@ class DataEntity {
 //   }
 
 // }
-
-
-export { DataEntity };

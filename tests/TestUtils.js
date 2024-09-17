@@ -1,4 +1,4 @@
-import { DataEntity } from "../src/entities/DataEntity"
+import DataEntity from "../src/entities/DataEntity"
 
 function arraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) return false
@@ -11,26 +11,23 @@ function arraysEqual(arr1, arr2) {
 /**
  * A helper function for generating DataEntity.
  * @param {object} type Type of questionnaire.
- * @param {number[][]} valueMatrix An matrix of result values.
+ * @param {number[][]} valueMatrix An matrix of questionnaire result values.
  */
 function generateDataEntity(type, valueMatrix) {
-  const userInfos = []
-  const results = []
+  const data = []
 
   valueMatrix.forEach((arr) => {
-    let result = {}
+    let row = {}
     arr.forEach((value, index) => {
-      result[`Q${index + 1}`] = value
+      row[`Q${index + 1}`] = value
     })
 
-    userInfos.push({})
-    results.push(result)
+    data.push(row)
   })
 
   return new DataEntity(
     type,
-    userInfos,
-    results
+    data
   )
 }
 

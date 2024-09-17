@@ -10,7 +10,7 @@ class DataAnalysisService {
    */
   calculateScores(dataEntity) {
     const calculator = dataEntity.type.scoreCalculator
-    return dataEntity.results.map(calculator)
+    return dataEntity.data.map(calculator)
   }
 
 

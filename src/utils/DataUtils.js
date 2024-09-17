@@ -67,6 +67,7 @@ function generateEmptyRow(columns) {
 
 
 export {
+  isQuestionColumn,
   infoResultSplit,
   generateResultColumns,
   generateEmptyRow
