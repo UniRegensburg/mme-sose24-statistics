@@ -1,4 +1,4 @@
-import { DataEntity } from "../entities/DataEntity"
+import DataEntity from "../entities/DataEntity"
 import { average } from "../utils/MathUtils"
 
 
