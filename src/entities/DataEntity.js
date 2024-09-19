@@ -177,6 +177,10 @@ export default class DataEntity {
     else { this.setUserInfoValue(rowNr, column, value) }
   }
 
+  setType(type) {
+    this.type = type
+  }
+
 
 
   /*************************

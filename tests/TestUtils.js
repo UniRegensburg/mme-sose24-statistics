@@ -25,10 +25,7 @@ function generateDataEntity(type, valueMatrix) {
     data.push(row)
   })
 
-  return new DataEntity(
-    type,
-    data
-  )
+  return new DataEntity(type, data)
 }
 
 export {

@@ -2,9 +2,12 @@ import { test, assert } from "vitest"
 import { readFileSync } from "fs"
 import dataService from "../../src/services/DataService"
 import { arraysEqual } from "../TestUtils"
+import { readFileSync } from "fs"
+import QUESTIONNAIRE_TYPE from "../../src/constants/QuestionnaireType"
 
 
-const data = dataService.importData("./tests/test-data/SUS-example.csv")
+const string = readFileSync("./tests/test-data/SUS-example.csv").toString()
+const data = dataService.deserialize(string, QUESTIONNAIRE_TYPE.SUS)
 
 test(
   "DataService imports CSV correctly.",
@@ -31,7 +34,7 @@ test(
   "DataService stringifies DataEntity correctly.",
   () => {
     const correctCsv = readFileSync("./tests/test-data/SUS-example.csv").toString()
-    const stringifiedData = dataService.stringify(data)
+    const stringifiedData = dataService.serialize(data)
     assert(stringifiedData === correctCsv)
   }
 )
