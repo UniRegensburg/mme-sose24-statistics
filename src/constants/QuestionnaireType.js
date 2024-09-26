@@ -146,6 +146,47 @@ QUESTIONNAIRE_TYPE.rawTLX = {
   }
 }
 
+QUESTIONNAIRE_TYPE.NPS = {
+  name: "NPS",
+  numOfQuestions: 1,
+  minValue: 0,
+  maxValue: 10,
+
+  scoreCalculator: (npsresults) => {
+    let promoters = 0;
+    let detractors = 0;
+    let neutrals = 0;
+    let numberResponses = npsresults.length;
+
+    // nps-Score
+    for (let i = 0; i < npsresults.length; i++) {
+      let score = npsresults[i]
+
+      if (score >= 9){
+        promoters++;
+      }
+      else if (score <= 6){
+        detractors++;
+      }
+      if{
+        neutrals++;
+      }
+    }
+    let npsScore = ((promoters - detractors)/numberResponses)*100;
+    return npsScore;
+  },
+
+  scoreInterpretor: (npsScore) => {
+    if (npsScore >= 30) {
+      return "Good NPS";
+    } else if (npsScore >= -30) {
+      return "Moderate NPS";
+    } else {
+      return "Bad NPS";
+    }
+  }
+}
+
 
 Object.freeze(QUESTIONNAIRE_TYPE)
 
