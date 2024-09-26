@@ -11,8 +11,11 @@ export default class DiagramEntity {
   constructor(type, linkedData, options={}) {
     this.type = type
     this.linkedData = linkedData
-    this.options = options
+    this.options = {}
     this._setDefaultOptions()
+    Object.keys(options).forEach(key => {
+      this.setOption(key, options[key])
+    })
   }
 
   _setDefaultOptions() {
@@ -20,17 +23,53 @@ export default class DiagramEntity {
     this.options.colorScheme = "burd"
   }
 
+  /**
+   * Set options to configure diagram resulf. Possible keys can be found in `DiagramType.js`.
+   * @param {string} key 
+   * @param {any} value 
+   * @returns 
+   */
   setOption(key, value) {
     if (value === null || value === undefined) {
       delete this.options[key]
       return
     }
-    if (this.type.options.includes(key)) {
-      this.options[key] = value
-      return
+    if (!this.type.options.includes(key)) {
+      throw new DiagramTypeError(`"${key}" is not a valid option for ${this.type.name} diagram.
+        Valid options are ${this.type.options}.`)
     }
-    throw new DiagramTypeError(`"${key}" is not a valid option for ${this.type.name} diagram.
-      Valid options are ${this.type.options}`)
+    if (key === "x") {
+      if (!this.linkedData.allColumns.includes(value)) {
+        throw new DiagramTypeError(`DataEntity ${this.linkedData} does not contain column ${value}`)
+      }
+    }
+    else if (key === "y") {
+      if (!this.linkedData.allColumns.includes(value)) {
+        throw new DiagramTypeError(`DataEntity ${this.linkedData} does not contain column "${value}"`)
+      }
+    }
+    this.options[key] = value
+  }
+
+  /**
+   * Link DiagramEntity to another DataEntity. Reset `x` and `y` options.
+   * @param {DataEntity} dataEntity 
+   */
+  setLinkedData(dataEntity) {
+    this.linkedData = dataEntity
+    delete this.options.x
+    delete this.options.y
+  }
+
+  /**
+   * Set diagram type. Delete all unsupported options.
+   * @param {object} type 
+   */
+  setType(type) {
+    this.type = type
+    Object.keys(this.options).forEach(k => {
+      if (!(k in type.options)) { delete this.options[k] }
+    })
   }
 
   getOption(key) {
@@ -42,12 +81,23 @@ export default class DiagramEntity {
    * @returns {object}
    */
   generatePlotOptions() {
+    this.checkPlotability()
     return this.type.plotOptions(this.linkedData.data, this.options)
   }
 
-  isPlotable() {
+  /**
+   * Checks if the diagram entity is ready for plotting.
+   * All required options of the diagram type should be filled.
+   * @returns 
+   */
+  checkPlotability() {
     for (let i = 0; i < this.type.requiredOptions.length; i++) {
-      if (!(this.type.requiredOptions[i] in this.options)) { return false }
+      let requiredOption = this.type.requiredOptions[i]
+      if (!(requiredOption in this.options)) { 
+        throw new DiagramTypeError(`Required option ${requiredOption} is missing.`)
+      }
+    }
+    if ("y" in this.options) {
     }
     return true
   }
