@@ -168,7 +168,7 @@ QUESTIONNAIRE_TYPE.NPS = {
       else if (score <= 6){
         detractors++;
       }
-      if{
+      else{
         neutrals++;
       }
     }
