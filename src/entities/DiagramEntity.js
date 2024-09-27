@@ -24,7 +24,8 @@ export default class DiagramEntity {
   }
 
   /**
-   * Set options to configure diagram resulf. Possible keys can be found in `DiagramType.js`.
+   * Set options to configure diagram resulf. Possible options can be found in `DiagramType.js` or using
+   * the getter `supportedOptions`.
    * @param {string} key 
    * @param {any} value 
    * @returns 
@@ -87,7 +88,7 @@ export default class DiagramEntity {
 
   /**
    * Checks if the diagram entity is ready for plotting.
-   * All required options of the diagram type should be filled.
+   * All required options of the diagram type must be filled.
    * @returns 
    */
   checkPlotability() {
@@ -101,5 +102,9 @@ export default class DiagramEntity {
     }
     return true
   }
+
+  get supportedOptions() { return this.type.options }
+
+  get requiredOptions() { return this.type.requiredOptions}
 
 }

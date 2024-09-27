@@ -21,6 +21,7 @@ $ npm run dev
 ## Technologies
 
 - Vite
+- Vitest
 - React
 - D3.js
 - Material UI
@@ -30,3 +31,9 @@ $ npm run dev
 ### Developer guidelines
 
 See [GUIDELINES.md](docs/GUIDELINES.md)
+
+### Tutorials for developers
+
+[Tutorial on Entities](docs/tutorials/tutorial-entities.md)
+
+[Tutorial on Services](docs/tutorials/tutorial-services.md)

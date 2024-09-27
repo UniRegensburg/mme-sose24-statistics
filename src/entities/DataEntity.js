@@ -1,11 +1,10 @@
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 import { InvalidDataInputError, QuestionnaireTypeError } from "../exceptions/DataExceptions"
-import { generateEmptyRow, generateResultColumns, isQuestionColumn } from "../utils/DataUtils"
+import { generateEmptyRow, isQuestionColumn } from "../utils/DataUtils"
 
 
 /**
  * A class for representing a series of questionnaire data.
- * 
  */
 export default class DataEntity {
 
@@ -99,7 +98,6 @@ export default class DataEntity {
 
 
 
-  /**
   /*************************
    * Row operations
    *************************/
@@ -115,7 +113,7 @@ export default class DataEntity {
   }
 
   /**
-   * In sert 1 empty row at the given index.
+   * Insert 1 empty row at the given index.
    * @param {number} index 
    */
   insertEmptyRow(index) {
@@ -164,7 +162,7 @@ export default class DataEntity {
   }
 
   /**
-   * Set value at given column and row number.
+   * Set value at given row number and column.
    * @param {number} rowNr
    * @param {string} column 
    * @param {number} value 
@@ -197,24 +195,11 @@ export default class DataEntity {
 
   get questionColumns() { return this.columns.questions }
 
+  getType() { return this.type.name }
+
   row(rowNumber) { return this.data[rowNumber] }
 
   loc(rowNr, column) { return this.data[rowNr][column] }
   
 }
 
-
-/**
- * A class that contains information about users who took
- * the questionnaire.
- */
-// class UserInfo {
-
-//   constructor(userID=null, age=null, gender=null, education=null) {
-//     this.userID = userID;
-//     this.age = age;
-//     this.gender = gender;
-//     this.education = education;
-//   }
-
-// }
