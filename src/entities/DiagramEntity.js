@@ -2,12 +2,12 @@ import { DiagramTypeError } from "../exceptions/DataExceptions";
 import DataEntity from "./DataEntity";
 
 export default class DiagramEntity {
-
+  
   /**
    * @param {object} type Type of diagram. Must be one of the types in `DIAGRAM_TYPE`.
    * @param {DataEntity} linkedData The DataEntity whose data is used for the diagram.
    * @param {object} options Configuration for the plotting result.
-   */
+  */
   constructor(type, linkedData, options={}) {
     this.type = type
     this.linkedData = linkedData
@@ -17,12 +17,16 @@ export default class DiagramEntity {
       this.setOption(key, options[key])
     })
   }
-
+  
+  /**
+   * A helper function to set default options. Must not be used from outside of the class.
+   */
   _setDefaultOptions() {
     this.options.gridY = true
     this.options.colorScheme = "burd"
   }
-
+  
+  
   /**
    * Set options to configure diagram resulf. Possible options can be found in `DiagramType.js` or using
    * the getter `supportedOptions`.
@@ -73,38 +77,39 @@ export default class DiagramEntity {
     })
   }
 
-  getOption(key) {
-    return this.options[key]
-  }
-
+  
   /**
-   * Generates a configuration object that can be used by the function `Plot.plot`.
+   * Generates a configuration object that can be used by the function `Plot.plot`. This function
+   * must not be used from outside of `src/conponents/Diagram.jsx`.
    * @returns {object}
-   */
+  */
   generatePlotOptions() {
     this.checkPlotability()
     return this.type.plotOptions(this.linkedData.data, this.options)
   }
-
+  
   /**
    * Checks if the diagram entity is ready for plotting.
    * All required options of the diagram type must be filled.
    * @returns 
-   */
+  */
   checkPlotability() {
     for (let i = 0; i < this.type.requiredOptions.length; i++) {
       let requiredOption = this.type.requiredOptions[i]
       if (!(requiredOption in this.options)) { 
-        throw new DiagramTypeError(`Required option ${requiredOption} is missing.`)
+        return false
       }
-    }
-    if ("y" in this.options) {
     }
     return true
   }
 
+  
   get supportedOptions() { return this.type.options }
-
-  get requiredOptions() { return this.type.requiredOptions}
+  
+  get requiredOptions() { return this.type.requiredOptions }
+  
+  getOption(key) {
+    return this.options[key]
+  }
 
 }

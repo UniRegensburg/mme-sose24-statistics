@@ -18,7 +18,7 @@ const dataEntity = generateDataEntity(
 dataEntity.addUserInfoColumns("age")
 
 const diagramEntity = new DiagramEntity(
-  DIAGRAM_TYPE.HIST,
+  DIAGRAM_TYPE.SCATTER,
   dataEntity,
   {
     gridY: false
@@ -36,5 +36,15 @@ test(
       .toThrow(DiagramTypeError)
     expect(() => diagramEntity.setOption("x", "fake-column"))
       .toThrow(DiagramTypeError)
+  }
+)
+
+
+test(
+  "Delete unsupported options when diagram type changes.",
+  () => {
+    diagramEntity.setOption("y", "Q1")
+    diagramEntity.setType(DIAGRAM_TYPE.HIST)
+    assert(diagramEntity.getOption("y") === undefined)
   }
 )
