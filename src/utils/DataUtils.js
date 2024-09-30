@@ -5,6 +5,13 @@ function isQuestionColumn(columnName) {
 }
 
 
+function columnType(columnName) {
+  if (columnName.match(/Q[1-9][0-9]*/g)) { return "questions" }
+  if (columnName.match(/T[1-9][0-9]*/g)) { return "transform" }
+  return "userInfo"
+}
+
+
 /**
  * Splitting raw questionnaire data object into user info object and result object.
  * @param {array} rawData 
@@ -68,6 +75,7 @@ function generateEmptyRow(columns) {
 
 export {
   isQuestionColumn,
+  columnType,
   infoResultSplit,
   generateResultColumns,
   generateEmptyRow

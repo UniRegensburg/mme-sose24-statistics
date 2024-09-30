@@ -1,5 +1,6 @@
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 import { InvalidDataInputError, QuestionnaireTypeError } from "../exceptions/DataExceptions"
+import evaluate from "../services/EvaluationService"
 import { generateEmptyRow, isQuestionColumn } from "../utils/DataUtils"
 
 
@@ -17,7 +18,7 @@ export default class DataEntity {
   constructor(type=QUESTIONNAIRE_TYPE.NONE, data=[]) {
     this.type = type
     this.data = data
-    this.columns = { userInfo: [], questions: [] }
+    this.columns = { userInfo: [], questions: [], transform: [] }
 
     if (data.length === 0) { return }
     this.columns.questions = Object.keys(data[0]).filter(isQuestionColumn)
@@ -91,6 +92,27 @@ export default class DataEntity {
     if (typeof columns === "string") { columns = [columns] }
     
     this.userInfoColumns = this.userInfoColumns.filter(col => !columns.includes(col))
+    columns.forEach(col => {
+      this.data.forEach(row => delete row[col])
+    })
+  }
+
+  addTransformColumns(columns) {
+    if (typeof columns === "string") { columns = [columns] }
+    columns = columns.filter(col => !this.transformColumns.includes(col))
+    
+    this.columns.transform = this.columns.transform.concat(columns)
+    columns.forEach(col => {
+      const results = evaluate(col, this)
+      this.data.forEach((row, index) => row[col] = results[index])
+    })
+  }
+
+  deleteColumns(columns) {
+    if (typeof columns === "string") { columns = [columns] }
+
+    this.columns.userInfo = this.columns.userInfo.filter(col => !columns.includes(col))
+    this.columns.transform = this.columns.transform.filter(col => !columns.includes(col))
     columns.forEach(col => {
       this.data.forEach(row => delete row[col])
     })
@@ -189,15 +211,19 @@ export default class DataEntity {
 
   get numOfQuestions() { return this.questionColumns.length }
 
-  get allColumns() {return this.userInfoColumns.concat(this.questionColumns)}
+  get allColumns() {return this.userInfoColumns.concat(this.questionColumns, this.transformColumns)}
 
   get userInfoColumns() { return this.columns.userInfo}
 
   get questionColumns() { return this.columns.questions }
 
+  get transformColumns() { return this.columns.transform }
+
   getType() { return this.type.name }
 
   row(rowNumber) { return this.data[rowNumber] }
+
+  col(colName) { return this.data.map(row => row[colName]) }
 
   loc(rowNr, column) { return this.data[rowNr][column] }
   
