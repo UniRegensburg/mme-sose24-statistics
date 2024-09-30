@@ -223,7 +223,13 @@ export default class DataEntity {
 
   row(rowNumber) { return this.data[rowNumber] }
 
-  col(colName) { return this.data.map(row => row[colName]) }
+  col(colName) {
+    const allColumns = this.allColumns
+    if (!allColumns.includes(colName)) {
+      throw new Error(`${this} does not contain column ${colName}. Available columns are ${allColumns}`)
+    }
+    return this.data.map(row => row[colName])
+  }
 
   loc(rowNr, column) { return this.data[rowNr][column] }
   

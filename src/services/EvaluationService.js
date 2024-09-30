@@ -1,53 +1,60 @@
+import { inplaceOperation, apply } from "../utils/MathUtils";
+import dataAnalysisService from "./DataAnalysisService";
 
 
 
-export function evaluate(expr) {
-  return parseExpression(tokenize(expr))
+export function evaluate(expr, dataEntity) {
+  return parseExpression(tokenize(expr), dataEntity)
 }
 
 
 
-/**
+/***************************
  * Token parser
- */
+ ***************************/
 
 const peek = (tokens) => tokens[0] || null
 const consume = (tokens) => tokens.shift()
 
-function parseExpression(tokens) {
-  let result = parseTerm(tokens);
+function parseExpression(tokens, dataEntity) {
+  let result = parseTerm(tokens, dataEntity);
   while (peek(tokens) && (peek(tokens).value === '+' || peek(tokens).value === '-')) {
     const operator = consume(tokens).value;
-    const right = parseTerm(tokens);
-    result = (operator === '+') ? result + right : result - right;
+    const right = parseTerm(tokens, dataEntity);
+    inplaceOperation(result, right, operator)// (operator === '+') ? result + right : result - right;
   }
   return result;
 }
 
-function parseTerm(tokens) {
-  let result = parseFactor(tokens);
+function parseTerm(tokens, dataEntity) {
+  let result = parseFactor(tokens, dataEntity);
   while (peek(tokens) && (peek(tokens).value === '*' || peek(tokens).value === '/')) {
     const operator = consume(tokens).value;
-    const right = parseFactor(tokens);
-    result = (operator === '*') ? result * right : result / right;
+    const right = parseFactor(tokens, dataEntity);
+    inplaceOperation(result, right, operator) // (operator === '*') ? result * right : result / right;
   }
   return result;
 }
 
-function parseFactor(tokens) {
+function parseFactor(tokens, dataEntity) {
   const token = peek(tokens)
   if (!token) {
-    throw new Error(`Unexpected token: ${token ? token.value : 'EOF'}`);
+    throw new Error("Unexpected token: 'EOF'");
   }
 
   if (token.type === TOKEN.FUNCTION) {
-    const func = SUPPORTED_FUNCTIONS[consume(tokens).value]
-    return func(parseFactor(tokens))
+    consume(tokens)
+    if (token.value === "SCORE") { return FUNCTIONS.SCORE(dataEntity) }
+
+    const func = FUNCTIONS[token.value] // Consume function
+    const result = parseFactor(tokens, dataEntity)
+    apply(result, func)
+    return result
   }
 
   if (token.value === '(') {
     consume(tokens)     // Consume '('
-    const result = parseExpression(tokens);
+    const result = parseExpression(tokens, dataEntity);
     if (peek(tokens).value === ')') {
       consume(tokens)   // Consume ')'
     } else {
@@ -56,31 +63,43 @@ function parseFactor(tokens) {
     return result
   }
   if (token.type === TOKEN.NUMBER) {
-    return parseFloat(consume(tokens).value)
+    consume(tokens)
+    const num = parseFloat(token.value)
+    return new Array(dataEntity.size).fill(num)
+  }
+  if (token.type === TOKEN.VARIABLE) {
+    consume(tokens)
+    return dataEntity.col(token.value)
   }
   if (token.value === "+" || token.value === "-") {
-    return 0
+    // Leave + and - for later evaluation. Initialize an array of 0s
+    return new Array(dataEntity.size).fill(0)
   }
+    
+  throw new Error(`Unexpected token: ${token.value}`);
 }
 
 
 
-/**
+/***************************
  * Tokenizer
- */
+ ***************************/
 
 const TOKEN = Object.freeze({
   NUMBER: "NUMBER",
   OPERATOR: "OPERATOR",
   PAREN: "PAREN",
   FUNCTION: "FUNCTION",
+  DATA_FUNC: "DATA_FUNC",
   VARIABLE: "VARIABLE"
 })
 
-const SUPPORTED_FUNCTIONS = {
-  SCORE: (dataEntity) => 0,
+const FUNCTIONS = {
+  // SCORE function behaves differently. This is accounted for in function parseFactor
+  SCORE: (dataEntity) => dataAnalysisService.calculateScores(dataEntity),
   LOG: Math.log
 }
+
 
 function token(type, value) { return { type: type, value: value } }
 
@@ -104,6 +123,14 @@ export function tokenize(expr) {
       while (i < expr.length && /[\d\.]/.test(expr[i])) {
         num += expr[i]
         i++
+      }
+
+      if (tokens.length >= 1) {
+        const prevToken = tokens[tokens.length - 1]
+        if (prevToken.type === TOKEN.FUNCTION || prevToken.type === TOKEN.VARIABLE) {
+          tokens[tokens.length - 1].value += num
+          continue
+        }
       }
 
       tokens.push(token(TOKEN.NUMBER, num))
@@ -132,7 +159,7 @@ export function tokenize(expr) {
         i++
       }
 
-      if (word in SUPPORTED_FUNCTIONS) {
+      if (word in FUNCTIONS) {
         tokens.push(token(TOKEN.FUNCTION, word))
       } else {
         tokens.push(token(TOKEN.VARIABLE, word))
