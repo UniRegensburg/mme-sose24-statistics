@@ -4,6 +4,7 @@ import DataTable from "./datatables/DataTableTabs"
 import Visualization from "./visualization/Visualization"
 import Modification from "./modification/Modification"
 import WorkspaceEntity from "../../../entities/WorkspaceEntity"
+import { StatesProvider } from "../../../providers/StatesProvider"
 
 /**
  * Main user interface for data analysis. Contains `DataTable`,
@@ -14,6 +15,8 @@ import WorkspaceEntity from "../../../entities/WorkspaceEntity"
  */
 export default function Workspace(workspaceEntity) {
   return (
+    <StatesProvider>
+
     <PanelGroup direction="horizontal" className="container">
       <Panel minSize={10}>
         <PanelGroup direction="vertical">
@@ -34,5 +37,7 @@ export default function Workspace(workspaceEntity) {
         <Modification />
       </Panel>
     </PanelGroup>
+
+    </StatesProvider>
   )
 }
