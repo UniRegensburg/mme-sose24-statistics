@@ -1,5 +1,5 @@
-import { inplaceOperation, apply } from "../utils/MathUtils";
-import dataAnalysisService from "./DataAnalysisService";
+import { inplaceOperation, apply, average } from "./MathUtils";
+import dataAnalysisService from "../services/DataAnalysisService";
 
 
 
@@ -7,6 +7,20 @@ export function evaluate(expr, dataEntity) {
   return parseExpression(tokenize(expr), dataEntity)
 }
 
+/**
+ * Supported functions. All functions apart from `SCORE` take in an array and
+ * fill in the results inplace.
+ */
+const FUNCTIONS = {
+  // SCORE function behaves differently. This is accounted for in function parseFactor
+  SCORE: (dataEntity) => dataAnalysisService.calculateScores(dataEntity),
+  AVG: (arr) => arr.fill(average(arr)),
+
+  ABS: (arr) => apply(arr, Math.abs),
+  LOG: (arr) => apply(arr, Math.log),
+  SIN: (arr) => apply(arr, Math.sin),
+  COS: (arr) => apply(arr, Math.cos),
+}
 
 
 /***************************
@@ -21,7 +35,7 @@ function parseExpression(tokens, dataEntity) {
   while (peek(tokens) && (peek(tokens).value === '+' || peek(tokens).value === '-')) {
     const operator = consume(tokens).value;
     const right = parseTerm(tokens, dataEntity);
-    inplaceOperation(result, right, operator)// (operator === '+') ? result + right : result - right;
+    inplaceOperation(result, right, operator)
   }
   return result;
 }
@@ -31,7 +45,7 @@ function parseTerm(tokens, dataEntity) {
   while (peek(tokens) && (peek(tokens).value === '*' || peek(tokens).value === '/')) {
     const operator = consume(tokens).value;
     const right = parseFactor(tokens, dataEntity);
-    inplaceOperation(result, right, operator) // (operator === '*') ? result * right : result / right;
+    inplaceOperation(result, right, operator)
   }
   return result;
 }
@@ -43,12 +57,12 @@ function parseFactor(tokens, dataEntity) {
   }
 
   if (token.type === TOKEN.FUNCTION) {
-    consume(tokens)
+    consume(tokens) // Consume function
     if (token.value === "SCORE") { return FUNCTIONS.SCORE(dataEntity) }
 
-    const func = FUNCTIONS[token.value] // Consume function
+    const func = FUNCTIONS[token.value]
     const result = parseFactor(tokens, dataEntity)
-    apply(result, func)
+    func(result)
     return result
   }
 
@@ -63,12 +77,12 @@ function parseFactor(tokens, dataEntity) {
     return result
   }
   if (token.type === TOKEN.NUMBER) {
-    consume(tokens)
+    consume(tokens)   // Consume number
     const num = parseFloat(token.value)
     return new Array(dataEntity.size).fill(num)
   }
   if (token.type === TOKEN.VARIABLE) {
-    consume(tokens)
+    consume(tokens)   // Consume variable
     return dataEntity.col(token.value)
   }
   if (token.value === "+" || token.value === "-") {
@@ -94,11 +108,7 @@ const TOKEN = Object.freeze({
   VARIABLE: "VARIABLE"
 })
 
-const FUNCTIONS = {
-  // SCORE function behaves differently. This is accounted for in function parseFactor
-  SCORE: (dataEntity) => dataAnalysisService.calculateScores(dataEntity),
-  LOG: Math.log
-}
+
 
 
 function token(type, value) { return { type: type, value: value } }

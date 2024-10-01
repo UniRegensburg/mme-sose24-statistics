@@ -1,6 +1,6 @@
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 import { InvalidDataInputError, QuestionnaireTypeError } from "../exceptions/DataExceptions"
-import evaluate from "../services/EvaluationService"
+import { evaluate } from "../utils/Evaluation"
 import { generateEmptyRow, isQuestionColumn } from "../utils/DataUtils"
 
 
