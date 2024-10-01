@@ -101,16 +101,17 @@ export default class DataEntity {
   /**
    * Given a string or an array of strings, create transform columns with those name and
    * fill those columns with the transformed data.
-   * @param {string | string[]} columns 
+   * @param {string | string[]} expressions 
    */
-  addTransformColumns(columns) {
-    if (typeof columns === "string") { columns = [columns] }
+  addTransformColumns(expressions) {
+    if (typeof expressions === "string") { expressions = [expressions] }
+    let columns = expressions.map(col => `T:${col}`)
     columns = columns.filter(col => !this.transformColumns.includes(col))
     
-    this.columns.transform = this.columns.transform.concat(columns.map(col => `T:${col}`))
-    columns.forEach(col => {
-      const results = evaluate(col, this)
-      this.data.forEach((row, index) => row[`T:${col}`] = results[index])
+    this.columns.transform = this.columns.transform.concat(columns)
+    expressions.forEach((expr, colIndex) => {
+      const results = evaluate(expr, this)
+      this.data.forEach((row, rowNr) => row[columns[colIndex]] = results[rowNr])
     })
   }
 

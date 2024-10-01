@@ -16,8 +16,8 @@ DataEntity {
   },
   data:
     [
-  	  { Q1: 11, Q2: 18, Q3: 18, Q4: 17, Q5: 19, Q6: 9, id: 1, age: 33, 'T:Q1+Q2': 29 },
-  	  { Q1: 13, Q2: 2, Q3: 10, Q4: 14, Q5: 17, Q6: 18, id: 2, age: 21, 'T:Q1+Q2': 15 }
+      { Q1: 11, Q2: 18, Q3: 18, Q4: 17, Q5: 19, Q6: 9, id: 1, age: 33, 'T:Q1+Q2': 29 },
+      { Q1: 13, Q2: 2, Q3: 10, Q4: 14, Q5: 17, Q6: 18, id: 2, age: 21, 'T:Q1+Q2': 15 }
     ],
   columns: {
     userInfo: [ 'id', 'age' ],
@@ -43,15 +43,15 @@ The constructor of `DataEntity` takes in questionnaire type and data, both are o
 const dataEntity = new DataEntity(
                        QUESTIONNAIRE_TYPE.NONE,
                        [
-                         { Q1: 5, Q2: 5, Q3: 5, id: 1, 'T:Q1+Q3': 10 },
-                         { Q1: 4, Q2: 3, Q3: 5, id: 2, 'T:Q1+Q3': 7 },
+                         { Q1: 5, Q2: 5, id: 1, 'T:Q1+Q2': 10 },
+                         { Q1: 4, Q2: 3, id: 2, 'T:Q1+Q2': 7 },
                        ]
                    )
 console.log(dataEntity)
 // Result:
 //
 // DataEntity {
-//	type: {
+//   type: {
 //    name: 'NONE',
 //    numOfQuestions: 9007199254740991,
 //    minValue: -9007199254740991,
@@ -60,14 +60,14 @@ console.log(dataEntity)
 //    scoreInterpretor: [Function: scoreInterpretor]
 //  },
 //  data:
-//	[
-//	  { Q1: 5, Q2: 5, Q3: 5, id: 1 },
-//    { Q1: 4, Q2: 3, Q3: 5, id: 2 },
-//	],
+//    [
+//      { Q1: 5, Q2: 5, id: 1, 'T:Q1+Q2': 10 },
+//      { Q1: 4, Q2: 3, id: 2, 'T:Q1+Q2': 7 },
+//    ],
 //  columns: {
 //    userInfo: [ 'id' ],
-//    questions: [ 'Q1', 'Q2', 'Q3' ],
-//	  transform: [ 'T:Q1+Q3' ]
+//    questions: [ 'Q1', 'Q2' ],
+//    transform: [ 'T:Q1+Q2' ]
 //  }
 // }
 	
@@ -80,7 +80,7 @@ console.log(dataEntity)
 | addQuestions(numOfQuestions=1)    | Add given number of new questions to the questionnaire.      | Only NONE-type data allows adding new questions.       |
 | deleteQuestions(numOfQuestions=1) | Delete given number of new questions to the questionnaire.   | Only NONE-type data allows setting number of questions |
 | addUserInfoColumns(columns)       | Given a string or an array of strings, add new strings among them as user info columns. | Existing columns will not be added again.              |
-| addTransformColumns(columns)      | Given a string or an array of strings, create transform columns with those name and fill those columns with the transformed data. | Do not include `'T:` in the input.                     |
+| addTransformColumns(expressions)  | Given a string or an array of strings, create transform columns with those name and fill those columns with the transformed data. | Do not include `'T:'` in the input.                    |
 | deleteColumns(columns)            | Given a string or an array of strings, delete columns with those names. | Only works for `userInfo` and `transform` columns.     |
 
 ### Row operations
@@ -119,24 +119,24 @@ Using the same `dataEntity` we created earlier:
 console.log(dataEntity.getType())
 // Result: NONE
 
-dataEntity.addQuestions()
+dataEntity.addQuestions() // This add 1 question by default
 console.log(dataEntity.questionColumns)
-// Result: [ 'Q1', 'Q2', 'Q3', 'Q4' ]
+// Result: [ 'Q1', 'Q2', 'Q3' ]
 
-dataEntity.addUserInfoColumns(["id", "age"])
+dataEntity.addUserInfoColumns(["id", "age"]) // Existing columns are not added twice
 dataEntity.addUserInfoColumns("gender")
 console.log(dataEntity.allColumns)
-// Result" [ 'id', 'age', 'gender', 'Q1', 'Q2', 'Q3', 'Q4' ]
+// Result" [ 'Q1', 'Q2', 'Q3', 'id', 'age', 'gender', 'T:Q1+Q2' ]
 
 dataEntity.addEmptyRows(2)
 dataEntity.setValue(2, "Q1", 1000)
-console.log(dataEntity.loc(2, "Q1"))
+console.log(dataEntity.loc(2, "Q1")) // Get value at the 3rd row in column Q1
 // Result: 1000
 console.log(dataEntity)
 // Result:
 //
 // DataEntity {
-//	type: {
+//  type: {
 //    name: 'NONE',
 //    numOfQuestions: 9007199254740991,
 //    minValue: -9007199254740991,
@@ -145,15 +145,15 @@ console.log(dataEntity)
 //    scoreInterpretor: [Function: scoreInterpretor]
 //  },
 //  data:
-//	[
-//	  { Q1: 5, Q2: 5, Q3: 5, Q4: null, id: 1, age: null, gender: null },
-//	  { Q1: null, Q2: null, Q3: null, Q4: null, id: null, age: null, gender: null },
-//	  { Q1: 1000, Q2: null, Q3: null, Q4: null, id: null, age: null, gender: null },
-//	],
+//    [
+//      { Q1: 5, Q2: 5, Q3: null, id: 1, age: null, gender: null, 'T:Q1+Q2': 10 },
+//      { Q1: 4, Q2: 3, Q3: null, id: null, age: null, gender: null, 'T:Q1+Q2': 7 },
+//      { Q1: 1000, Q2: null, Q3: null, id: null, age: null, gender: null, 'T:Q1+Q2': null },
+//    ],
 //  columns: {
 //    userInfo: [ 'id', 'age', 'gender' ],
-//    questions: [ 'Q1', 'Q2', 'Q3', 'Q4' ],
-//    transform: []
+//    questions: [ 'Q1', 'Q2', 'Q3' ],
+//    transform: [ 'T:Q1+Q2' ]
 //  }
 // }
 ```
