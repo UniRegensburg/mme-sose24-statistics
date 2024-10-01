@@ -18,7 +18,7 @@ test(
   "Evaluation function works properly.",
   () => {
     assert(arraysEqual(evaluate("SCORE + 1", dataEntity), [51, 51, 51, 51]))
-    assert(arraysEqual(evaluate("-Q1*2 +1", dataEntity), [-5, -9, -5, -9]))
+    assert(arraysEqual(evaluate("(-1+(-Q1+1)*2+ 1)+1", dataEntity), [-3, -7, -3, -7]))
     assert(arraysEqual(evaluate(".2*4", dataEntity), [.8, .8, .8, .8]))
     expect(() => evaluate("0??+Q6", dataEntity)).toThrowError()
   }
@@ -36,7 +36,8 @@ test(
   () => {
     const expr = "Q1*2+1"
     dataEntity.addTransformColumns(expr)
-    assert(arraysEqual(dataEntity.transformColumns, [expr]))
-    assert(arraysEqual(dataEntity.col(expr), [7, 11, 7, 11]))
+    console.log(dataEntity)
+    assert(arraysEqual(dataEntity.transformColumns, [`T:${expr}`]))
+    assert(arraysEqual(dataEntity.col(`T:${expr}`), [7, 11, 7, 11]))
   }
 )
