@@ -152,5 +152,6 @@ console.log(dataEntity)
 
 This class is relatively easy to understand. You can refer to the source code in `src\entities\DiagramEntity.js` for more information.
 
+## `WorkspaceEntity`
 
-
+The sole purpose of `WorkspaceEntity` is to store current `dataEntity` and `diagramEntity`. 
