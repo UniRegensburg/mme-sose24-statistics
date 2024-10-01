@@ -15,31 +15,38 @@ DataEntity {
     scoreInterpretor: [Function: scoreInterpretor]
   },
   data:
-  	[
-  		{ Q1: 11, Q2: 18, Q3: 18, Q4: 17, Q5: 19, Q6: 9, id: 1 },
-  		{ Q1: 13, Q2: 2, Q3: 10, Q4: 14, Q5: 17, Q6: 18, id: 2 }
-  	],
+    [
+  	  { Q1: 11, Q2: 18, Q3: 18, Q4: 17, Q5: 19, Q6: 9, id: 1, age: 33, 'T:Q1+Q2': 29 },
+  	  { Q1: 13, Q2: 2, Q3: 10, Q4: 14, Q5: 17, Q6: 18, id: 2, age: 21, 'T:Q1+Q2': 15 }
+    ],
   columns: {
-    userInfo: [ 'id' ],
+    userInfo: [ 'id', 'age' ],
     questions: [
       'Q1', 'Q2', 'Q3',
       'Q4', 'Q5', 'Q6',
       'Q7', 'Q8'
-    ]
+    ],
+    transform: [ 'T:Q1+Q2' ]
   }
 }
 ```
+
+- `type`: The type of questionnaire. 
+- `data`: The raw data, represented by an array of objects. When performing data manipulation on the data, **do not** access the raw data like `dataEntity.data[row]["col"]`, **you are required to use the appropriate member functions instead**.
+- `columns`: Stores information about columns.
 
 ### Constructor
 
 The constructor of `DataEntity` takes in questionnaire type and data, both are optional. The constructor automatically detect questionnaire columns and user info columns.
 
 ```javascript
-const dataEntity = new DataEntity(QUESTIONNAIRE_TYPE.NONE, 
-                                  [
-    								 { Q1: 5, Q2: 5, Q3: 5, id: 1 },
-                                  ]
-                                 )
+const dataEntity = new DataEntity(
+                       QUESTIONNAIRE_TYPE.NONE,
+                       [
+                         { Q1: 5, Q2: 5, Q3: 5, id: 1, 'T:Q1+Q3': 10 },
+                         { Q1: 4, Q2: 3, Q3: 5, id: 2, 'T:Q1+Q3': 7 },
+                       ]
+                   )
 console.log(dataEntity)
 // Result:
 //
@@ -54,11 +61,13 @@ console.log(dataEntity)
 //  },
 //  data:
 //	[
-//		{ Q1: 5, Q2: 5, Q3: 5, id: 1 }
+//	  { Q1: 5, Q2: 5, Q3: 5, id: 1 },
+//    { Q1: 4, Q2: 3, Q3: 5, id: 2 },
 //	],
 //  columns: {
 //    userInfo: [ 'id' ],
-//    questions: [ 'Q1', 'Q2', 'Q3' ]
+//    questions: [ 'Q1', 'Q2', 'Q3' ],
+//	  transform: [ 'T:Q1+Q3' ]
 //  }
 // }
 	
@@ -71,7 +80,8 @@ console.log(dataEntity)
 | addQuestions(numOfQuestions=1)    | Add given number of new questions to the questionnaire.      | Only NONE-type data allows adding new questions.       |
 | deleteQuestions(numOfQuestions=1) | Delete given number of new questions to the questionnaire.   | Only NONE-type data allows setting number of questions |
 | addUserInfoColumns(columns)       | Given a string or an array of strings, add new strings among them as user info columns. | Existing columns will not be added again.              |
-| deleteUserInfoColumns(columns)    | Given a string or an array of strings, delete user info columns of those names. |                                                        |
+| addTransformColumns(columns)      | Given a string or an array of strings, create transform columns with those name and fill those columns with the transformed data. | Do not include `'T:` in the input.                     |
+| deleteColumns(columns)            | Given a string or an array of strings, delete columns with those names. | Only works for `userInfo` and `transform` columns.     |
 
 ### Row operations
 
@@ -82,10 +92,10 @@ console.log(dataEntity)
 
 ### Data manipulation
 
-| Function                       | Description                                       |
-| ------------------------------ | ------------------------------------------------- |
-| setValue(rowNr, column, value) | Set value at the given and row number and column. |
-| setType(type)                  | Set questionnaire type.                           |
+| Function                       | Description                                       | Notes                                             |
+| ------------------------------ | ------------------------------------------------- | ------------------------------------------------- |
+| setValue(rowNr, column, value) | Set value at the given and row number and column. | Data in transform columns cannot be manually set. |
+| setType(type)                  | Set questionnaire type.                           |                                                   |
 
 ### Getters
 
@@ -98,6 +108,7 @@ console.log(dataEntity)
 | get questionColumns() | Get a list of question columns.                   |
 | getType()             | Get a string of questionnaire type name.          |
 | row(rowNumber)        | Get a single row of data.                         |
+| col(columnName)       | Get data from a column as an array.               |
 | loc(rowNr, column)    | Get the value at the given row number and column. |
 
 ### Example
@@ -135,13 +146,14 @@ console.log(dataEntity)
 //  },
 //  data:
 //	[
-//		{ Q1: 5, Q2: 5, Q3: 5, Q4: null, id: 1, age: null, gender: null },
-//		{ Q1: null, Q2: null, Q3: null, Q4: null, id: null, age: null, gender: null },
-//		{ Q1: 1000, Q2: null, Q3: null, Q4: null, id: null, age: null, gender: null },
+//	  { Q1: 5, Q2: 5, Q3: 5, Q4: null, id: 1, age: null, gender: null },
+//	  { Q1: null, Q2: null, Q3: null, Q4: null, id: null, age: null, gender: null },
+//	  { Q1: 1000, Q2: null, Q3: null, Q4: null, id: null, age: null, gender: null },
 //	],
 //  columns: {
 //    userInfo: [ 'id', 'age', 'gender' ],
-//    questions: [ 'Q1', 'Q2', 'Q3', 'Q4' ]
+//    questions: [ 'Q1', 'Q2', 'Q3', 'Q4' ],
+//    transform: []
 //  }
 // }
 ```

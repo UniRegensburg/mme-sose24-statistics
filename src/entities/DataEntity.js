@@ -1,7 +1,7 @@
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 import { InvalidDataInputError, QuestionnaireTypeError } from "../exceptions/DataExceptions"
 import { evaluate } from "../utils/Evaluation"
-import { generateEmptyRow, isQuestionColumn } from "../utils/DataUtils"
+import { columnType, generateEmptyRow } from "../utils/DataUtils"
 
 
 /**
@@ -21,8 +21,9 @@ export default class DataEntity {
     this.columns = { userInfo: [], questions: [], transform: [] }
 
     if (data.length === 0) { return }
-    this.columns.questions = Object.keys(data[0]).filter(isQuestionColumn)
-    this.columns.userInfo = Object.keys(data[0]).filter(k => !isQuestionColumn(k))
+    this.columns.questions = Object.keys(data[0]).filter(k => columnType(k) === "questions")
+    this.columns.userInfo = Object.keys(data[0]).filter(k => columnType(k) === "userInfo")
+    this.columns.transform = Object.keys(data[0]).filter(k => columnType(k) === "transform")
   }
 
 
@@ -85,7 +86,7 @@ export default class DataEntity {
   }
 
   /**
-   * Given a string or an array of strings, delete user info columns of those names.
+   * Given a string or an array of strings, delete user info columns with those names.
    * @param {string | string[]} columns 
    */
   deleteUserInfoColumns(columns) {
@@ -97,17 +98,26 @@ export default class DataEntity {
     })
   }
 
+  /**
+   * Given a string or an array of strings, create transform columns with those name and
+   * fill those columns with the transformed data.
+   * @param {string | string[]} columns 
+   */
   addTransformColumns(columns) {
     if (typeof columns === "string") { columns = [columns] }
     columns = columns.filter(col => !this.transformColumns.includes(col))
     
-    this.columns.transform = this.columns.transform.concat(columns)
+    this.columns.transform = this.columns.transform.concat(columns.map(col => `T:${col}`))
     columns.forEach(col => {
       const results = evaluate(col, this)
-      this.data.forEach((row, index) => row[col] = results[index])
+      this.data.forEach((row, index) => row[`T:${col}`] = results[index])
     })
   }
 
+  /**
+   * Given a string or an array of strings, delete columns with those names.
+   * @param {string | string[]} columns 
+   */
   deleteColumns(columns) {
     if (typeof columns === "string") { columns = [columns] }
 
@@ -190,11 +200,15 @@ export default class DataEntity {
    * @param {number} value 
    */
   setValue(rowNr, column, value) {
-    if (isQuestionColumn(column)) {
+    const colType = columnType(column)
+    if (colType === "questions") {
       const questionNr = parseInt(column.substring(1))
       this.setResultValue(rowNr, questionNr, value)
     }
-    else { this.setUserInfoValue(rowNr, column, value) }
+    else if (colType === "userInfo") { this.setUserInfoValue(rowNr, column, value) }
+    else {
+      throw new InvalidDataInputError("Data in transform columns cannot be manually changed.")
+    }
   }
 
   setType(type) {
