@@ -1,3 +1,4 @@
+import DIAGRAM_TYPE from "../constants/DiagramType";
 import { DiagramTypeError } from "../exceptions/DataExceptions";
 import DataEntity from "./DataEntity";
 
@@ -94,17 +95,21 @@ export default class DiagramEntity {
    * @returns 
   */
   checkPlotability() {
+    if (this.type === DIAGRAM_TYPE.NONE) {
+      throw new DiagramTypeError("NONE-type diagram cannot be plotted.")
+    }
     for (let i = 0; i < this.type.requiredOptions.length; i++) {
       let requiredOption = this.type.requiredOptions[i]
       if (!(requiredOption in this.options)) { 
-        return false
+        throw new DiagramTypeError(`All required options must be filled. 
+            Required options are ${this.requiredOptions}`)
       }
     }
     return true
   }
 
   
-  get supportedOptions() { return this.type.options }
+  get AllOptions() { return this.type.options }
   
   get requiredOptions() { return this.type.requiredOptions }
   
