@@ -1,11 +1,11 @@
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 import { InvalidDataInputError, QuestionnaireTypeError } from "../exceptions/DataExceptions"
-import { generateEmptyRow, generateResultColumns, isQuestionColumn } from "../utils/DataUtils"
+import { evaluate } from "../utils/Evaluation"
+import { columnType, generateEmptyRow } from "../utils/DataUtils"
 
 
 /**
  * A class for representing a series of questionnaire data.
- * 
  */
 export default class DataEntity {
 
@@ -18,11 +18,12 @@ export default class DataEntity {
   constructor(type=QUESTIONNAIRE_TYPE.NONE, data=[]) {
     this.type = type
     this.data = data
-    this.columns = { userInfo: [], questions: [] }
+    this.columns = { userInfo: [], questions: [], transform: [] }
 
     if (data.length === 0) { return }
-    this.columns.questions = Object.keys(data[0]).filter(isQuestionColumn)
-    this.columns.userInfo = Object.keys(data[0]).filter(k => !isQuestionColumn(k))
+    this.columns.questions = Object.keys(data[0]).filter(k => columnType(k) === "questions")
+    this.columns.userInfo = Object.keys(data[0]).filter(k => columnType(k) === "userInfo")
+    this.columns.transform = Object.keys(data[0]).filter(k => columnType(k) === "transform")
   }
 
 
@@ -85,7 +86,7 @@ export default class DataEntity {
   }
 
   /**
-   * Given a string or an array of strings, delete user info columns of those names.
+   * Given a string or an array of strings, delete user info columns with those names.
    * @param {string | string[]} columns 
    */
   deleteUserInfoColumns(columns) {
@@ -97,9 +98,39 @@ export default class DataEntity {
     })
   }
 
-
+  /**
+   * Given a string or an array of strings, create transform columns with those name and
+   * fill those columns with the transformed data.
+   * @param {string | string[]} expressions 
+   */
+  addTransformColumns(expressions) {
+    if (typeof expressions === "string") { expressions = [expressions] }
+    let columns = expressions.map(col => `T:${col}`)
+    columns = columns.filter(col => !this.transformColumns.includes(col))
+    
+    this.columns.transform = this.columns.transform.concat(columns)
+    expressions.forEach((expr, colIndex) => {
+      const results = evaluate(expr, this)
+      this.data.forEach((row, rowNr) => row[columns[colIndex]] = results[rowNr])
+    })
+  }
 
   /**
+   * Given a string or an array of strings, delete columns with those names.
+   * @param {string | string[]} columns 
+   */
+  deleteColumns(columns) {
+    if (typeof columns === "string") { columns = [columns] }
+
+    this.columns.userInfo = this.columns.userInfo.filter(col => !columns.includes(col))
+    this.columns.transform = this.columns.transform.filter(col => !columns.includes(col))
+    columns.forEach(col => {
+      this.data.forEach(row => delete row[col])
+    })
+  }
+
+
+
   /*************************
    * Row operations
    *************************/
@@ -115,7 +146,7 @@ export default class DataEntity {
   }
 
   /**
-   * In sert 1 empty row at the given index.
+   * Insert 1 empty row at the given index.
    * @param {number} index 
    */
   insertEmptyRow(index) {
@@ -164,17 +195,25 @@ export default class DataEntity {
   }
 
   /**
-   * Set value at given column and row number.
+   * Set value at given row number and column.
    * @param {number} rowNr
    * @param {string} column 
    * @param {number} value 
    */
   setValue(rowNr, column, value) {
-    if (isQuestionColumn(column)) {
+    const colType = columnType(column)
+    if (colType === "questions") {
       const questionNr = parseInt(column.substring(1))
       this.setResultValue(rowNr, questionNr, value)
     }
-    else { this.setUserInfoValue(rowNr, column, value) }
+    else if (colType === "userInfo") { this.setUserInfoValue(rowNr, column, value) }
+    else {
+      throw new InvalidDataInputError("Data in transform columns cannot be manually changed.")
+    }
+  }
+
+  setType(type) {
+    this.type = type
   }
 
 
@@ -187,30 +226,27 @@ export default class DataEntity {
 
   get numOfQuestions() { return this.questionColumns.length }
 
-  get allColumns() {return this.userInfoColumns.concat(this.questionColumns)}
+  get allColumns() {return this.userInfoColumns.concat(this.questionColumns, this.transformColumns)}
 
   get userInfoColumns() { return this.columns.userInfo}
 
   get questionColumns() { return this.columns.questions }
 
+  get transformColumns() { return this.columns.transform }
+
+  getType() { return this.type.name }
+
   row(rowNumber) { return this.data[rowNumber] }
+
+  col(colName) {
+    const allColumns = this.allColumns
+    if (!allColumns.includes(colName)) {
+      throw new Error(`${this} does not contain column ${colName}. Available columns are ${allColumns}`)
+    }
+    return this.data.map(row => row[colName])
+  }
 
   loc(rowNr, column) { return this.data[rowNr][column] }
   
 }
 
-
-/**
- * A class that contains information about users who took
- * the questionnaire.
- */
-// class UserInfo {
-
-//   constructor(userID=null, age=null, gender=null, education=null) {
-//     this.userID = userID;
-//     this.age = age;
-//     this.gender = gender;
-//     this.education = education;
-//   }
-
-// }

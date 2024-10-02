@@ -31,6 +31,57 @@ QUESTIONNAIRE_TYPE.NONE = {
   }
 }
 
+QUESTIONNAIRE_TYPE.UEQ = {
+  name: "UEQ",
+  numOfQuestions: 26,
+  minValue: -3,  
+  maxValue: 3,
+  // Categories of the UEQ
+  categories: {
+    attractiveness: [1, 2, 3, 4, 5, 6],
+    perspicuity: [7, 8, 9, 10, 11, 12],
+    efficiency: [13, 14, 15, 16],
+    dependability: [17, 18, 19, 20],
+    stimulation: [21, 22, 23],
+    novelty: [24, 25, 26]
+  },
+
+  // Calculate UEQ-Score
+  scoreCalculator: (ueqResult) => {
+    let scores = {};
+
+    // UEQ-Score pro Category
+    for (let category in QUESTIONNAIRE_TYPE.UEQ.categories) {
+      let questionIndices = QUESTIONNAIRE_TYPE.UEQ.categories[category];
+      let categoryScoreUEQ = 0;
+
+      // Sum of questions pro category
+      for (let i = 0; i < questionIndices.length; i++) {
+        let qIndex = questionIndices[i];
+        categoryScoreUEQ += ueqResult["Q" + qIndex + 1];
+      }
+
+      //  mean for every category
+      scores[category] = categoryScoreUEQ / questionIndices.length;
+    }
+
+    return scores;
+  },
+
+  scoreInterpretor: (categoryScoreUEQ) => {
+    if (categoryScoreUEQ > 1.5) {
+      return "Excellent";
+    } else if (categoryScoreUEQ > 0.5) {
+      return "Good";
+    } else if (categoryScoreUEQ >= -0.5) {
+      return "Neutral";
+    } else {
+      return "Poor";
+    }
+  }   
+
+}
+
 
 QUESTIONNAIRE_TYPE.SUS = {
   name: "SUS",
@@ -66,7 +117,75 @@ QUESTIONNAIRE_TYPE.SUS = {
   }
 }
 
+QUESTIONNAIRE_TYPE.rawTLX = {
+  name: "rawTLX",
+  numOfQuestions: 6,
+  minValue: 0,
+  maxValue: 20,
 
+  scoreCalculator: (rawtxlresults) => {
+    let score = 0;
+
+    // rawTLX-Score
+    for (let i = 1; i <= 6; i++) {
+        score += rawtxlresults[`Q${i}`];  // sum the scores
+    }
+    //final rule
+    return score / 6;
+  },
+
+  scoreInterpretor: (rawtxtlscore) => {
+    let scaledtxlscore = rawtxtlscore * 5;
+    if (scaledtxlscore >= 75) {
+      return "Very High Workload";
+    } else if (scaledtxlscore >= 25) {
+      return "Moderate Workload";
+    } else {
+      return "Very Low Workload";
+    }
+  }
+}
+
+QUESTIONNAIRE_TYPE.NPS = {
+  name: "NPS",
+  numOfQuestions: 1,
+  minValue: 0,
+  maxValue: 10,
+
+  scoreCalculator: (npsresults) => {
+    let promoters = 0;
+    let detractors = 0;
+    let neutrals = 0;
+    let numberResponses = npsresults.length;
+
+    // nps-Score
+    for (let i = 0; i < npsresults.length; i++) {
+      let score = npsresults[i]
+
+      if (score >= 9){
+        promoters++;
+      }
+      else if (score <= 6){
+        detractors++;
+      }
+      else{
+        neutrals++;
+      }
+    }
+    let npsScore = ((promoters - detractors)/numberResponses)*100;
+    return npsScore;
+  },
+
+  scoreInterpretor: (npsScore) => {
+    if (npsScore >= 30) {
+      return "Good NPS";
+    } else if (npsScore >= -30) {
+      return "Moderate NPS";
+    } else {
+      return "Bad NPS";
+    }
+  }
+}
 
 
 Object.freeze(QUESTIONNAIRE_TYPE)

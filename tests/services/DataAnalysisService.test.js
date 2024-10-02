@@ -33,4 +33,17 @@ test(
   }
 )
 
+test(
+  "DataAnalysisService calculates NPS correctly.",
+  () => {
+    const testDataEntity = generateDataEntity(
+      QUESTIONNAIRE_TYPE.NPS,
+      [[1,8,8,7,9,9,9,9]
+      ]
+    )
+    const npsScore = dataAnalysisService.calculateAverageScore(testDataEntity)
+    assert(Math.abs(npsScore - 37.5) < 0.1, "Test NPS data should have NPS score 37.5.")
+  }
+)
+
 

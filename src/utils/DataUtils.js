@@ -1,7 +1,11 @@
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 
-function isQuestionColumn(columnName) {
-  return columnName.match(/Q[1-9][0-9]*/g)
+
+
+function columnType(columnName) {
+  if (columnName.match(/^Q[1-9][0-9]*/g)) { return "questions" }
+  if (columnName.match(/^T:*/g)) { return "transform" }
+  return "userInfo"
 }
 
 
@@ -67,7 +71,7 @@ function generateEmptyRow(columns) {
 
 
 export {
-  isQuestionColumn,
+  columnType,
   infoResultSplit,
   generateResultColumns,
   generateEmptyRow

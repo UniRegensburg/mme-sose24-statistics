@@ -19,11 +19,13 @@ test(
 )
 
 test(
-  "New user info columns can be added to DataEntity.",
+  "New user info columns can be added to or deleted from DataEntity.",
   () => {
     noneData.addUserInfoColumns("id")
     assert(arraysEqual(noneData.userInfoColumns, ["id"]))
-    noneData.addUserInfoColumns(["id", "age", "gender"])
+    noneData.addUserInfoColumns(["id", "age", "gender", "height"])
+    assert(arraysEqual(noneData.userInfoColumns, ["id", "age", "gender", "height"]))
+    noneData.deleteColumns(["height"])
     assert(arraysEqual(noneData.userInfoColumns, ["id", "age", "gender"]))
   }
 )

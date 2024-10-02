@@ -1,5 +1,16 @@
 export default class WorkspaceEntity {
-    
 
-    // test pull
+  constructor(dataEntity=null, diagramEntity=null) {
+    this.dataEntity = dataEntity
+    this.diagramEntity = diagramEntity
+  }
+
+  setDataEntity(dataEntity) {
+    this.dataEntity = dataEntity
+  }
+
+  setDiagramEntity(diagramEntity) {
+    this.diagramEntity = diagramEntity
+  }
+
 }
