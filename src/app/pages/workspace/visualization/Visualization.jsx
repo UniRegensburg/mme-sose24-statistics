@@ -1,3 +1,4 @@
+import Diagram from "../../../../components/Diagram";
 
 /**
  * A component containing diagrams from a workspace.
@@ -7,6 +8,6 @@
 export default function Visualization() {
 
   return (
-    <p>Visualization</p>
+    <Diagram />
   );
 }

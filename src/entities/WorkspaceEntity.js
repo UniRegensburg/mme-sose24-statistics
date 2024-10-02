@@ -9,7 +9,7 @@ export default class WorkspaceEntity {
     this.dataEntity = dataEntity
   }
 
-  setDiagramEntity() {
+  setDiagramEntity(diagramEntity) {
     this.diagramEntity = diagramEntity
   }
 

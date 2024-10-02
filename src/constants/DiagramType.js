@@ -38,6 +38,13 @@ function commonPlotOptions(options) {
 const DIAGRAM_TYPE = {}
 
 
+DIAGRAM_TYPE.NONE = {
+  name: "None",
+  options: [],
+  requiredOptions: [],
+}
+
+
 DIAGRAM_TYPE.HIST = {
   name: "Histogram",
   options: ["x"].concat(COMMON_OPTIONS),
