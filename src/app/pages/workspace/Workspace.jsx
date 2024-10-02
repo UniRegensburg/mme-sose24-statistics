@@ -3,20 +3,33 @@ import "./Workspace.css"
 import DataTable from "./datatables/DataTableTabs"
 import Visualization from "./visualization/Visualization"
 import Modification from "./modification/Modification"
-import WorkspaceEntity from "../../../entities/WorkspaceEntity"
-import { StatesProvider } from "../../../providers/StatesProvider"
+import { useStatesContext } from "../../../providers/StatesProvider"
+import { useEffect } from "react"
+import { useWorkspaceContext } from "../../../providers/WorkspaceProvider"
+import dataService from "../../../services/DataService"
+import DiagramEntity from "../../../entities/DiagramEntity"
+import DIAGRAM_TYPE from "../../../constants/DiagramType"
 
 /**
  * Main user interface for data analysis. Contains `DataTable`,
  * `Visualization` and `Modification` as sub-components.
- * 
- * @param {WorkspaceEntity} workspaceEntity This argument should be a `WorkspaceEntity`.
- * @returns {ReactNode} Rendered React component.
  */
-export default function Workspace(workspaceEntity) {
-  return (
-    <StatesProvider>
+export default function Workspace() {
+  const { workspace, setWorkspace } = useWorkspaceContext()
+  const { updateAll } = useStatesContext()
 
+  // Import test data. Must be deleted in production
+  useEffect(() => {
+    dataService.importData("tests/test-data/SUS-example.csv")
+          .then(dataEntity => {
+            workspace.setDataEntity(dataEntity)
+            const diagramEntity = new DiagramEntity(DIAGRAM_TYPE.NONE, dataEntity)
+            workspace.setDiagramEntity(diagramEntity)
+            updateAll()
+          })
+  }, [])
+
+  return (
     <PanelGroup direction="horizontal" className="container">
       <Panel minSize={10}>
         <PanelGroup direction="vertical">
@@ -37,7 +50,5 @@ export default function Workspace(workspaceEntity) {
         <Modification />
       </Panel>
     </PanelGroup>
-
-    </StatesProvider>
   )
 }
