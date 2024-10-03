@@ -109,7 +109,7 @@ export default class DiagramEntity {
   }
 
   
-  get AllOptions() { return this.type.options }
+  get allOptions() { return this.type.options }
   
   get requiredOptions() { return this.type.requiredOptions }
   
