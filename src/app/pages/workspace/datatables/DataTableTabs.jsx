@@ -2,12 +2,7 @@ import { TrendingUp } from "@mui/icons-material";
 import { useStatesContext } from "../../../../providers/StatesProvider";
 import { useWorkspaceContext } from "../../../../providers/WorkspaceProvider";
 import {
-  Table,
-  TableBody,
-  TableCell,
   TableContainer,
-  TableHead,
-  TableRow,
   Typography,
   Paper,
 } from "@mui/material";
@@ -73,8 +68,11 @@ export default function DataTableTabs() {
           disableRowSelectionOnClick={true}
           onCellEditStart={(param) => setCurrentCol(param.field)}
           processRowUpdate={(newRow, oldRow) => {
+            let value = newRow[currentCol].trim()
+            if (/^\d+$/.test(value)) { value = parseFloat(value) } // Check if input is a number
+            
             const rowNr = dataEntity.data.findIndex((row) => row.id === oldRow.id)
-            dataEntity.setValue(rowNr, currentCol, newRow[currentCol])
+            dataEntity.setValue(rowNr, currentCol, value)
             console.log(dataEntity)
             return newRow
           }}

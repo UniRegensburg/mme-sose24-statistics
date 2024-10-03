@@ -1,5 +1,5 @@
 import DataEntity from "../entities/DataEntity"
-import { average } from "../utils/MathUtils"
+import { average, count } from "../utils/MathUtils"
 
 
 class DataAnalysisService {
@@ -20,6 +20,29 @@ class DataAnalysisService {
    */
   calculateAverageScore(dataEntity) {
     return average(this.calculateScores(dataEntity))
+  }
+
+
+  getReport(dataEntity) {
+    const result = {}
+    result.userInfo = {}
+    result.transform = {}
+    if (dataEntity.size === 0 || !dataEntity) { return result }
+
+    dataEntity.userInfoColumns.forEach(col => {
+      if (col === "id") { return }
+      const valueArr = dataEntity.col(col)
+      if (typeof dataEntity.loc(0, col) === "number") {
+        result.userInfo[col] = {
+          avg: average(valueArr)
+        }
+      }
+      else {
+        result.userInfo[col] = count(valueArr)
+      }
+    })
+
+    return result
   }
 
 }
