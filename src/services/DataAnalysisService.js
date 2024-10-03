@@ -1,3 +1,4 @@
+import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 import DataEntity from "../entities/DataEntity"
 import { average, count } from "../utils/MathUtils"
 
@@ -25,22 +26,44 @@ class DataAnalysisService {
 
   getReport(dataEntity) {
     const result = {}
-    result.userInfo = {}
     result.transform = {}
+    result.userInfo = {}
+    result.questions = {}
+
+    const getNumericReport = (valueArr) => {
+      return {
+        avg: average(valueArr)
+      }
+    }
+    const getCategoricalReport = (valueArr) => {
+      return {
+        count: count(valueArr)
+      }
+    }
+
+
     if (dataEntity.size === 0 || !dataEntity) { return result }
 
     dataEntity.userInfoColumns.forEach(col => {
       if (col === "id") { return }
       const valueArr = dataEntity.col(col)
       if (typeof dataEntity.loc(0, col) === "number") {
-        result.userInfo[col] = {
-          avg: average(valueArr)
-        }
+        result.userInfo[col] = getNumericReport(valueArr)
       }
       else {
-        result.userInfo[col] = count(valueArr)
+        result.userInfo[col] = getCategoricalReport(valueArr)
       }
     })
+    dataEntity.questionColumns.forEach(col => {
+      result.questions[col] = getNumericReport(dataEntity.col(col))
+    })
+    dataEntity.transformColumns.forEach(col => {
+      result.transform[col] = getNumericReport(dataEntity.col(col))
+    })
+
+    if (dataEntity.type !== QUESTIONNAIRE_TYPE.NONE) {
+      result.score = this.calculateAverageScore(dataEntity)
+    } else {result.score = "Undefined"}
 
     return result
   }
