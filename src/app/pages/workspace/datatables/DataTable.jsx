@@ -1,4 +1,4 @@
-import DataEntity from "../entities/DataEntity";
+import DataEntity from "../../../../entities/DataEntity";
 
 /**
  * A table element that present a data entity
