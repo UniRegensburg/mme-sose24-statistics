@@ -1,7 +1,8 @@
 import * as Plot from "@observablehq/plot";
-import Document from "../utils/Document"
-import { useWorkspaceContext } from "../providers/WorkspaceProvider";
-import { useStatesContext } from "../providers/StatesProvider";
+import Document from "../../../../utils/Document"
+import { useWorkspaceContext } from "../../../../providers/WorkspaceProvider";
+import { useStatesContext } from "../../../../providers/StatesProvider";
+import DIAGRAM_TYPE from "../../../../constants/DiagramType";
 
 
 /**
@@ -14,6 +15,7 @@ export default function Diagram() {
 
   if (!diagramEntity) { return <></> }
 
+  // diagramEntity.setType(DIAGRAM_TYPE.HIST)
   // diagramEntity.setOption("x", "age")
   try {
     const plotOptions = diagramEntity.generatePlotOptions()

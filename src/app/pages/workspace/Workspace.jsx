@@ -31,23 +31,29 @@ export default function Workspace() {
 
   return (
     <PanelGroup direction="horizontal" className="container">
-      <Panel minSize={10}>
+      <Panel minSize={8} collapsible={true}>
         <PanelGroup direction="vertical">
-          <Panel minSize={10} className="panel">
+          <Panel minSize={8} className="panel" collapsible={true}>
             {/* data table component */}
-            <DataTable />
+            <div className="inner-panel">
+              <DataTable />
+            </div>
           </Panel>
           <PanelResizeHandle/>
-          <Panel minSize={10} className="panel">
+          <Panel minSize={8} className="panel" collapsible={true}>
             {/* visualization component */}
-            <Visualization />
+            <div className="inner-panel">
+              <Visualization />
+            </div>
           </Panel>
         </PanelGroup>
       </Panel>
       <PanelResizeHandle/>
-      <Panel defaultSize={30} minSize={10} className="panel">
+      <Panel defaultSize={30} minSize={8} className="panel" collapsible={true}>
         {/* modification component */}
-        <Modification />
+        <div className="inner-panel">
+          <Modification />
+        </div>
       </Panel>
     </PanelGroup>
   )

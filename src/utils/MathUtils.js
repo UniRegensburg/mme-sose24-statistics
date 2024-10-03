@@ -8,6 +8,14 @@ function average(arr) {
 }
 
 
+function count(arr) {
+  return arr.reduce((count, item) => {
+    count[item] = (count[item] || 0) + 1
+    return count;
+  }, {})
+}
+
+
 /**
  * @param {number[]} arr1 
  * @param {number[] | number} arr2
@@ -49,6 +57,7 @@ function apply(arr, func) {
 
 export {
   average,
+  count,
   inplaceOperation,
   apply
 }

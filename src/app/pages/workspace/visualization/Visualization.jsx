@@ -1,4 +1,4 @@
-import Diagram from "../../../../components/Diagram";
+import Diagram from "./Diagram";
 
 /**
  * A component containing diagrams from a workspace.
