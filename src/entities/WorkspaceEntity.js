@@ -7,6 +7,9 @@ export default class WorkspaceEntity {
 
   setDataEntity(dataEntity) {
     this.dataEntity = dataEntity
+    if (this.diagramEntity) {
+      this.diagramEntity.setLinkedData(this.dataEntity)
+    }
   }
 
   setDiagramEntity(diagramEntity) {

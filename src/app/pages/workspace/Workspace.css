@@ -18,3 +18,9 @@
   background-color: rgb(244, 244, 244);
   border-radius: 2%;
 }
+
+.inner-panel {
+  overflow: auto;
+  max-height: 100%;
+  max-width: 100%;
+}
