@@ -4,60 +4,69 @@
  * 
  * @returns {ReactNode} Rendered tabs component.
  */
+import { useWorkspaceContext } from "../../../../providers/WorkspaceProvider";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Paper,
+} from "@mui/material";
 
 export default function DataTableTabs() {
-  const [activeTab, setActiveTab] = useState(0); 
-  const [dataTables, setDataTables] = useState([]); 
+  const { workspace } = useWorkspaceContext();
+  const dataEntity = workspace.dataEntity;
 
-  useEffect(() => {
-    Promise.all(csvFiles.map(file => d3.csv(file)))
-      .then(data => {
-        setDataTables(data);
-      })
-      .catch(error => {
-        console.error('Error', error);
-      });
-  }, []);
-  
+  console.log("Data Entity:", dataEntity);
+
+  if (!dataEntity || !dataEntity.allColumns) {
+    return (
+      <Typography variant="h6" color="error">
+        No data available
+      </Typography>
+    );
+  }
+
   return (
-<div>
-      <div className="tab-bar">
-        {dataTables.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setActiveTab(index)}
-            className={activeTab === index ? 'active-tab' : ''}
-          >
-            Data Table {index + 1} {}
-          </button>
-        ))}
-      </div>
-
-      <div className="data-table">
-        {dataTables.length > 0 ? (
-          <table>
-            <thead>
-              <tr>
-                {Object.keys(dataTables[activeTab][0]).map((columnName, i) => (
-                  <th key={i}>{columnName}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {dataTables[activeTab].map((row, i) => (
-                <tr key={i}>
-                  {Object.values(row).map((value, j) => (
-                    <td key={j}>{value}</td>
-                  ))}
-                </tr>
+    <div className="App">
+      <Typography variant="h4" component="h1" gutterBottom>
+        😊 Deine Daten: 
+      </Typography>
+      <TableContainer component={Paper} elevation={3}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {dataEntity.allColumns.map((column) => (
+                <TableCell key={column} style={{ backgroundColor: '#00897B', color: '#fff' }}>
+                  <Typography variant="subtitle1">{column}</Typography>
+                </TableCell>
               ))}
-            </tbody>
-          </table>
-        ) : (
-          <p>Loading...</p>
-        )}
-      </div>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {dataEntity.data && dataEntity.data.length > 0 ? (
+              dataEntity.data.map((row) => (
+                <TableRow key={row.id}>
+                  {dataEntity.allColumns.map((column) => (
+                    <TableCell key={column}>{row[column]}</TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={dataEntity.allColumns.length}>
+                  <Typography variant="body2" color="textSecondary" align="center">
+                    No data available
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
-  ); 
-
+  );
 }
