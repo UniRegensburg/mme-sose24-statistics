@@ -152,7 +152,10 @@ QUESTIONNAIRE_TYPE.NPS = {
   minValue: 0,
   maxValue: 10,
 
-  scoreCalculator: (npsresults) => {
+  // NPS does not define score for individual
+  scoreCalculator: x => x,
+
+  totalScoreCalculator: (npsresults) => {
     let promoters = 0;
     let detractors = 0;
     let neutrals = 0;
@@ -160,7 +163,7 @@ QUESTIONNAIRE_TYPE.NPS = {
 
     // nps-Score
     for (let i = 0; i < npsresults.length; i++) {
-      let score = npsresults[i]
+      let score = npsresults[i].Q1
 
       if (score >= 9){
         promoters++;
