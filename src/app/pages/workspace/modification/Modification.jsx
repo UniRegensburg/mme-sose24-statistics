@@ -1,12 +1,19 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useStatesContext } from "../../../../providers/StatesProvider"
 import { useWorkspaceContext } from "../../../../providers/WorkspaceProvider"
 import { Box, Button, DialogActions, Divider, FormControl, MenuItem, Select, TextField } from "@mui/material"
 import DIAGRAM_TYPE from "../../../../constants/DiagramType"
+import OptionFields from "./OptionFields"
 
 
 const availablDiagTypes = Object.values(DIAGRAM_TYPE)
 availablDiagTypes.shift()
+
+const emptyOptions = (allOptions) => {
+  const options = {}
+  allOptions.forEach(opt => options[opt] = "")
+  return options
+}
 
 
 /**
@@ -15,20 +22,25 @@ availablDiagTypes.shift()
 function Modification() {
   const { modificationState, updateDiagram, updateModification } = useStatesContext()
   const { workspace } = useWorkspaceContext()
-  const [options, setOptions] = useState({})
-
-  // The diagram entity to be worked on
   const diagramEntity = workspace.diagramEntity
   if (!diagramEntity) { return <></> }
+  
+  const allOptions = diagramEntity.allOptions
+  const requiredOptions = diagramEntity.requiredOptions
+  const [options, setOptions] = useState(emptyOptions(allOptions))
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
-    options[name] = value
+    setOptions({
+      ...options,
+      [name]: value
+    })
   }
 
   const handleTypeChange = (event) => {
     diagramEntity.setType(event.target.value)
-    updateModification()
+    setOptions(emptyOptions(diagramEntity.allOptions))
     updateDiagram()
   }
 
@@ -37,8 +49,6 @@ function Modification() {
     updateDiagram()
   }
 
-  const allOptions = diagramEntity.allOptions
-  const requiredOptions = diagramEntity.requiredOptions
 
   return (
     <div style={{margin: "10px"}}>
@@ -57,15 +67,12 @@ function Modification() {
 
         <Divider>Options</Divider>
 
-        {allOptions.map((opt, index) => (
-          <TextField
-            size="small"
-            key={index}
-            name={opt}
-            label={opt}
-            onChange={handleInputChange}
-          />
-        ))}
+        <OptionFields
+          options={options}
+          allOptions={allOptions}
+          requiredOptions={requiredOptions}
+          onChange={handleInputChange}
+        />
 
         <Divider />
       </Box>
