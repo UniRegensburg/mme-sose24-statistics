@@ -49,7 +49,7 @@ DIAGRAM_TYPE.SCATTER = {
     const plotOptions = commonPlotSettings(settings)
     plotOptions.marks = [
       Plot.ruleY([0]),
-      Plot.dot(data, {x: options.x, y: options.y, fill: options.y})
+      Plot.dot(data, {x: options.x, y: options.y})
     ]
     return plotOptions
   },
