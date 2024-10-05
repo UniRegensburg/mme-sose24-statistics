@@ -23,7 +23,7 @@ function _prepareColumns(dataEntity) {
   const userInfo = dataEntity.userInfoColumns.map(prepareCol);
   const questions = dataEntity.questionColumns.map(prepareCol);
   const transform = dataEntity.transformColumns.map(prepareCol);
-  return userInfo.concat(questions, transform);
+  return userInfo.concat(transform, questions);
 }
 
 /**

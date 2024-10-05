@@ -61,14 +61,14 @@ export default class DataEntity {
     }
   }
 
-  setNumOfQUestions(numOfQuestions) {
+  setNumOfQuestions(numOfQuestions) {
     if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
       throw new QuestionnaireTypeError("Only NONE-type data allows setting number of questions.")
     }
     const difference = numOfQuestions - this.numOfQuestions
     if (difference === 0) { return }
-    if (difference >= 0) { this.addQuestions(difference) }
-    else { this.deleteQuestions(difference) }
+    if (difference > 0) { this.addQuestions(difference) }
+    else { this.deleteQuestions(-difference) }
   }
 
   /**
@@ -108,11 +108,11 @@ export default class DataEntity {
     let columns = expressions.map(col => `T:${col}`)
     columns = columns.filter(col => !this.transformColumns.includes(col))
     
-    this.columns.transform = this.columns.transform.concat(columns)
     expressions.forEach((expr, colIndex) => {
       const results = evaluate(expr, this)
       this.data.forEach((row, rowNr) => row[columns[colIndex]] = results[rowNr])
     })
+    this.columns.transform = this.columns.transform.concat(columns)
   }
 
   /**
