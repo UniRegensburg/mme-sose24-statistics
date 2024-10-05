@@ -34,7 +34,7 @@ export default class DiagramEntity {
   }
 
   setSetting(key, value) {
-    if (!value) {
+    if (value === null || value === undefined) {
       delete this.options[key]
       return
     }
@@ -100,7 +100,6 @@ export default class DiagramEntity {
   */
   generatePlotOptions() {
     this.checkPlotability()
-    console.log( JSON.stringify( this.type.plotOptions(this.linkedData.data, this.settings, this.options) ) )
     return this.type.plotOptions(this.linkedData.data, this.settings, this.options)
   }
   
@@ -129,5 +128,7 @@ export default class DiagramEntity {
   get requiredOptions() { return this.type.requiredOptions }
   
   getOption(key) { return this.options[key] }
+
+  getSetting(key) { return this.settings[key]}
 
 }
