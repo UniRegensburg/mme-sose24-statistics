@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom'
 import { IconButton, Modal, Box, Typography } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useWorkspaceContext } from '../../../providers/WorkspaceProvider'
+import DataService from '../../../services/DataService'
+{/*import workspaceEntity from '../../../entities/WorkspaceEntity'*/}
+
 
 
 /**
@@ -18,6 +21,25 @@ function Home() {
   const { workspace } = useWorkspaceContext()
 
   // ---------- Danger zone ends here ----------
+
+  // DataImport via the async in DataService.js
+  //No need for Initialization
+  {/*const dataService = new DataService();*/}
+
+
+  const fileUploader = async (event) => {
+    const file = event.target.files[0];
+    if (file){
+    const newURL = URL.createObjectURL(file);
+    try{
+      const importedData = await DataService.importData(newURL);
+      workspace.setDataEntity(importedData);
+      {/*setWorkspace({ csvData: dataEntity.data });*/}
+    }catch (error) {
+      console.error("error");
+    }
+    }
+  }
 
   
   // Control if modal is closed
@@ -47,9 +69,7 @@ function Home() {
       <p className="darkmode">Darkmode-Reminder</p>
       {/*Logo*/}
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
+      <img src="/Logo_UsabilityAnalyzer.jpeg" className="logo" alt="Usability Analyzer Logo" />
       </div>
       <h1>Usability Analyzer</h1>
       <p>
@@ -58,7 +78,7 @@ function Home() {
       <div className="card">
         {/* Modal for Info UserData*/}
         <div className="fieldDataFile">
-          <p>Lade hier die demographischen Daten hoch. Zulässige Daten sind User-ID, Alter und Geschlecht. Für eine Beispielsdatei klicke <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
+          <p> Wir stellen dir hier ein Tool zur Verfügung, um deine Usability-Daten aus Fragebögen auszuwerten. Diese Anwendung ist für User Experience Questionnaire (UEQ), System Usability Scale (SUS), Net Promoter Score (NPS) und RAW Task Load Index geeignet. Für den erforderlichen Aufbau der Datei klicke <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
           <Modal open={isUserDataFormatOpen} onClose={handleCloseUserDataFormat}>
             <Box className="modal-box">
               <p>Datenformat</p>
@@ -87,15 +107,15 @@ function Home() {
               <button onClick={handleCloseUserDataFormat} className="button">Schließen</button>
             </Box>
           </Modal>
-          <button className="button">
+          {/*<button className="button">
             Upload demographic data
-          </button>
+          </button>*/}
         </div>
         {/* Choose Usability Data*/}
         <div className="buttonColumn">
           {/* Upload Usability Data*/}
           <div className="fieldDataFile">
-            <p>Hier kannst du deine Daten hochladen. Wähle zuerst den Usabiliyt-Fragebogen aus, welchen du gerne analysieren möchtest. Für Infos zum Datenformat klicke, HIER!</p>
+            <p>Hier kannst du deine Daten hochladen. Wähle zuerst den Usability-Fragebogen aus, welchen du gerne analysieren möchtest. Anschließend kannst du deine dazugehörige csv-Datei hochladen. Für Infos bzgl. des Aufbaus der Datei, öffne gerne die Infos oben.</p>
             <select id="questionnaire-type" name="questionnaire-type">
               <option value="">-- Bitte wählen --</option>
               <option value="type1">User Experience Questionnaire (UEQ)</option>
@@ -104,10 +124,15 @@ function Home() {
               <option value="type3">RAW Task Load Index</option>
             </select>
             <br />
+            {/* Datei-Upload-Button*/} 
+           <input type="file" accept={".csv"} onChange={fileUploader} />
             <br />
-            <button className="button">
-              Upload File
-            </button>
+            <br />
+            <Link to="/workspace">
+          <button className="button">
+            Start to Analyse
+          </button >
+          </Link>
           </div>
           <div className="separator"></div>
           <div className="fieldDataFile">
@@ -122,19 +147,19 @@ function Home() {
             </select>
             <br />
             <br />
-            <button className="button">
-              Use Mask for Data
-            </button>
+            <Link to="/workspace">
+          <button className="button">
+            Start to Analyse
+          </button >
+          </Link>
           </div>
         </div>
       </div>
       {/* use Link for redirecting */}
       <div className="analyse-section">
-        <Link to="/workspace">
-          <button className="button">
-            Start to Analyse
-          </button >
-        </Link>
+      <button className="button" onClick={() => window.location.reload()}>
+        Refresh
+      </button>
       </div>
       <p className="read-the-docs">
         Impressum!!!!!!!!!!!!!!!!!!!!!
