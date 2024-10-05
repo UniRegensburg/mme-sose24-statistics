@@ -31,7 +31,7 @@ export default function Workspace() {
 
   return (
     <PanelGroup direction="horizontal" className="container">
-      <Panel minSize={8} collapsible={true}>
+      <Panel minSize={8}>
         <PanelGroup direction="vertical">
           <Panel minSize={8} className="panel" collapsible={true}>
             {/* data table component */}
@@ -49,7 +49,7 @@ export default function Workspace() {
         </PanelGroup>
       </Panel>
       <PanelResizeHandle/>
-      <Panel defaultSize={30} minSize={8} className="panel" collapsible={true}>
+      <Panel defaultSize={20} minSize={8} maxSize={30} className="panel" collapsible={true}>
         {/* modification component */}
         <div className="inner-panel">
           <Modification />

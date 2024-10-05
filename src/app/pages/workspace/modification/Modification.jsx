@@ -4,6 +4,7 @@ import { useWorkspaceContext } from "../../../../providers/WorkspaceProvider"
 import { Box, Button, DialogActions, Divider, FormControl, MenuItem, Select, TextField } from "@mui/material"
 import DIAGRAM_TYPE from "../../../../constants/DiagramType"
 import OptionFields from "./OptionFields"
+import DiagramSettings from "./DiagramSettings"
 
 
 const availablDiagTypes = Object.values(DIAGRAM_TYPE)
@@ -53,6 +54,8 @@ function Modification() {
   return (
     <div style={{margin: "10px"}}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Divider>Diagram Type</Divider>
+
         <Select
           label="Diagram Type"
           size="small"
@@ -74,11 +77,15 @@ function Modification() {
           onChange={handleInputChange}
         />
 
+        <Divider>Settings</Divider>
+
+        <DiagramSettings />
+
         <Divider />
       </Box>
         
 
-      <Button onClick={confirm}>
+      <Button onClick={confirm} style={{margin: '1em'}}>
         Apply changes
       </Button>
     </div>
