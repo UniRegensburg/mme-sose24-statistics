@@ -12,7 +12,7 @@ test(
       QUESTIONNAIRE_TYPE.NONE,
       [[5,5,5,5,5,5,5,5,5,5,5,5,5]]
     )
-    expect(() => dataAnalysisService.calculateAverageScore(testDataEntity))
+    expect(() => dataAnalysisService.calculateTotalScore(testDataEntity))
       .toThrow(QuestionnaireTypeError)
   }
 )
@@ -28,7 +28,7 @@ test(
         [5,5,5,5,5,5,5,5,5,5]
       ]
     )
-    const susScore = dataAnalysisService.calculateAverageScore(testDataEntity)
+    const susScore = dataAnalysisService.calculateTotalScore(testDataEntity)
     assert(susScore === 50, "Test SUS data should have SUS score 50.")
   }
 )
@@ -38,10 +38,9 @@ test(
   () => {
     const testDataEntity = generateDataEntity(
       QUESTIONNAIRE_TYPE.NPS,
-      [[1,8,8,7,9,9,9,9]
-      ]
+      [[1],[8],[8],[7],[9],[9],[9],[9]]
     )
-    const npsScore = dataAnalysisService.calculateAverageScore(testDataEntity)
+    const npsScore = dataAnalysisService.calculateTotalScore(testDataEntity)
     assert(Math.abs(npsScore - 37.5) < 0.1, "Test NPS data should have NPS score 37.5.")
   }
 )

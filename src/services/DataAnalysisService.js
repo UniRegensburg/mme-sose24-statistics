@@ -16,10 +16,14 @@ class DataAnalysisService {
 
 
   /**
-   * Calculate average score of a DataEntity according to its questionnaire type.
+   * Calculate total score of a DataEntity according to its questionnaire type.
+   * For most questionnaires, this means the average score.
    * @param {DataEntity} dataEntity 
    */
-  calculateAverageScore(dataEntity) {
+  calculateTotalScore(dataEntity) {
+    if (dataEntity.type === QUESTIONNAIRE_TYPE.NPS) {
+      return QUESTIONNAIRE_TYPE.NPS.totalScoreCalculator(dataEntity.data)
+    } 
     return average(this.calculateScores(dataEntity))
   }
 
@@ -62,7 +66,7 @@ class DataAnalysisService {
     })
 
     if (dataEntity.type !== QUESTIONNAIRE_TYPE.NONE) {
-      result.score = this.calculateAverageScore(dataEntity)
+      result.score = this.calculateTotalScore(dataEntity)
     } else {result.score = "Undefined"}
 
     return result

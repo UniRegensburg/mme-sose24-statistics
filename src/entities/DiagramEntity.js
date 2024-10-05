@@ -1,3 +1,4 @@
+import { DIAGRAM_SETTING } from "../constants/DiagramSetting";
 import DIAGRAM_TYPE from "../constants/DiagramType";
 import { DiagramTypeError } from "../exceptions/DataExceptions";
 import DataEntity from "./DataEntity";
@@ -13,7 +14,8 @@ export default class DiagramEntity {
     this.type = type
     this.linkedData = linkedData
     this.options = {}
-    this._setDefaultOptions()
+    this.settings = {}
+    this._setDefaultSettings()
     Object.keys(options).forEach(key => {
       this.setOption(key, options[key])
     })
@@ -22,9 +24,21 @@ export default class DiagramEntity {
   /**
    * A helper function to set default options. Must not be used from outside of the class.
    */
-  _setDefaultOptions() {
-    this.options.gridY = true
-    this.options.colorScheme = "burd"
+  _setDefaultSettings() {
+    Object.values(DIAGRAM_SETTING.BOOL).forEach(setting => {
+      this.setSetting(setting.name, setting.default)
+    })
+    Object.values(DIAGRAM_SETTING.SELECT).forEach(setting => {
+      this.setSetting(setting.name, setting.default)
+    })
+  }
+
+  setSetting(key, value) {
+    if (value === null || value === undefined) {
+      delete this.options[key]
+      return
+    }
+    this.settings[key] = value
   }
   
   
@@ -86,7 +100,7 @@ export default class DiagramEntity {
   */
   generatePlotOptions() {
     this.checkPlotability()
-    return this.type.plotOptions(this.linkedData.data, this.options)
+    return this.type.plotOptions(this.linkedData.data, this.settings, this.options)
   }
   
   /**
@@ -109,12 +123,12 @@ export default class DiagramEntity {
   }
 
   
-  get AllOptions() { return this.type.options }
+  get allOptions() { return this.type.options }
   
   get requiredOptions() { return this.type.requiredOptions }
   
-  getOption(key) {
-    return this.options[key]
-  }
+  getOption(key) { return this.options[key] }
+
+  getSetting(key) { return this.settings[key]}
 
 }

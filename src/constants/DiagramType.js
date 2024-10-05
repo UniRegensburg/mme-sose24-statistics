@@ -1,25 +1,6 @@
 import * as Plot from "@observablehq/plot"
-
-
-
-/**
- * Options shared by all diagram types.
- */
-const COMMON_OPTIONS = [
-  "gridX",
-  "gridY",
-  "colorScheme"
-]
-
-/**
- * Helper function that generates plot options from common options.
- */
-function commonPlotOptions(options) {
-  return {
-    y: { grid: options.gridY },
-    color: { scheme: options.colorScheme },
-  }
-}
+import * as d3 from "d3"
+import { commonPlotSettings } from "./DiagramSetting"
 
 
 
@@ -47,10 +28,10 @@ DIAGRAM_TYPE.NONE = {
 
 DIAGRAM_TYPE.HIST = {
   name: "Histogram",
-  options: ["x"].concat(COMMON_OPTIONS),
+  options: ["x"],
   requiredOptions: ["x"],
-  plotOptions: (data, options) => {
-    const plotOptions = commonPlotOptions(options)
+  plotOptions: (data, settings, options) => {
+    const plotOptions = commonPlotSettings(settings)
     plotOptions.marks = [
       Plot.ruleY([0]),
       Plot.rectY(data, Plot.binX({y: "count"}, {x: options.x}))
@@ -62,14 +43,14 @@ DIAGRAM_TYPE.HIST = {
 
 DIAGRAM_TYPE.SCATTER = {
   name: "Scatter",
-  options: ["x", "y"].concat(COMMON_OPTIONS),
+  options: ["x", "y"],
   requiredOptions: ["x", "y"],
-  plotOptions: (data, options) => {
-    const plotOptions = commonPlotOptions(options)
+  plotOptions: (data, settings, options) => {
+    const plotOptions = commonPlotSettings(settings)
     plotOptions.marks = [
-        Plot.ruleY([0]),
-        Plot.dot(data, {x: options.x, y: options.y})
-      ]
+      Plot.ruleY([0]),
+      Plot.dot(data, {x: options.x, y: options.y})
+    ]
     return plotOptions
   },
 }
