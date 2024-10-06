@@ -1,4 +1,3 @@
-import { TrendingUp } from "@mui/icons-material";
 import { useStatesContext } from "../../../../providers/StatesProvider";
 import { useWorkspaceContext } from "../../../../providers/WorkspaceProvider";
 import {
@@ -7,7 +6,7 @@ import {
   Paper,
 } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
-import TableToolbar from "./TableToolbar";
+import TableToolbar from "./Toolbar/TableToolbar";
 import { useState } from "react";
 
 
@@ -86,49 +85,17 @@ export default function DataTableTabs() {
           disableRowSelectionOnClick={true}
           onCellEditStart={(param) => setCurrentCol(param.field)}
           processRowUpdate={(newRow, oldRow) => {
-            let value = newRow[currentCol].trim()
+            let value = String(newRow[currentCol]).trim()
             if (/^\d+$/.test(value)) { value = parseFloat(value) } // Check if input is a number
             
             const rowNr = dataEntity.data.findIndex((row) => row.id === oldRow.id)
             dataEntity.setValue(rowNr, currentCol, value)
-            console.log(dataEntity)
             return newRow
           }}
           onProcessRowUpdateError={(error) => {
             console.log(error)
           }}
         />
-
-        {/* <Table>
-          <TableHead>
-            <TableRow>
-              {dataEntity.allColumns.map((column) => (
-                <TableCell key={column} style={{ backgroundColor: '#00897B', color: '#fff' }}>
-                  <Typography variant="subtitle1">{column}</Typography>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {dataEntity.data && dataEntity.data.length > 0 ? (
-              dataEntity.data.map((row) => (
-                <TableRow key={row.id}>
-                  {dataEntity.allColumns.map((column) => (
-                    <TableCell key={column}>{row[column]}</TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={dataEntity.allColumns.length}>
-                  <Typography variant="body2" color="textSecondary" align="center">
-                    No data available
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table> */}
       </TableContainer>
     </div>
   );
