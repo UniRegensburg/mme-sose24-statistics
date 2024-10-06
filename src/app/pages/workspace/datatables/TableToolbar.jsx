@@ -1,14 +1,18 @@
 import { useState } from 'react'
-import { Box, 
+import {
+  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
   Popover,
   Stack,
   TextField,
-  Typography
 } from "@mui/material";
 import { GridToolbarColumnsButton, GridToolbarContainer, GridToolbarExport } from "@mui/x-data-grid"
 import { useWorkspaceContext } from "../../../../providers/WorkspaceProvider";
@@ -16,8 +20,6 @@ import { useStatesContext } from '../../../../providers/StatesProvider';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import dataAnalysisService from '../../../../services/DataAnalysisService';
-
-
 
 export default function TableToolbar() {
   return (
@@ -31,19 +33,43 @@ export default function TableToolbar() {
   );
 }
 
+// Function to capitalize the categories inside the Report
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Function to make the Report more human readable
+function formatReport(report) {
+  if (typeof report === 'object' && report !== null) {
+    return (
+      <List>
+        {Object.entries(report).map(([key, value]) => (
+          <ListItem key={key}>
+            <ListItemText
+              primary={capitalizeFirstLetter(key.replace(/_/g, ' '))} // Capitalize and replace underscores with spaces
+              secondary={typeof value === 'object' ? JSON.stringify(value, null, 2).replace(/[{}[\]]/g, '') : value}
+            />
+          </ListItem>
+        ))}
+      </List>
+    );
+  }
+
+  // Return a string without brackets if it's not an Object
+  return <DialogContentText>{JSON.stringify(report).replace(/[{}[\]]/g, '')}</DialogContentText>;
+}
 
 function MyReportBtn() {
-// ---------- Danger zone starts here ----------
-  const { workspace } = useWorkspaceContext()
-  const dataEntity = workspace.dataEntity
-  const [open, setOpen] = useState(false)
-  const handleClickOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  // ---------- Danger zone starts here ----------
+  const { workspace } = useWorkspaceContext();
+  const dataEntity = workspace.dataEntity;
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-  const report = dataAnalysisService.getReport(dataEntity)
-// ---------- Danger zone ends here ----------
-  
-  
+  const report = dataAnalysisService.getReport(dataEntity);
+  // ---------- Danger zone ends here ----------
+
   return (
     <div>
       <Button onClick={handleClickOpen} startIcon={<SummarizeIcon />}>
@@ -56,52 +82,51 @@ function MyReportBtn() {
         onClose={handleClose}
       >
         <DialogContent>
-          <DialogContentText>
-            {JSON.stringify(report)}
-          </DialogContentText>
+          <Typography variant="h6" gutterBottom>
+            Report Details
+          </Typography>
+          {formatReport(report)}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
     </div>
-  )
+  );
 }
-
 
 // ---------- Danger zone starts here ----------
 function SetColumnsBtn() {
-  const { workspace } = useWorkspaceContext()
-  const dataEntity = workspace.dataEntity
-  const { updateTable } = useStatesContext()
-  const [anchorEl, setAnchorEl] = useState(null)
-  const open = Boolean(anchorEl)
-  const id = open ? 'simple-popover' : undefined
-  const handleClick = (event) => setAnchorEl(event.currentTarget)
-  const handleClose = () => setAnchorEl(null)
+  const { workspace } = useWorkspaceContext();
+  const dataEntity = workspace.dataEntity;
+  const { updateTable } = useStatesContext();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+  const handleClick = (event) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
 
-  const [questionNr, setQuestionNr] = useState("")
-  const [newUserInfo, setNewUserInfo] = useState("")
-  const [newTransform, setNewTransform] = useState("")
-  const [deleteColumn, setDeleteColumn] = useState("")
+  const [questionNr, setQuestionNr] = useState("");
+  const [newUserInfo, setNewUserInfo] = useState("");
+  const [newTransform, setNewTransform] = useState("");
+  const [deleteColumn, setDeleteColumn] = useState("");
 
   const applyChanges = () => {
     if (/^\d+$/.test(questionNr)) {
-      dataEntity.setNumOfQuestions(parseInt(questionNr))
+      dataEntity.setNumOfQuestions(parseInt(questionNr));
     }
     if (newUserInfo) {
-      dataEntity.addUserInfoColumns(newUserInfo)
+      dataEntity.addUserInfoColumns(newUserInfo);
     }
     if (newTransform) {
-      dataEntity.addTransformColumns(newTransform)
+      dataEntity.addTransformColumns(newTransform);
     }
     if (deleteColumn) {
-      dataEntity.deleteColumns(deleteColumn)
+      dataEntity.deleteColumns(deleteColumn);
     }
-    updateTable()
-  }
-  
-  
+    updateTable();
+  };
+
   return (
     <div>
       <Button
@@ -111,7 +136,7 @@ function SetColumnsBtn() {
         aria-expanded={open ? 'true' : undefined}
         startIcon={<TableChartIcon />}
         onClick={handleClick}
-        >
+      >
         Data settings
       </Button>
       <Popover
@@ -127,39 +152,36 @@ function SetColumnsBtn() {
           vertical: 'top',
           horizontal: 'center',
         }}
-        >
-          <Box sx={{margin: 3}}>
+      >
+        <Box sx={{ margin: 3 }}>
           <Stack direction="column" spacing={2}>
-            <TextField 
+            <TextField
               size="small"
               label="Set question number"
               onChange={(event) => setQuestionNr(event.target.value.trim())}
             />
             <Stack direction="row" spacing={2}>
-              <TextField 
+              <TextField
                 size="small"
-                label="Add user into" 
+                label="Add user info"
                 onChange={(event) => setNewUserInfo(event.target.value.trim())}
               />
-              <TextField 
+              <TextField
                 size="small"
-                label="Add transform" 
+                label="Add transform"
                 onChange={(event) => setNewTransform(event.target.value.trim())}
               />
             </Stack>
-            <TextField 
+            <TextField
               size="small"
-              label="Delete user into/transform column" 
+              label="Delete user info/transform column"
               onChange={(event) => setDeleteColumn(event.target.value.trim())}
             />
-            <Button onClick={applyChanges}>
-              confirm
-            </Button>
+            <Button onClick={applyChanges}>Confirm</Button>
           </Stack>
-
-          </Box>
+        </Box>
       </Popover>
     </div>
-  )
+  );
 }
 // ---------- Danger zone ends here ----------
