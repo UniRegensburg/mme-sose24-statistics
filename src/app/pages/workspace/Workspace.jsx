@@ -9,6 +9,7 @@ import { useWorkspaceContext } from "../../../providers/WorkspaceProvider"
 import dataService from "../../../services/DataService"
 import DiagramEntity from "../../../entities/DiagramEntity"
 import DIAGRAM_TYPE from "../../../constants/DiagramType"
+import QUESTIONNAIRE_TYPE from "../../../constants/QuestionnaireType"
 
 /**
  * Main user interface for data analysis. Contains `DataTable`,
@@ -20,13 +21,13 @@ export default function Workspace() {
 
   // Import test data. Must be deleted in production
   useEffect(() => {
-    dataService.importData("tests/test-data/SUS-example.csv")
-          .then(dataEntity => {
-            workspace.setDataEntity(dataEntity)
-            const diagramEntity = new DiagramEntity(DIAGRAM_TYPE.NONE, dataEntity)
-            workspace.setDiagramEntity(diagramEntity)
-            updateAll()
-          })
+    dataService.importData("tests/test-data/SUS-example.csv", QUESTIONNAIRE_TYPE.SUS)
+        .then(dataEntity => {
+          workspace.setDataEntity(dataEntity)
+          const diagramEntity = new DiagramEntity(DIAGRAM_TYPE.NONE, dataEntity)
+          workspace.setDiagramEntity(diagramEntity)
+          updateAll()
+        })
   }, [])
 
   return (
