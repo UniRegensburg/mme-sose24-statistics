@@ -76,7 +76,6 @@ function parseColumnInput(input, dataEntity) {
   
   for (let col of dataEntity.transformColumns) {
     if (col.startsWith(input)) {
-      console.log(col)
       return col
     }
   }

@@ -2,7 +2,6 @@ import { Checkbox, FormControl, FormControlLabel, FormGroup } from "@mui/materia
 import { DIAGRAM_SETTING } from "../../../../constants/DiagramSetting";
 import { useWorkspaceContext } from "../../../../providers/WorkspaceProvider";
 import { useStatesContext } from "../../../../providers/StatesProvider";
-import { useEffect } from "react";
 
 
 
@@ -10,7 +9,7 @@ const boolSettingList = Object.values(DIAGRAM_SETTING.BOOL)
 
 
 export default function DiagramSettings() {
-  const { updateDiagram, updateModification } = useStatesContext()
+  const { updateDiagram } = useStatesContext()
   const { workspace } = useWorkspaceContext()
   const diagramEntity = workspace.diagramEntity
 
@@ -26,6 +25,7 @@ export default function DiagramSettings() {
         <FormControl sx={{ flexDirection: 'row', alignItems: 'center' }}>
           {boolSettingList.map(setting => (
             <FormControlLabel
+              key={setting.name}
               control={
                 <Checkbox 
                   size="small"

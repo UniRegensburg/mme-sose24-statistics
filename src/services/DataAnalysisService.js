@@ -27,6 +27,10 @@ class DataAnalysisService {
     return average(this.calculateScores(dataEntity))
   }
 
+  interpretTotalScore(dataEntity, score) {
+    return dataEntity.type.scoreInterpretor(score)
+  }
+
 
   getReport(dataEntity) {
     const result = {}
@@ -36,7 +40,7 @@ class DataAnalysisService {
 
     const getNumericReport = (valueArr) => {
       return {
-        avg: average(valueArr)
+        average: average(valueArr)
       }
     }
     const getCategoricalReport = (valueArr) => {
@@ -46,7 +50,9 @@ class DataAnalysisService {
     }
 
 
-    if (dataEntity.size === 0 || !dataEntity) { return result }
+    if (!dataEntity || dataEntity.size === 0) { return result }
+
+    result.dataSize = dataEntity.size
 
     dataEntity.userInfoColumns.forEach(col => {
       if (col === "id") { return }
@@ -66,8 +72,12 @@ class DataAnalysisService {
     })
 
     if (dataEntity.type !== QUESTIONNAIRE_TYPE.NONE) {
-      result.score = this.calculateTotalScore(dataEntity)
-    } else {result.score = "Undefined"}
+      this.score = {}
+      result.score.value = this.calculateTotalScore(dataEntity)
+      result.score.interpretation = this.interpretTotalScore(result.score)
+    } else {
+      result.score = null
+    }
 
     return result
   }
