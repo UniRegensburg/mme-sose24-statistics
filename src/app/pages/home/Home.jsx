@@ -77,36 +77,9 @@ function Home() {
       </p>
       <div className="card">
         {/* Modal for Info UserData*/}
-        <div className="fieldDataFile">
-          <p> Wir stellen dir hier ein Tool zur Verfügung, um deine Usability-Daten aus Fragebögen auszuwerten. Diese Anwendung ist für User Experience Questionnaire (UEQ), System Usability Scale (SUS), Net Promoter Score (NPS) und RAW Task Load Index geeignet. Für den erforderlichen Aufbau der Datei klicke <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
-          <Modal open={isUserDataFormatOpen} onClose={handleCloseUserDataFormat}>
-            <Box className="modal-box">
-              <p>Datenformat</p>
-              <p>
-                Zugelassen sind nur csv-Dateien. Diese müssen für die Analyse im folgenden Format vorliegen.
-                <table className="exampleTable">
-                  <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>25</td>
-                      <td>M</td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>30</td>
-                      <td>W</td>
-                    </tr>
-                    <tr>
-                      <td>3</td>
-                      <td>22</td>
-                      <td>M</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </p>
-              <button onClick={handleCloseUserDataFormat} className="button">Schließen</button>
-            </Box>
-          </Modal>
+        <div className="fieldDataFile" style={{ textAlign: 'center'}}>
+          <p> Wir stellen dir hier ein Tool zur Verfügung, um deine Usability-Daten aus Fragebögen auszuwerten. Diese Anwendung ist für User Experience Questionnaire (UEQ), System Usability Scale (SUS), Net Promoter Score (NPS) und RAW Task Load Index geeignet. 
+            </p>
           {/*<button className="button">
             Upload demographic data
           </button>*/}
@@ -115,7 +88,8 @@ function Home() {
         <div className="buttonColumn">
           {/* Upload Usability Data*/}
           <div className="fieldDataFile">
-            <p>Hier kannst du deine Daten hochladen. Wähle zuerst den Usability-Fragebogen aus, welchen du gerne analysieren möchtest. Anschließend kannst du deine dazugehörige csv-Datei hochladen. Für Infos bzgl. des Aufbaus der Datei, öffne gerne die Infos oben.</p>
+            <h2>Hier kannst du deine Daten hochladen.</h2>
+            <p>1. Wähle deinen Usability-Fragebogen.</p>
             <select id="questionnaire-type" name="questionnaire-type">
               <option value="">-- Bitte wählen --</option>
               <option value="type1">User Experience Questionnaire (UEQ)</option>
@@ -124,6 +98,8 @@ function Home() {
               <option value="type3">RAW Task Load Index</option>
             </select>
             <br />
+            <p>2. Lade deine csv-Datei hoch. Für Informationen zum Datei-Format klicke 
+              <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
             {/* Datei-Upload-Button*/} 
            <input type="file" accept={".csv"} onChange={fileUploader} />
             <br />
@@ -137,7 +113,8 @@ function Home() {
           <div className="separator"></div>
           <div className="fieldDataFile">
             {/* Upload Usability Data*/}
-            <p>Hier kannst du deine Daten maskieren. Wähle zuerst den Usabiliyt-Fragebogen aus, welchen du gerne analysieren möchtest. Für Infos zum Datenformat klicke, HIER!</p>
+            <h2>Hier kannst du über eine Maske Daten eingeben.</h2>
+            <p>1. Wähle deinen Usability-Fragebogen.</p>
             <select id="questionnaire-type" name="questionnaire-type">
               <option value="">-- Bitte wählen --</option>
               <option value="type1">User Experience Questionnaire (UEQ)</option>
@@ -145,6 +122,8 @@ function Home() {
               <option value="type3">Net Promoter Score (NPS)</option>
               <option value="type3">RAW Task Load Index</option>
             </select>
+            <br />
+            <p>2. Befülle die Maske. Für Informationen zum Datei-Format klicke <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
             <br />
             <br />
             <Link to="/workspace">
@@ -164,7 +143,65 @@ function Home() {
       <p className="read-the-docs">
         Impressum!!!!!!!!!!!!!!!!!!!!!
       </p>
-
+      <Modal open={isUserDataFormatOpen} onClose={handleCloseUserDataFormat}>
+            <Box className="modal-box">
+              <h1>Datenformat</h1>
+              <p>
+              <p>Zugelassen sind nur csv-Dateien. Diese müssen für die Analyse im folgenden Format vorliegen. Spalte 1-3 enthalten die demographischen Informationen, die darauffolgenden, die Antowrten der Fragebögen. 
+                Beispielhaft ist hier der SUS gelistet, die anderen Fragebögen sind analog zu beachten, nur mit angepasster Fragenanzahl.</p>
+                <table className="exampleTable">
+                  <tbody>
+                    <tr>
+                      <td>ID1</td>
+                      <td>25</td>
+                      <td>W</td>
+                      <td>1</td>
+                      <td>2</td>
+                      <td>3</td>
+                      <td>4</td>
+                      <td>5</td>
+                      <td>1</td>
+                      <td>2</td>
+                      <td>4</td>
+                      <td>2</td>
+                      <td>5</td>
+                    </tr>
+                    <tr>
+                      <td>ID2</td>
+                      <td>30</td>
+                      <td>W</td>
+                      <td>3</td>
+                      <td>3</td>
+                      <td>3</td>
+                      <td>4</td>
+                      <td>5</td>
+                      <td>2</td>
+                      <td>1</td>
+                      <td>4</td>
+                      <td>2</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>ID3</td>
+                      <td>22</td>
+                      <td>M</td>
+                      <td>5</td>
+                      <td>4</td>
+                      <td>3</td>
+                      <td>2</td>
+                      <td>5</td>
+                      <td>3</td>
+                      <td>2</td>
+                      <td>3</td>
+                      <td>2</td>
+                      <td>1</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </p>
+              <button onClick={handleCloseUserDataFormat} className="button">Schließen</button>
+            </Box>
+          </Modal>
 
       {/*<p><button onClick={() => setCount((count) => count + 1)}>
           Upload User-Data {count}
@@ -177,5 +214,6 @@ function Home() {
     </>
   )
 }
+
 
 export default Home
