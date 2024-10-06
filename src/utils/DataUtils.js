@@ -4,7 +4,7 @@ import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 
 function columnType(columnName) {
   if (columnName.match(/^Q[1-9][0-9]*/g)) { return "questions" }
-  if (columnName.match(/^T:*/g)) { return "transform" }
+  if (columnName.match(/^T[1-9][0-9]*:/g)) { return "transform" }
   return "userInfo"
 }
 
@@ -70,9 +70,23 @@ function generateEmptyRow(columns) {
 }
 
 
+function parseColumnInput(input, dataEntity) {
+  input = input.trim()
+  if (!input.match(/^T[1-9][0-9]*$/g)) { return input }
+  
+  for (let col of dataEntity.transformColumns) {
+    if (col.startsWith(input)) {
+      console.log(col)
+      return col
+    }
+  }
+}
+
+
 export {
   columnType,
   infoResultSplit,
   generateResultColumns,
-  generateEmptyRow
+  generateEmptyRow,
+  parseColumnInput
 }
