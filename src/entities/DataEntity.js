@@ -19,6 +19,7 @@ export default class DataEntity {
     this.type = type
     this.data = data
     this.columns = { userInfo: [], questions: [], transform: [] }
+    this.transformId = 1
 
     if (data.length === 0) { return }
     this.columns.questions = Object.keys(data[0]).filter(k => columnType(k) === "questions")
@@ -61,14 +62,14 @@ export default class DataEntity {
     }
   }
 
-  setNumOfQUestions(numOfQuestions) {
+  setNumOfQuestions(numOfQuestions) {
     if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
       throw new QuestionnaireTypeError("Only NONE-type data allows setting number of questions.")
     }
     const difference = numOfQuestions - this.numOfQuestions
     if (difference === 0) { return }
-    if (difference >= 0) { this.addQuestions(difference) }
-    else { this.deleteQuestions(difference) }
+    if (difference > 0) { this.addQuestions(difference) }
+    else { this.deleteQuestions(-difference) }
   }
 
   /**
@@ -99,20 +100,19 @@ export default class DataEntity {
   }
 
   /**
-   * Given a string or an array of strings, create transform columns with those name and
+   * Given a string, create transform columns with those name and
    * fill those columns with the transformed data.
-   * @param {string | string[]} expressions 
+   * @param {string} expressions 
    */
-  addTransformColumns(expressions) {
-    if (typeof expressions === "string") { expressions = [expressions] }
-    let columns = expressions.map(col => `T:${col}`)
-    columns = columns.filter(col => !this.transformColumns.includes(col))
+  addTransformColumns(expression) {
+    let column = `T${this.transformId}:${expression}`
+    if (this.transformColumns.includes(column)) { return }
     
-    this.columns.transform = this.columns.transform.concat(columns)
-    expressions.forEach((expr, colIndex) => {
-      const results = evaluate(expr, this)
-      this.data.forEach((row, rowNr) => row[columns[colIndex]] = results[rowNr])
-    })
+    const results = evaluate(expression, this)
+    this.data.forEach((row, rowNr) => row[column] = results[rowNr])
+
+    this.columns.transform.push(column)
+    this.transformId++
   }
 
   /**

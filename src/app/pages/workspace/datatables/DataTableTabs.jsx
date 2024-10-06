@@ -13,17 +13,18 @@ import { useState } from "react";
 
 
 function _prepareColumns(dataEntity) {
-  const prepareCol = (col) => {
+  const prepareCol = (type) => (col) => {
     return {
       field: col,
       headerName: col,
       editable: col !== "id",
+      headerClassName: `${type}-header`
     }
   };
-  const userInfo = dataEntity.userInfoColumns.map(prepareCol);
-  const questions = dataEntity.questionColumns.map(prepareCol);
-  const transform = dataEntity.transformColumns.map(prepareCol);
-  return userInfo.concat(questions, transform);
+  const userInfo = dataEntity.userInfoColumns.map(prepareCol("userInfo"));
+  const questions = dataEntity.questionColumns.map(prepareCol("questions"));
+  const transform = dataEntity.transformColumns.map(prepareCol("transform"));
+  return userInfo.concat(transform, questions);
 }
 
 /**
@@ -60,10 +61,27 @@ export default function DataTableTabs() {
       <Typography variant="h4" component="h1" gutterBottom>
         😊 Deine Daten: 
       </Typography>
-      <TableContainer component={Paper} elevation={3}>
+      <TableContainer
+        component={Paper}
+        elevation={3}
+        sx={{
+          '& .userInfo-header': {
+            backgroundColor: 'rgb(255, 240, 240)',
+          },
+          '& .transform-header': {
+            backgroundColor: 'rgb(240, 255, 240)',
+          },
+          '& .questions-header': {
+            backgroundColor: 'rgb(240, 240, 255)',
+          },
+        }}
+      >
         <DataGrid 
           rows={dataEntity.data}
+          rowHeight={28}
           columns={columns}
+          showCellVerticalBorder
+          showColumnVerticalBorder
           slots={{toolbar: TableToolbar}}
           disableRowSelectionOnClick={true}
           onCellEditStart={(param) => setCurrentCol(param.field)}

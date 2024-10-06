@@ -6,6 +6,8 @@ import { Box,
   DialogContent,
   DialogContentText,
   Popover,
+  Stack,
+  TextField,
   Typography
 } from "@mui/material";
 import { GridToolbarColumnsButton, GridToolbarContainer, GridToolbarExport } from "@mui/x-data-grid"
@@ -70,6 +72,7 @@ function MyReportBtn() {
 // ---------- Danger zone starts here ----------
 function SetColumnsBtn() {
   const { workspace } = useWorkspaceContext()
+  const dataEntity = workspace.dataEntity
   const { updateTable } = useStatesContext()
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
@@ -77,7 +80,26 @@ function SetColumnsBtn() {
   const handleClick = (event) => setAnchorEl(event.currentTarget)
   const handleClose = () => setAnchorEl(null)
 
-  
+  const [questionNr, setQuestionNr] = useState("")
+  const [newUserInfo, setNewUserInfo] = useState("")
+  const [newTransform, setNewTransform] = useState("")
+  const [deleteColumn, setDeleteColumn] = useState("")
+
+  const applyChanges = () => {
+    if (/^\d+$/.test(questionNr)) {
+      dataEntity.setNumOfQuestions(parseInt(questionNr))
+    }
+    if (newUserInfo) {
+      dataEntity.addUserInfoColumns(newUserInfo)
+    }
+    if (newTransform) {
+      dataEntity.addTransformColumns(newTransform)
+    }
+    if (deleteColumn) {
+      dataEntity.deleteColumns(deleteColumn)
+    }
+    updateTable()
+  }
   
   
   return (
@@ -90,7 +112,7 @@ function SetColumnsBtn() {
         startIcon={<TableChartIcon />}
         onClick={handleClick}
         >
-        set columns
+        Data settings
       </Button>
       <Popover
         id={id}
@@ -106,7 +128,36 @@ function SetColumnsBtn() {
           horizontal: 'center',
         }}
         >
-        <Typography sx={{ p: 2 }}>Your code here</Typography>
+          <Box sx={{margin: 3}}>
+          <Stack direction="column" spacing={2}>
+            <TextField 
+              size="small"
+              label="Set question number"
+              onChange={(event) => setQuestionNr(event.target.value.trim())}
+            />
+            <Stack direction="row" spacing={2}>
+              <TextField 
+                size="small"
+                label="Add user into" 
+                onChange={(event) => setNewUserInfo(event.target.value.trim())}
+              />
+              <TextField 
+                size="small"
+                label="Add transform" 
+                onChange={(event) => setNewTransform(event.target.value.trim())}
+              />
+            </Stack>
+            <TextField 
+              size="small"
+              label="Delete user into/transform column" 
+              onChange={(event) => setDeleteColumn(event.target.value.trim())}
+            />
+            <Button onClick={applyChanges}>
+              confirm
+            </Button>
+          </Stack>
+
+          </Box>
       </Popover>
     </div>
   )

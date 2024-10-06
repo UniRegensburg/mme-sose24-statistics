@@ -5,6 +5,7 @@ import { Box, Button, DialogActions, Divider, FormControl, MenuItem, Select, Tex
 import DIAGRAM_TYPE from "../../../../constants/DiagramType"
 import OptionFields from "./OptionFields"
 import DiagramSettings from "./DiagramSettings"
+import { parseColumnInput } from "../../../../utils/DataUtils"
 
 
 const availablDiagTypes = Object.values(DIAGRAM_TYPE)
@@ -24,6 +25,7 @@ function Modification() {
   const { modificationState, updateDiagram, updateModification } = useStatesContext()
   const { workspace } = useWorkspaceContext()
   const diagramEntity = workspace.diagramEntity
+  const dataEntity = workspace.dataEntity
   if (!diagramEntity) { return <></> }
   
   const allOptions = diagramEntity.allOptions
@@ -46,7 +48,12 @@ function Modification() {
   }
 
   const confirm = (event) => {
-    Object.keys(options).map(opt => diagramEntity.setOption(opt, options[opt]))
+    Object.keys(options).map(opt => {
+      let value = null
+      if (opt === "x" || opt === "y") { value = parseColumnInput(options[opt], dataEntity) }
+      else { value = options[opt]}
+      diagramEntity.setOption(opt, value)
+    })
     updateDiagram()
   }
 
