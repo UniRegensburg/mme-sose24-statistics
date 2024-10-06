@@ -33,10 +33,15 @@ class DataAnalysisService {
 
 
   getReport(dataEntity) {
+    if (!dataEntity || dataEntity.size === 0) { return null }
+
     const result = {}
-    result.transform = {}
-    result.userInfo = {}
-    result.questions = {}
+    result.dataSize = dataEntity.size
+    result.columns = {
+      userInfo: {},
+      questions: {},
+      transform: {},
+    }
 
     const getNumericReport = (valueArr) => {
       return {
@@ -50,31 +55,27 @@ class DataAnalysisService {
     }
 
 
-    if (!dataEntity || dataEntity.size === 0) { return result }
-
-    result.dataSize = dataEntity.size
-
     dataEntity.userInfoColumns.forEach(col => {
       if (col === "id") { return }
       const valueArr = dataEntity.col(col)
       if (typeof dataEntity.loc(0, col) === "number") {
-        result.userInfo[col] = getNumericReport(valueArr)
+        result.columns.userInfo[col] = getNumericReport(valueArr)
       }
       else {
-        result.userInfo[col] = getCategoricalReport(valueArr)
+        result.columns.userInfo[col] = getCategoricalReport(valueArr)
       }
     })
     dataEntity.questionColumns.forEach(col => {
-      result.questions[col] = getNumericReport(dataEntity.col(col))
+      result.columns.questions[col] = getNumericReport(dataEntity.col(col))
     })
     dataEntity.transformColumns.forEach(col => {
-      result.transform[col] = getNumericReport(dataEntity.col(col))
+      result.columns.transform[col] = getNumericReport(dataEntity.col(col))
     })
 
     if (dataEntity.type !== QUESTIONNAIRE_TYPE.NONE) {
-      this.score = {}
+      result.score = {}
       result.score.value = this.calculateTotalScore(dataEntity)
-      result.score.interpretation = this.interpretTotalScore(result.score)
+      result.score.interpretation = this.interpretTotalScore(dataEntity, result.score)
     } else {
       result.score = null
     }
