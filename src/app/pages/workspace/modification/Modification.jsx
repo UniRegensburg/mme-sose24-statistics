@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useStatesContext } from "../../../../providers/StatesProvider"
 import { useWorkspaceContext } from "../../../../providers/WorkspaceProvider"
-import { Box, Button, DialogActions, Divider, FormControl, MenuItem, Select, TextField } from "@mui/material"
+import { Box, Button, DialogActions, Divider, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
 import DIAGRAM_TYPE from "../../../../constants/DiagramType"
 import OptionFields from "./OptionFields"
 import DiagramSettings from "./DiagramSettings"
@@ -47,7 +47,7 @@ function Modification() {
     updateDiagram()
   }
 
-  const confirm = (event) => {
+  const confirm = () => {
     Object.keys(options).map(opt => {
       let value = null
       if (opt === "x" || opt === "y") { value = parseColumnInput(options[opt], dataEntity) }
@@ -62,11 +62,13 @@ function Modification() {
     <div style={{margin: "10px"}}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <Divider>Diagram Type</Divider>
-
+        <FormControl fullWidth>
+          <InputLabel id="diagram-type">Choose type</InputLabel>
         <Select
-          label="Diagram Type"
+          labelId="diagram-type"
+          label="Choose type"
           size="small"
-          value=""
+          value={diagramEntity.type}
           onChange={handleTypeChange}
         >
           <MenuItem value={DIAGRAM_TYPE.NONE}>-</MenuItem>
@@ -74,6 +76,7 @@ function Modification() {
             <MenuItem key={index} value={type}>{type.name}</MenuItem>
           ))}
         </Select>
+        </FormControl>
 
         <Divider>Options</Divider>
 
