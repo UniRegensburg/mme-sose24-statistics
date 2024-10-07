@@ -40,9 +40,10 @@ function Home() {
     }
     }
   }
-
+  //Disable a section (Upload/Mask) if the other is filled
+  const [selectedSection, setSelectedSection] = useState(null);
   
-  // Control if modal is closed
+  // Control if modal (help/formatinfo) is closed
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isUserDataFormatOpen, setIsUserDataFormatOpen] = useState(false);
   const handleOpenHelp = () => setIsHelpOpen(true);
@@ -76,7 +77,7 @@ function Home() {
         Dein Tool, um schnell und unkompliziert Usability-Daten auzuswerten
       </p>
       <div className="card">
-        {/* Modal for Info UserData*/}
+        {/* Info_field*/}
         <div className="fieldDataFile" style={{ textAlign: 'center'}}>
           <p> Wir stellen dir hier ein Tool zur Verfügung, um deine Usability-Daten aus Fragebögen auszuwerten. Diese Anwendung ist für User Experience Questionnaire (UEQ), System Usability Scale (SUS), Net Promoter Score (NPS) und RAW Task Load Index geeignet. 
             </p>
@@ -87,10 +88,10 @@ function Home() {
         {/* Choose Usability Data*/}
         <div className="buttonColumn">
           {/* Upload Usability Data*/}
-          <div className="fieldDataFile">
+          <div className={`fieldDataFile ${selectedSection === 'mask' ? 'disabled-section' : ''}`}>
             <h2>Hier kannst du deine Daten hochladen.</h2>
             <p>1. Wähle deinen Usability-Fragebogen.</p>
-            <select id="questionnaire-type" name="questionnaire-type">
+            <select id="questionnaire-type" name="questionnaire-type" disabled={selectedSection === 'mask'} onChange={() => setSelectedSection('upload')}>
               <option value="">-- Bitte wählen --</option>
               <option value="type1">User Experience Questionnaire (UEQ)</option>
               <option value="type2">System Usability Scale (SUS)</option>
@@ -101,21 +102,21 @@ function Home() {
             <p>2. Lade deine csv-Datei hoch. Für Informationen zum Datei-Format klicke 
               <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
             {/* Datei-Upload-Button*/} 
-           <input type="file" accept={".csv"} onChange={fileUploader} />
+           <input type="file" accept={".csv"} onChange={(event) => {setSelectedSection('upload'); fileUploader(event);}}  disabled={selectedSection === 'mask'}/>
             <br />
             <br />
             <Link to="/workspace">
-          <button className="button">
+            <button className="button" disabled={selectedSection === 'mask'}>
             Start to Analyse
           </button >
           </Link>
           </div>
           <div className="separator"></div>
-          <div className="fieldDataFile">
-            {/* Upload Usability Data*/}
+          <div className={`fieldDataFile ${selectedSection === 'upload' ? 'disabled-section' : ''}`}>
+            {/* Mask for Usability Data*/}
             <h2>Hier kannst du über eine Maske Daten eingeben.</h2>
             <p>1. Wähle deinen Usability-Fragebogen.</p>
-            <select id="questionnaire-type" name="questionnaire-type">
+            <select id="questionnaire-type" name="questionnaire-type" disabled={selectedSection === 'upload'} onChange={() => setSelectedSection('mask')}>
               <option value="">-- Bitte wählen --</option>
               <option value="type1">User Experience Questionnaire (UEQ)</option>
               <option value="type2">System Usability Scale (SUS)</option>
@@ -127,7 +128,7 @@ function Home() {
             <br />
             <br />
             <Link to="/workspace">
-          <button className="button">
+            <button className="button" disabled={selectedSection === 'upload'}>
             Start to Analyse
           </button >
           </Link>
