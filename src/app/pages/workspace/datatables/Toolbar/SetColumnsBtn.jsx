@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {
   Box,
   Button,
+  Divider,
   Popover,
   Stack,
   TextField,
@@ -89,6 +90,7 @@ export default function SetColumnsBtn() {
                 onChange={(event) => setNewTransform(event.target.value.trim())}
               />
             </Stack>
+            <Divider />
             <TextField
               size="small"
               label="Delete user info/transform column"

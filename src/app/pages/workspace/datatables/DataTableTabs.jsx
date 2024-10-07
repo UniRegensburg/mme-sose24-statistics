@@ -20,7 +20,16 @@ function _prepareColumns(dataEntity) {
       headerClassName: `${type}-header`
     }
   };
-  const userInfo = dataEntity.userInfoColumns.map(prepareCol("userInfo"));
+  const userInfo = [{
+    field: "id",
+    headerName: "id",
+    editable: false
+  }];
+  for (let userInfoCol of dataEntity.userInfoColumns) {
+    if (userInfoCol !== "id") {
+      userInfo.push(prepareCol("userInfo")(userInfoCol));
+    }
+  }
   const questions = dataEntity.questionColumns.map(prepareCol("questions"));
   const transform = dataEntity.transformColumns.map(prepareCol("transform"));
   return userInfo.concat(transform, questions);
