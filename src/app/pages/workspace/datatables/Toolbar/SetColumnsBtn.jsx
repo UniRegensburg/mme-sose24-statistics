@@ -14,7 +14,7 @@ import {
 import { useWorkspaceContext } from "../../../../../providers/WorkspaceProvider";
 import { useStatesContext } from '../../../../../providers/StatesProvider';
 import TableChartIcon from '@mui/icons-material/TableChart';
-import { parseColumnInput } from '../../../../../utils/DataUtils';
+import { parseColumnInput, parseList } from '../../../../../utils/DataUtils';
 import QUESTIONNAIRE_TYPE from '../../../../../constants/QuestionnaireType';
 
 
@@ -36,35 +36,32 @@ export default function SetColumnsBtn() {
   
   
   const clearStates = () => {
-    setQuestionNr("")
-    setNewUserInfo("")
-    setNewTransform("")
-    setDeleteColumn("")
-    setQtnType(dataEntity.type)
+    setQuestionNr("");
+    setNewUserInfo("");
+    setNewTransform("");
+    setDeleteColumn("");
   };
   
-  const handleClick = (event) => setAnchorEl(event.currentTarget);
-  const handleClose = () => {
-    setAnchorEl(null);
-    clearStates();
+  const handleClick = (event) => {
+    setQtnType(dataEntity.type)
+    setAnchorEl(event.currentTarget);
   }
+  const handleClose = () => setAnchorEl(null);
   
   const applyChanges = () => {
+    handleClose();
     if (/^\d+$/.test(questionNr)) {
       dataEntity.setNumOfQuestions(parseInt(questionNr));
     }
-    if (newUserInfo) {
-      dataEntity.addUserInfoColumns(newUserInfo);
-    }
-    if (newTransform) {
-      dataEntity.addTransformColumns(newTransform);
-    }
-    if (deleteColumn) {
-      dataEntity.deleteColumns(deleteColumn);
-    }
+    dataEntity.addUserInfoColumns(parseList(newUserInfo));
+    dataEntity.addTransformColumns(parseList(newTransform))
+    dataEntity.deleteColumns(
+      parseList(deleteColumn)
+      .map(col => parseColumnInput(col, dataEntity))
+    );
     dataEntity.setType(qtnType);
     updateTable();
-    handleClose();
+    clearStates();
   };
 
   return (
@@ -135,7 +132,7 @@ export default function SetColumnsBtn() {
 
 
 const availableQtnTypes = Object.values(QUESTIONNAIRE_TYPE);
-availableQtnTypes.shift()
+availableQtnTypes.shift();
 
 function QtnTypeSelect({ currentType, onChange }) {
   return (
