@@ -40,14 +40,13 @@ export default function SetColumnsBtn() {
     setNewUserInfo("")
     setNewTransform("")
     setDeleteColumn("")
-    setQtnType(dataEntity.type)
   };
   
-  const handleClick = (event) => setAnchorEl(event.currentTarget);
-  const handleClose = () => {
-    setAnchorEl(null);
-    clearStates();
+  const handleClick = (event) => {
+    setQtnType(dataEntity.type)
+    setAnchorEl(event.currentTarget);
   }
+  const handleClose = () => setAnchorEl(null);
   
   const applyChanges = () => {
     if (/^\d+$/.test(questionNr)) {
@@ -65,6 +64,7 @@ export default function SetColumnsBtn() {
     dataEntity.setType(qtnType);
     updateTable();
     handleClose();
+    clearStates()
   };
 
   return (
