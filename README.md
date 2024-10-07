@@ -2,6 +2,8 @@
 
 ## About the app
 
+Try it out with this link: [https://UniRegensburg.github.io/mme-sose24-statistics/](https://UniRegensburg.github.io/mme-sose24-statistics/).
+
 ## Setup
 
 To install the application, run
