@@ -7,7 +7,18 @@ import { IconButton, Modal, Box, Typography } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useWorkspaceContext } from '../../../providers/WorkspaceProvider'
 import DataService from '../../../services/DataService'
+import QUESTIONNAIRE_TYPE from "../../../constants/QuestionnaireType"
 {/*import workspaceEntity from '../../../entities/WorkspaceEntity'*/}
+import NewRowMaker from "./MaskImport"
+import * as React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import {
+  randomCreatedDate,
+  randomTraderName,
+  randomUpdatedDate,
+} from '@mui/x-data-grid-generator';
+
+//erforderlich npm install @mui/x-data-grid-generator
 
 
 
@@ -125,6 +136,8 @@ function Home() {
             </select>
             <br />
             <p>2. Befülle die Maske. Für Informationen zum Datei-Format klicke <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
+            <NewRowMaker/>
+            <br />
             <br />
             <br />
             <Link to="/workspace">
@@ -135,13 +148,13 @@ function Home() {
           </div>
         </div>
       </div>
-      {/* use Link for redirecting */}
-      <div className="analyse-section">
+      {/* use Link for redirecting ÜBERARBEITEN!!!!*/}
+      <div className="refresh-section">
       <button className="button" onClick={() => window.location.reload()}>
         Refresh
       </button>
       </div>
-      <p className="read-the-docs">
+      <p className="copyrightInfo">
         Impressum!!!!!!!!!!!!!!!!!!!!!
       </p>
       <Modal open={isUserDataFormatOpen} onClose={handleCloseUserDataFormat}>
@@ -211,9 +224,12 @@ function Home() {
           Edit <code>src/app/pages/home/Home.jsx</code> and save to test HMR
         </p>*/}
 
-
+    
     </>
   )
+
+
+  
 }
 
 
