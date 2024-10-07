@@ -3,13 +3,19 @@ import {
   Box,
   Button,
   Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
   Popover,
+  Select,
   Stack,
   TextField,
 } from "@mui/material";
 import { useWorkspaceContext } from "../../../../../providers/WorkspaceProvider";
 import { useStatesContext } from '../../../../../providers/StatesProvider';
 import TableChartIcon from '@mui/icons-material/TableChart';
+import { parseColumnInput } from '../../../../../utils/DataUtils';
+import QUESTIONNAIRE_TYPE from '../../../../../constants/QuestionnaireType';
 
 
 
@@ -21,14 +27,28 @@ export default function SetColumnsBtn() {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
-  const handleClick = (event) => setAnchorEl(event.currentTarget);
-  const handleClose = () => setAnchorEl(null);
-
+  
   const [questionNr, setQuestionNr] = useState("");
   const [newUserInfo, setNewUserInfo] = useState("");
   const [newTransform, setNewTransform] = useState("");
   const [deleteColumn, setDeleteColumn] = useState("");
-
+  const [qtnType, setQtnType] = useState(dataEntity.type);
+  
+  
+  const clearStates = () => {
+    setQuestionNr("")
+    setNewUserInfo("")
+    setNewTransform("")
+    setDeleteColumn("")
+    setQtnType(dataEntity.type)
+  };
+  
+  const handleClick = (event) => setAnchorEl(event.currentTarget);
+  const handleClose = () => {
+    setAnchorEl(null);
+    clearStates();
+  }
+  
   const applyChanges = () => {
     if (/^\d+$/.test(questionNr)) {
       dataEntity.setNumOfQuestions(parseInt(questionNr));
@@ -42,7 +62,9 @@ export default function SetColumnsBtn() {
     if (deleteColumn) {
       dataEntity.deleteColumns(deleteColumn);
     }
+    dataEntity.setType(qtnType);
     updateTable();
+    handleClose();
   };
 
   return (
@@ -73,11 +95,18 @@ export default function SetColumnsBtn() {
       >
         <Box sx={{ margin: 3 }}>
           <Stack direction="column" spacing={2}>
-            <TextField
-              size="small"
-              label="Set question number"
-              onChange={(event) => setQuestionNr(event.target.value.trim())}
-            />
+            <Stack direction="row" spacing={2}>
+              <QtnTypeSelect 
+                currentType={qtnType}
+                onChange={(event) => setQtnType(event.target.value)}
+              />
+              <TextField
+                fullWidth
+                size="small"
+                label="Set question number"
+                onChange={(event) => setQuestionNr(event.target.value.trim())}
+              />
+            </Stack>
             <Stack direction="row" spacing={2}>
               <TextField
                 size="small"
@@ -94,12 +123,47 @@ export default function SetColumnsBtn() {
             <TextField
               size="small"
               label="Delete user info/transform column"
-              onChange={(event) => setDeleteColumn(event.target.value.trim())}
+              onChange={(event) => setDeleteColumn(parseColumnInput(event.target.value, dataEntity))}
             />
             <Button onClick={applyChanges}>Confirm</Button>
           </Stack>
         </Box>
       </Popover>
     </div>
+  );
+}
+
+
+const availableQtnTypes = Object.values(QUESTIONNAIRE_TYPE);
+availableQtnTypes.shift()
+
+function QtnTypeSelect({ currentType, onChange }) {
+  return (
+    <>
+    <FormControl fullWidth>
+      <InputLabel id="qtn-select">Set questionnaire type</InputLabel>
+      <Select
+        labelId="qtn-select"
+        label="Set questionnaire type"
+        size='small'
+        value={currentType}
+        onChange={onChange}
+      >
+        <MenuItem
+          value={QUESTIONNAIRE_TYPE.NONE}
+        >
+          -
+        </MenuItem>
+        {availableQtnTypes.map(type => (
+          <MenuItem
+            key={type.name}
+            value={type}
+          >
+            {type.name}
+          </MenuItem>
+        ))}
+      </Select>
+      </FormControl>
+    </>
   );
 }

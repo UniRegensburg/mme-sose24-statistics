@@ -38,9 +38,9 @@ export default class DataEntity {
    * @param {number} numOfQuestions 
    */
   addQuestions(numOfQuestions=1) {
-    if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
-      throw new QuestionnaireTypeError("Only NONE-type data allows adding new questions.")
-    }
+    // if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
+    //   throw new QuestionnaireTypeError("Only NONE-type data allows adding new questions.")
+    // }
     for (let i = 0; i < numOfQuestions; i++) {
       const newCol = `Q${this.numOfQuestions + 1}`
       this.columns.questions.push(newCol)
@@ -53,9 +53,9 @@ export default class DataEntity {
    * @param {number} numOfQuestions 
    */
   deleteQuestions(numOfQuestions=1) {
-    if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
-      throw new QuestionnaireTypeError("Only NONE-type data allows deleting questions.")
-    }
+    // if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
+    //   throw new QuestionnaireTypeError("Only NONE-type data allows deleting questions.")
+    // }
     for (let i = 0; i < numOfQuestions; i++) {
       const deletedCol = this.columns.questions.pop()
       this.data.forEach(row => delete row[deletedCol])
@@ -63,9 +63,9 @@ export default class DataEntity {
   }
 
   setNumOfQuestions(numOfQuestions) {
-    if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
-      throw new QuestionnaireTypeError("Only NONE-type data allows setting number of questions.")
-    }
+    // if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
+    //   throw new QuestionnaireTypeError("Only NONE-type data allows setting number of questions.")
+    // }
     const difference = numOfQuestions - this.numOfQuestions
     if (difference === 0) { return }
     if (difference > 0) { this.addQuestions(difference) }
@@ -214,6 +214,7 @@ export default class DataEntity {
 
   setType(type) {
     this.type = type
+    this.setNumOfQuestions(type.numOfQuestions)
   }
 
 
