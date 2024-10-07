@@ -76,14 +76,15 @@ export default class DataEntity {
    * Given a string or an array of strings, add new strings among them as user info columns.
    * @param {string | string[]} columns 
    */
-  addUserInfoColumns(columns) {
-    if (typeof columns === "string") { columns = [columns] }
-    columns = columns.filter(col => !this.userInfoColumns.includes(col))
+  addUserInfoColumns(column) {
+    if (Array.isArray(column)) {
+      column.forEach(col => this.addUserInfoColumns(col))
+      return
+    }
+    if (this.userInfoColumns.includes(column)) { return }
     
-    this.columns.userInfo = this.columns.userInfo.concat(columns)
-    columns.forEach(col => {
-      this.data.forEach(row => row[col] = null)
-    })
+    this.columns.userInfo.push(column)
+    this.data.forEach(row => row[column] = null)
   }
 
   /**
@@ -105,6 +106,11 @@ export default class DataEntity {
    * @param {string} expressions 
    */
   addTransformColumns(expression) {
+    if (Array.isArray(expression)) {
+      expression.forEach(expr => this.addTransformColumns(expr))
+      return
+    }
+
     let column = `T${this.transformId}:${expression}`
     if (this.transformColumns.includes(column)) { return }
     

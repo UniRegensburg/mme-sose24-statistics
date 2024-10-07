@@ -81,11 +81,16 @@ function parseColumnInput(input, dataEntity) {
   }
 }
 
+function parseList(input) {
+  return input.split(",").map(str => str.trim()).filter(str => str !== "")
+}
+
 
 export {
   columnType,
   infoResultSplit,
   generateResultColumns,
   generateEmptyRow,
-  parseColumnInput
+  parseColumnInput,
+  parseList
 }

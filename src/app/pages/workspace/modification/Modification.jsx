@@ -57,9 +57,17 @@ function Modification() {
     updateDiagram()
   }
 
+  const onKeyDown = (event) => {
+    if (event.key === "Enter") { confirm() }
+  }
+
 
   return (
-    <div style={{margin: "10px"}}>
+    <div
+    style={{margin: "10px"}}
+    tabIndex="0"
+    onKeyDown={onKeyDown}
+    >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <Divider>Diagram Type</Divider>
         <FormControl fullWidth>
