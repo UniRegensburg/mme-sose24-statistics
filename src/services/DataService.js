@@ -7,12 +7,24 @@ class DataService {
 
   async importData(filePath, type=QUESTIONNAIRE_TYPE.NONE) {
     const data = await d3.csv(filePath, d3.autoType)
-    return new DataEntity(type, data)
+    const dataEntity = new DataEntity(type, data)
+    this.generateId(dataEntity)
+    return dataEntity
   }
 
-  // exportData(filePath, dataEntity) {
-  //   writeFileSync(filePath, this.stringify(dataEntity))
-  // }
+
+  /**
+   * Generate unique id for each row of data. This is required by MUI DataGrid.
+   * @param {DataEntity} dataEntity 
+   */
+  generateId(dataEntity) {
+    if (dataEntity.userInfoColumns.includes("id")) { return }
+    dataEntity.addUserInfoColumns("id")
+    for (let i = 0; i < dataEntity.size; i++) {
+      dataEntity.setValue(i, "id", i + 1)
+    }
+  }
+
 
   /**
    * Return a string of CSV format representing the data entity.
