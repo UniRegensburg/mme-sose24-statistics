@@ -122,3 +122,10 @@
   padding: 8px;
   text-align: left;
 }
+
+.disabled-section {
+  pointer-events: none;
+  opacity: 0.5;
+  border: 1px solid #ccc;
+  box-shadow: none;
+}
