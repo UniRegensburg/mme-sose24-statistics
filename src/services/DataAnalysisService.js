@@ -73,9 +73,11 @@ class DataAnalysisService {
     })
 
     if (dataEntity.type !== QUESTIONNAIRE_TYPE.NONE) {
-      result.score = {}
-      result.score.value = this.calculateTotalScore(dataEntity)
-      result.score.interpretation = this.interpretTotalScore(dataEntity, result.score)
+      result.score = {
+        name: dataEntity.type.name,
+        value: this.calculateTotalScore(dataEntity),
+        interpretation: this.interpretTotalScore(dataEntity, result.score)
+      }
     } else {
       result.score = null
     }
