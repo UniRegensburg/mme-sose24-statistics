@@ -38,9 +38,9 @@ export default class DataEntity {
    * @param {number} numOfQuestions 
    */
   addQuestions(numOfQuestions=1) {
-    if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
-      throw new QuestionnaireTypeError("Only NONE-type data allows adding new questions.")
-    }
+    // if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
+    //   throw new QuestionnaireTypeError("Only NONE-type data allows adding new questions.")
+    // }
     for (let i = 0; i < numOfQuestions; i++) {
       const newCol = `Q${this.numOfQuestions + 1}`
       this.columns.questions.push(newCol)
@@ -53,9 +53,9 @@ export default class DataEntity {
    * @param {number} numOfQuestions 
    */
   deleteQuestions(numOfQuestions=1) {
-    if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
-      throw new QuestionnaireTypeError("Only NONE-type data allows deleting questions.")
-    }
+    // if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
+    //   throw new QuestionnaireTypeError("Only NONE-type data allows deleting questions.")
+    // }
     for (let i = 0; i < numOfQuestions; i++) {
       const deletedCol = this.columns.questions.pop()
       this.data.forEach(row => delete row[deletedCol])
@@ -63,9 +63,9 @@ export default class DataEntity {
   }
 
   setNumOfQuestions(numOfQuestions) {
-    if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
-      throw new QuestionnaireTypeError("Only NONE-type data allows setting number of questions.")
-    }
+    // if (this.type !== QUESTIONNAIRE_TYPE.NONE) {
+    //   throw new QuestionnaireTypeError("Only NONE-type data allows setting number of questions.")
+    // }
     const difference = numOfQuestions - this.numOfQuestions
     if (difference === 0) { return }
     if (difference > 0) { this.addQuestions(difference) }
@@ -76,14 +76,15 @@ export default class DataEntity {
    * Given a string or an array of strings, add new strings among them as user info columns.
    * @param {string | string[]} columns 
    */
-  addUserInfoColumns(columns) {
-    if (typeof columns === "string") { columns = [columns] }
-    columns = columns.filter(col => !this.userInfoColumns.includes(col))
+  addUserInfoColumns(column) {
+    if (Array.isArray(column)) {
+      column.forEach(col => this.addUserInfoColumns(col))
+      return
+    }
+    if (this.userInfoColumns.includes(column)) { return }
     
-    this.columns.userInfo = this.columns.userInfo.concat(columns)
-    columns.forEach(col => {
-      this.data.forEach(row => row[col] = null)
-    })
+    this.columns.userInfo.push(column)
+    this.data.forEach(row => row[column] = null)
   }
 
   /**
@@ -105,6 +106,11 @@ export default class DataEntity {
    * @param {string} expressions 
    */
   addTransformColumns(expression) {
+    if (Array.isArray(expression)) {
+      expression.forEach(expr => this.addTransformColumns(expr))
+      return
+    }
+
     let column = `T${this.transformId}:${expression}`
     if (this.transformColumns.includes(column)) { return }
     
@@ -214,6 +220,7 @@ export default class DataEntity {
 
   setType(type) {
     this.type = type
+    this.setNumOfQuestions(type.numOfQuestions)
   }
 
 
