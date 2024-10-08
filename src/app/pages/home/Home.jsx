@@ -40,7 +40,7 @@ function Home() {
     }
     }
   }
-  //Disable a section (Upload/Mask) if the other is filled
+  // Disable a section (Upload/Mask) if another is filled
   const [selectedSection, setSelectedSection] = useState(null);
   
   // Control if modal (help/formatinfo) is closed
@@ -62,24 +62,24 @@ function Home() {
         <Box className="modal-box">
           <p>Hilfe</p>
           <p>
-            Bei dieser Seite handelt es sich, um ein Tool, dass dir dabei hilft deine Usability-Daten auszuwerten. Lade Sie hoch und profitiere von den Auswertungsfunktionen. Falls du Fragen hast Melde dich sehr gerne bei uns.
+          Hierbei handelt es sich um ein Tool zur Analyse Ihrer Usability-Daten. Laden Sie Ihre Daten hoch und nutzen Sie die umfassenden Auswertungsfunktionen. Bei Fragen oder Anliegen stehen wir Ihnen gerne zur Verfügung.
           </p>
           <button onClick={handleCloseHelp} className="button">Schließen</button>
         </Box>
       </Modal>
-      <p className="darkmode">Darkmode-Reminder</p>
+      <p className="darkmode">Darkmode Reminder</p>
       {/*Logo*/}
       <div>
       <img src="/Logo_UsabilityAnalyzer.jpeg" className="logo" alt="Usability Analyzer Logo" />
       </div>
       <h1>Usability Analyzer</h1>
       <p>
-        Dein Tool, um schnell und unkompliziert Usability-Daten auzuswerten
+        Ihr Tool um schnell und unkompliziert Usability-Daten auszuwerten
       </p>
       <div className="card">
         {/* Info_field*/}
         <div className="fieldDataFile" style={{ textAlign: 'center'}}>
-          <p> Wir stellen dir hier ein Tool zur Verfügung, um deine Usability-Daten aus Fragebögen auszuwerten. Diese Anwendung ist für User Experience Questionnaire (UEQ), System Usability Scale (SUS), Net Promoter Score (NPS) und RAW Task Load Index geeignet. 
+          <p> Wir bieten Ihnen ein Tool zur Analyse von Usability-Daten aus Fragebögen. Diese Anwendung unterstützt die Auswertung von User Experience Questionnaire (UEQ), System Usability Scale (SUS), Net Promoter Score (NPS) und RAW Task Load Index. 
             </p>
           {/*<button className="button">
             Upload demographic data
@@ -89,8 +89,8 @@ function Home() {
         <div className="buttonColumn">
           {/* Upload Usability Data*/}
           <div className={`fieldDataFile ${selectedSection === 'mask' ? 'disabled-section' : ''}`}>
-            <h2>Hier kannst du deine Daten hochladen.</h2>
-            <p>1. Wähle deinen Usability-Fragebogen.</p>
+            <h2>Hier können Sie ihre Daten hochladen.</h2>
+            <p>1. Wählen Sie einen Usability-Fragebogen.</p>
             <select id="questionnaire-type" name="questionnaire-type" disabled={selectedSection === 'mask'} onChange={() => setSelectedSection('upload')}>
               <option value="">-- Bitte wählen --</option>
               <option value="type1">User Experience Questionnaire (UEQ)</option>
@@ -99,23 +99,22 @@ function Home() {
               <option value="type3">RAW Task Load Index</option>
             </select>
             <br />
-            <p>2. Lade deine csv-Datei hoch. Für Informationen zum Datei-Format klicke 
-              <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
+            <p>2. Laden Sie eine CSV-Datei hoch. Für Informationen zum Datei-Format klicken Sie <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
             {/* Datei-Upload-Button*/} 
            <input type="file" accept={".csv"} onChange={(event) => {setSelectedSection('upload'); fileUploader(event);}}  disabled={selectedSection === 'mask'}/>
             <br />
             <br />
             <Link to="/workspace">
             <button className="button" disabled={selectedSection === 'mask'}>
-            Start to Analyse
+            Analyse Starten
           </button >
           </Link>
           </div>
           <div className="separator"></div>
           <div className={`fieldDataFile ${selectedSection === 'upload' ? 'disabled-section' : ''}`}>
             {/* Mask for Usability Data*/}
-            <h2>Hier kannst du über eine Maske Daten eingeben.</h2>
-            <p>1. Wähle deinen Usability-Fragebogen.</p>
+            <h2>Hier können Sie Ihre Daten über eine Maske eingeben.</h2>
+            <p>1. Wählen Sie einen Usability-Fragebogen. Kein Upload notwendig.</p>
             <select id="questionnaire-type" name="questionnaire-type" disabled={selectedSection === 'upload'} onChange={() => setSelectedSection('mask')}>
               <option value="">-- Bitte wählen --</option>
               <option value="type1">User Experience Questionnaire (UEQ)</option>
@@ -124,12 +123,12 @@ function Home() {
               <option value="type3">RAW Task Load Index</option>
             </select>
             <br />
-            <p>2. Befülle die Maske. Für Informationen zum Datei-Format klicke <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
+            <p>2. Befülle Sie ihre Maske. Für Informationen zum Datei-Format klicken Sie  <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
             <br />
             <br />
             <Link to="/workspace">
             <button className="button" disabled={selectedSection === 'upload'}>
-            Start to Analyse
+            Analyse Starten
           </button >
           </Link>
           </div>
@@ -138,18 +137,18 @@ function Home() {
       {/* use Link for redirecting */}
       <div className="analyse-section">
       <button className="button" onClick={() => window.location.reload()}>
-        Refresh
+        Seite neu laden
       </button>
       </div>
       <p className="read-the-docs">
-        Impressum!!!!!!!!!!!!!!!!!!!!!
+      2024  Reginleif Klein, Sebastian Scherübl, Ruoyu Xu
       </p>
       <Modal open={isUserDataFormatOpen} onClose={handleCloseUserDataFormat}>
             <Box className="modal-box">
               <h1>Datenformat</h1>
               <p>
-              <p>Zugelassen sind nur csv-Dateien. Diese müssen für die Analyse im folgenden Format vorliegen. Spalte 1-3 enthalten die demographischen Informationen, die darauffolgenden, die Antowrten der Fragebögen. 
-                Beispielhaft ist hier der SUS gelistet, die anderen Fragebögen sind analog zu beachten, nur mit angepasster Fragenanzahl.</p>
+              <p>Zugelassen sind nur CSV-Dateien. Diese müssen für die Analyse im folgenden Format vorliegen. Spalte 1-3 enthalten die demographischen Informationen, die folgenden Spalten enthalten die Antworten der Fragebögen. 
+                Beispielhaft ist hier der SUS gelistet. Andere Fragebögen sind analog zu beachten, nur mit angepasster Fragenanzahl.</p>
                 <table className="exampleTable">
                   <tbody>
                     <tr>
