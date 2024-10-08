@@ -1,5 +1,5 @@
-import { inplaceOperation, apply, average } from "./MathUtils";
-import dataAnalysisService from "../services/DataAnalysisService";
+import { inplaceOperation } from "./MathUtils";
+import FUNCTIONS from "../constants/SupportedFunctions";
 
 
 
@@ -7,20 +7,6 @@ export function evaluate(expr, dataEntity) {
   return parseExpression(tokenize(expr), dataEntity)
 }
 
-/**
- * Supported functions. All functions apart from `SCORE` take in an array and
- * fill in the results inplace.
- */
-const FUNCTIONS = {
-  // SCORE function behaves differently. This is accounted for in function parseFactor
-  SCORE: (dataEntity) => dataAnalysisService.calculateScores(dataEntity),
-  AVG: (arr) => arr.fill(average(arr)),
-
-  ABS: (arr) => apply(arr, Math.abs),
-  LOG: (arr) => apply(arr, Math.log),
-  SIN: (arr) => apply(arr, Math.sin),
-  COS: (arr) => apply(arr, Math.cos),
-}
 
 
 /***************************
@@ -58,9 +44,9 @@ function parseFactor(tokens, dataEntity) {
 
   if (token.type === TOKEN.FUNCTION) {
     consume(tokens) // Consume function
-    if (token.value === "SCORE") { return FUNCTIONS.SCORE(dataEntity) }
+    if (token.value === "SCORE") { return FUNCTIONS.SCORE.func(dataEntity) }
 
-    const func = FUNCTIONS[token.value]
+    const func = FUNCTIONS[token.value].func
     const result = parseFactor(tokens, dataEntity)
     func(result)
     return result

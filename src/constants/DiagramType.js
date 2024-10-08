@@ -1,5 +1,4 @@
 import * as Plot from "@observablehq/plot"
-import * as d3 from "d3"
 import { commonPlotSettings } from "./DiagramSetting"
 
 
@@ -42,7 +41,7 @@ DIAGRAM_TYPE.HIST = {
 
 
 DIAGRAM_TYPE.SCATTER = {
-  name: "Scatter",
+  name: "Scatter plot",
   options: ["x", "y"],
   requiredOptions: ["x", "y"],
   plotOptions: (data, settings, options) => {
