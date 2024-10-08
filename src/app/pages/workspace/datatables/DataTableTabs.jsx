@@ -9,13 +9,18 @@ import { DataGrid } from '@mui/x-data-grid';
 import TableToolbar from "./Toolbar/TableToolbar";
 import { useState } from "react";
 
-
+function _capitalizeFirstLetter(value) {
+  if (typeof value === 'string') {
+    return value.replace(/\b\w/g, (char) => char.toUpperCase());
+  }
+  return value;
+}
 
 function _prepareColumns(dataEntity) {
   const prepareCol = (type) => (col) => {
     return {
       field: col,
-      headerName: col,
+      headerName: _capitalizeFirstLetter(col),
       editable: col !== "id",
       headerClassName: `${type}-header`
     }
@@ -50,10 +55,9 @@ export default function DataTableTabs() {
     updateAll
   } = useStatesContext();
   const [currentCol, setCurrentCol] = useState("")
-  
+
   // ---------- Danger zone ends here ----------
-  
-  
+
   if (!dataEntity) {
     return (
       <Typography variant="h6" color="error">
@@ -61,9 +65,9 @@ export default function DataTableTabs() {
       </Typography>
     );
   }
-  
+
   const columns = _prepareColumns(dataEntity);
-  
+
   return (
     <div className="App">
       <Typography variant="h4" component="h1" gutterBottom>
