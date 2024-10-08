@@ -15,6 +15,18 @@ function count(arr) {
   }, {})
 }
 
+function standardDeviation(arr) {
+  const mean = average(arr)
+  return Math.sqrt(average(arr.map(x => (x - mean) ** 2 )))
+}
+
+function inplaceStandardize(arr) {
+  const mean = average(arr)
+  const sd = Math.sqrt(average(arr.map(x => (x - mean) ** 2 )))
+  inplaceOperation(arr, mean, "-")
+  inplaceOperation(arr, sd, "/")
+}
+
 
 /**
  * @param {number[]} arr1 
@@ -58,6 +70,8 @@ function apply(arr, func) {
 export {
   average,
   count,
+  standardDeviation,
+  inplaceStandardize,
   inplaceOperation,
   apply
 }
