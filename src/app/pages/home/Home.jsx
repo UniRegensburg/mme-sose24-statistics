@@ -7,7 +7,18 @@ import { IconButton, Modal, Box, Typography } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useWorkspaceContext } from '../../../providers/WorkspaceProvider'
 import DataService from '../../../services/DataService'
+import QUESTIONNAIRE_TYPE from "../../../constants/QuestionnaireType"
 {/*import workspaceEntity from '../../../entities/WorkspaceEntity'*/}
+import NewRowMaker from "./MaskImport"
+import * as React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import {
+  randomCreatedDate,
+  randomTraderName,
+  randomUpdatedDate,
+} from '@mui/x-data-grid-generator';
+
+//erforderlich npm install @mui/x-data-grid-generator
 
 
 
@@ -22,27 +33,10 @@ function Home() {
 
   // ---------- Danger zone ends here ----------
 
-  // DataImport via the async in DataService.js
-  //No need for Initialization
-  {/*const dataService = new DataService();*/}
-
-
-  const fileUploader = async (event) => {
-    const file = event.target.files[0];
-    if (file){
-    const newURL = URL.createObjectURL(file);
-    try{
-      const importedData = await DataService.importData(newURL);
-      workspace.setDataEntity(importedData);
-      {/*setWorkspace({ csvData: dataEntity.data });*/}
-    }catch (error) {
-      console.error("error");
-    }
-    }
-  }
   //Disable a section (Upload/Mask) if the other is filled
   const [selectedSection, setSelectedSection] = useState(null);
-  
+  //Select Questionaire_Type
+  const [selectedQuestionnaireType, setSelectedQuestionnaireType] = useState(QUESTIONNAIRE_TYPE.NONE);
   // Control if modal (help/formatinfo) is closed
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isUserDataFormatOpen, setIsUserDataFormatOpen] = useState(false);
@@ -50,6 +44,23 @@ function Home() {
   const handleCloseHelp = () => setIsHelpOpen(false);
   const handleOpenUserDataFormat = () => setIsUserDataFormatOpen(true);
   const handleCloseUserDataFormat = () => setIsUserDataFormatOpen(false);
+
+  // DataImport via the async in DataService.js
+  //No need for Initialization
+  {/*const dataService = new DataService();*/}
+  const fileUploader = async (event) => {
+    const file = event.target.files[0];
+    if (file){
+    const newURL = URL.createObjectURL(file);
+    try{
+      const importedData = await DataService.importData(newURL, selectedQuestionnaireType);
+      workspace.setDataEntity(importedData);
+      {/*setWorkspace({ csvData: dataEntity.data });*/}
+    }catch (error) {
+      console.error("error");
+    }
+    }
+  }
 
   return (
     <>
@@ -91,12 +102,14 @@ function Home() {
           <div className={`fieldDataFile ${selectedSection === 'mask' ? 'disabled-section' : ''}`}>
             <h2>Hier kannst du deine Daten hochladen.</h2>
             <p>1. Wähle deinen Usability-Fragebogen.</p>
-            <select id="questionnaire-type" name="questionnaire-type" disabled={selectedSection === 'mask'} onChange={() => setSelectedSection('upload')}>
-              <option value="">-- Bitte wählen --</option>
-              <option value="type1">User Experience Questionnaire (UEQ)</option>
-              <option value="type2">System Usability Scale (SUS)</option>
-              <option value="type3">Net Promoter Score (NPS)</option>
-              <option value="type3">RAW Task Load Index</option>
+            <select id="questionnaire-type" name="questionnaire-type" disabled={selectedSection === 'mask'} onChange={(e) => {
+                setSelectedSection('upload'); setSelectedQuestionnaireType(QUESTIONNAIRE_TYPE[e.target.value]);
+              }}>
+            <option value={QUESTIONNAIRE_TYPE.NONE}>-- Bitte wählen --</option>
+              <option value={QUESTIONNAIRE_TYPE.UEQ}>User Experience Questionnaire (UEQ)</option>
+              <option value={QUESTIONNAIRE_TYPE.SUS}>System Usability Scale (SUS)</option>
+              <option value={QUESTIONNAIRE_TYPE.NPS}>Net Promoter Score (NPS)</option>
+              <option value={QUESTIONNAIRE_TYPE.rawTLX}>RAW Task Load Index</option>
             </select>
             <br />
             <p>2. Lade deine csv-Datei hoch. Für Informationen zum Datei-Format klicke 
@@ -116,15 +129,19 @@ function Home() {
             {/* Mask for Usability Data*/}
             <h2>Hier kannst du über eine Maske Daten eingeben.</h2>
             <p>1. Wähle deinen Usability-Fragebogen.</p>
-            <select id="questionnaire-type" name="questionnaire-type" disabled={selectedSection === 'upload'} onChange={() => setSelectedSection('mask')}>
-              <option value="">-- Bitte wählen --</option>
-              <option value="type1">User Experience Questionnaire (UEQ)</option>
-              <option value="type2">System Usability Scale (SUS)</option>
-              <option value="type3">Net Promoter Score (NPS)</option>
-              <option value="type3">RAW Task Load Index</option>
+            <select id="questionnaire-type" name="questionnaire-type" disabled={selectedSection === 'upload'} onChange={(e) => {
+                setSelectedSection('mask'); setSelectedQuestionnaireType(QUESTIONNAIRE_TYPE[e.target.value]);
+              }}>
+            <option value={QUESTIONNAIRE_TYPE.NONE}>-- Bitte wählen --</option>
+              <option value={QUESTIONNAIRE_TYPE.UEQ}>User Experience Questionnaire (UEQ)</option>
+              <option value={QUESTIONNAIRE_TYPE.SUS}>System Usability Scale (SUS)</option>
+              <option value={QUESTIONNAIRE_TYPE.NPS}>Net Promoter Score (NPS)</option>
+              <option value={QUESTIONNAIRE_TYPE.rawTLX}>RAW Task Load Index</option>
             </select>
             <br />
             <p>2. Befülle die Maske. Für Informationen zum Datei-Format klicke <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
+            <NewRowMaker/>
+            <br />
             <br />
             <br />
             <Link to="/workspace">
@@ -135,13 +152,13 @@ function Home() {
           </div>
         </div>
       </div>
-      {/* use Link for redirecting */}
-      <div className="analyse-section">
+      {/* use Link for redirecting ÜBERARBEITEN!!!!*/}
+      <div className="refresh-section">
       <button className="button" onClick={() => window.location.reload()}>
         Refresh
       </button>
       </div>
-      <p className="read-the-docs">
+      <p className="copyrightInfo">
         Impressum!!!!!!!!!!!!!!!!!!!!!
       </p>
       <Modal open={isUserDataFormatOpen} onClose={handleCloseUserDataFormat}>
@@ -211,9 +228,12 @@ function Home() {
           Edit <code>src/app/pages/home/Home.jsx</code> and save to test HMR
         </p>*/}
 
-
+    
     </>
   )
+
+
+  
 }
 
 
