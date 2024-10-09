@@ -69,12 +69,12 @@ function Modification() {
     onKeyDown={onKeyDown}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <Divider>Diagram Type</Divider>
+        <Divider>Diagrammtyp</Divider>
         <FormControl fullWidth>
-          <InputLabel id="diagram-type">Choose type</InputLabel>
+          <InputLabel id="diagram-type">Wähle Diagrammtyp</InputLabel>
         <Select
           labelId="diagram-type"
-          label="Choose type"
+          label="Wähle Diagrammtyp"
           size="small"
           value={diagramEntity.type}
           onChange={handleTypeChange}
@@ -86,7 +86,7 @@ function Modification() {
         </Select>
         </FormControl>
 
-        <Divider>Options</Divider>
+        <Divider>Optionen</Divider>
 
         <OptionFields
           options={options}
@@ -95,7 +95,7 @@ function Modification() {
           onChange={handleInputChange}
         />
 
-        <Divider>Settings</Divider>
+        <Divider>Einstellungen</Divider>
 
         <DiagramSettings />
 
@@ -104,7 +104,7 @@ function Modification() {
         
 
       <Button onClick={confirm} style={{margin: '1em'}}>
-        Apply changes
+        Änderungen speichern
       </Button>
     </div>
   )

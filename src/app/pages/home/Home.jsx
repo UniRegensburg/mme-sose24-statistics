@@ -1,66 +1,49 @@
-import { useState } from 'react'
-import reactLogo from '../../../assets/react.svg'
-import viteLogo from '/vite.svg'
-import './Home.css'
-import { Link } from 'react-router-dom'
-import { IconButton, Modal, Box, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { IconButton, Modal, Box } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { useWorkspaceContext } from '../../../providers/WorkspaceProvider'
-import DataService from '../../../services/DataService'
-import QUESTIONNAIRE_TYPE from "../../../constants/QuestionnaireType"
-{/*import workspaceEntity from '../../../entities/WorkspaceEntity'*/}
-import NewRowMaker from "./MaskImport"
-import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import {
-  randomCreatedDate,
-  randomTraderName,
-  randomUpdatedDate,
-} from '@mui/x-data-grid-generator';
-
-//erforderlich npm install @mui/x-data-grid-generator
-
-
+import { useWorkspaceContext } from '../../../providers/WorkspaceProvider';
+import DataService from '../../../services/DataService';
+import QUESTIONNAIRE_TYPE from "../../../constants/QuestionnaireType";
+import NewRowMaker from "./MaskImport";
+import './Home.css';
 
 /**
  * Main component for home page. Landing Page.
  * 
  * @returns Rendered react component.
  */
+
 function Home() {
   // ---------- Danger zone starts here ----------
-  const { workspace } = useWorkspaceContext()
-
+  const { workspace } = useWorkspaceContext();
   // ---------- Danger zone ends here ----------
 
-  //Disable a section (Upload/Mask) if the other is filled
+  // State management
   const [selectedSection, setSelectedSection] = useState(null);
-  //Select Questionaire_Type
   const [selectedQuestionnaireType, setSelectedQuestionnaireType] = useState(QUESTIONNAIRE_TYPE.NONE);
-  // Control if modal (help/formatinfo) is closed
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isUserDataFormatOpen, setIsUserDataFormatOpen] = useState(false);
+
+  // Modal handlers
   const handleOpenHelp = () => setIsHelpOpen(true);
   const handleCloseHelp = () => setIsHelpOpen(false);
   const handleOpenUserDataFormat = () => setIsUserDataFormatOpen(true);
   const handleCloseUserDataFormat = () => setIsUserDataFormatOpen(false);
 
-  // DataImport via the async in DataService.js
-  //No need for Initialization
-  {/*const dataService = new DataService();*/}
+  // File uploader
   const fileUploader = async (event) => {
     const file = event.target.files[0];
-    if (file){
-    const newURL = URL.createObjectURL(file);
-    try{
-      const importedData = await DataService.importData(newURL, selectedQuestionnaireType);
-      workspace.setDataEntity(importedData);
-      {/*setWorkspace({ csvData: dataEntity.data });*/}
-    }catch (error) {
-      console.error("error");
+    if (file) {
+      const newURL = URL.createObjectURL(file);
+      try {
+        const importedData = await DataService.importData(newURL, selectedQuestionnaireType);
+        workspace.setDataEntity(importedData);
+      } catch (error) {
+        console.error("error");
+      }
     }
-    }
-  }
+  };
 
   return (
     <>
@@ -68,173 +51,191 @@ function Home() {
         <HelpOutlineIcon />
       </IconButton>
 
-      {/* Modal for Help-Icon*/}
+      {/* Modal for Help-Icon */}
       <Modal open={isHelpOpen} onClose={handleCloseHelp}>
         <Box className="modal-box">
-          <p>Hilfe</p>
+          <h2>Hilfe</h2>
           <p>
-            Bei dieser Seite handelt es sich, um ein Tool, dass dir dabei hilft deine Usability-Daten auszuwerten. Lade Sie hoch und profitiere von den Auswertungsfunktionen. Falls du Fragen hast Melde dich sehr gerne bei uns.
+            Hierbei handelt es sich um ein Tool zur Analyse Ihrer Usability-Daten. 
+            Laden Sie Ihre Daten hoch und nutzen Sie die umfassenden Auswertungsfunktionen. 
+            Bei Fragen oder Anliegen stehen wir Ihnen gerne zur Verfügung.
           </p>
           <button onClick={handleCloseHelp} className="button">Schließen</button>
         </Box>
       </Modal>
-      <p className="darkmode">Darkmode-Reminder</p>
-      {/*Logo*/}
+
+      <p className="darkmode">Darkmode Reminder</p>
+
+      {/* Logo */}
       <div>
-      <img src="/Logo_UsabilityAnalyzer.jpeg" className="logo" alt="Usability Analyzer Logo" />
+        <img src="/Logo_UsabilityAnalyzer.jpeg" className="logo" alt="Usability Analyzer Logo" />
       </div>
+
       <h1>Usability Analyzer</h1>
-      <p>
-        Dein Tool, um schnell und unkompliziert Usability-Daten auzuswerten
-      </p>
+      <p>Das Tool für schnelle und unkomplizierte Auswertung von Usability-Daten</p>
+
       <div className="card">
-        {/* Info_field*/}
-        <div className="fieldDataFile" style={{ textAlign: 'center'}}>
-          <p> Wir stellen dir hier ein Tool zur Verfügung, um deine Usability-Daten aus Fragebögen auszuwerten. Diese Anwendung ist für User Experience Questionnaire (UEQ), System Usability Scale (SUS), Net Promoter Score (NPS) und RAW Task Load Index geeignet. 
-            </p>
-          {/*<button className="button">
-            Upload demographic data
-          </button>*/}
+        {/* Info Field */}
+        <div className="fieldDataFile" style={{ textAlign: 'center' }}>
+          <p>
+            Wir bieten Ihnen ein Tool zur Analyse von Usability-Daten aus Fragebögen. 
+            Diese Anwendung unterstützt die Auswertung von User Experience Questionnaire (UEQ), 
+            System Usability Scale (SUS), Net Promoter Score (NPS) und RAW Task Load Index.
+          </p>
         </div>
-        {/* Choose Usability Data*/}
+
+        {/* Choose Usability Data */}
         <div className="buttonColumn">
-          {/* Upload Usability Data*/}
+          {/* Upload Usability Data */}
           <div className={`fieldDataFile ${selectedSection === 'mask' ? 'disabled-section' : ''}`}>
-            <h2>Hier kannst du deine Daten hochladen.</h2>
-            <p>1. Wähle deinen Usability-Fragebogen.</p>
-            <select id="questionnaire-type" name="questionnaire-type" disabled={selectedSection === 'mask'} onChange={(e) => {
-                setSelectedSection('upload'); setSelectedQuestionnaireType(QUESTIONNAIRE_TYPE[e.target.value]);
-              }}>
-            <option value={QUESTIONNAIRE_TYPE.NONE}>-- Bitte wählen --</option>
+            <h2>Hier können Sie Ihre Daten hochladen.</h2>
+            <p>1. Wählen Sie einen Usability-Fragebogen.</p>
+            <select 
+              id="questionnaire-type" 
+              name="questionnaire-type" 
+              disabled={selectedSection === 'mask'} 
+              onChange={(e) => {
+                setSelectedSection('upload'); 
+                setSelectedQuestionnaireType(QUESTIONNAIRE_TYPE[e.target.value]);
+              }}
+            >
+              <option value={QUESTIONNAIRE_TYPE.NONE}>-- Bitte wählen --</option>
               <option value={QUESTIONNAIRE_TYPE.UEQ}>User Experience Questionnaire (UEQ)</option>
               <option value={QUESTIONNAIRE_TYPE.SUS}>System Usability Scale (SUS)</option>
               <option value={QUESTIONNAIRE_TYPE.NPS}>Net Promoter Score (NPS)</option>
               <option value={QUESTIONNAIRE_TYPE.rawTLX}>RAW Task Load Index</option>
             </select>
             <br />
-            <p>2. Lade deine csv-Datei hoch. Für Informationen zum Datei-Format klicke 
-              <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
-            {/* Datei-Upload-Button*/} 
-           <input type="file" accept={".csv"} onChange={(event) => {setSelectedSection('upload'); fileUploader(event);}}  disabled={selectedSection === 'mask'}/>
-            <br />
-            <br />
+            <p>
+              2. Laden Sie eine CSV-Datei hoch. 
+              Für Informationen zum Datei-Format klicken Sie 
+              <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}> hier</span>.
+            </p>
+            <input 
+              type="file" 
+              accept=".csv" 
+              onChange={(event) => { setSelectedSection('upload'); fileUploader(event); }} 
+              disabled={selectedSection === 'mask'} 
+            />
+            <br /><br />
             <Link to="/workspace">
-            <button className="button" disabled={selectedSection === 'mask'}>
-            Start to Analyse
-          </button >
-          </Link>
+              <button className="button" disabled={selectedSection === 'mask'}>
+                Analyse Starten
+              </button>
+            </Link>
           </div>
+
           <div className="separator"></div>
+
           <div className={`fieldDataFile ${selectedSection === 'upload' ? 'disabled-section' : ''}`}>
-            {/* Mask for Usability Data*/}
-            <h2>Hier kannst du über eine Maske Daten eingeben.</h2>
-            <p>1. Wähle deinen Usability-Fragebogen.</p>
-            <select id="questionnaire-type" name="questionnaire-type" disabled={selectedSection === 'upload'} onChange={(e) => {
-                setSelectedSection('mask'); setSelectedQuestionnaireType(QUESTIONNAIRE_TYPE[e.target.value]);
-              }}>
-            <option value={QUESTIONNAIRE_TYPE.NONE}>-- Bitte wählen --</option>
+            {/* Mask for Usability Data */}
+            <h2>Hier können Sie Ihre Daten über eine Maske eingeben.</h2>
+            <p>1. Wählen Sie einen Usability-Fragebogen. Kein Upload notwendig!</p>
+            <select 
+              id="questionnaire-type" 
+              name="questionnaire-type" 
+              disabled={selectedSection === 'upload'} 
+              onChange={(e) => {
+                setSelectedSection('mask'); 
+                setSelectedQuestionnaireType(QUESTIONNAIRE_TYPE[e.target.value]);
+              }}
+            >
+              <option value={QUESTIONNAIRE_TYPE.NONE}>-- Bitte wählen --</option>
               <option value={QUESTIONNAIRE_TYPE.UEQ}>User Experience Questionnaire (UEQ)</option>
               <option value={QUESTIONNAIRE_TYPE.SUS}>System Usability Scale (SUS)</option>
               <option value={QUESTIONNAIRE_TYPE.NPS}>Net Promoter Score (NPS)</option>
               <option value={QUESTIONNAIRE_TYPE.rawTLX}>RAW Task Load Index</option>
             </select>
             <br />
-            <p>2. Befülle die Maske. Für Informationen zum Datei-Format klicke <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}>hier</span>.</p>
-            <NewRowMaker/>
-            <br />
-            <br />
-            <br />
+            <p>
+              2. Befüllen Sie Ihre Maske. 
+              Für Informationen zum Datei-Format klicken Sie 
+              <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}> hier</span>.
+            </p>
+            <NewRowMaker />
+            <br /><br />
             <Link to="/workspace">
-            <button className="button" disabled={selectedSection === 'upload'}>
-            Start to Analyse
-          </button >
-          </Link>
+              <button className="button" disabled={selectedSection === 'upload'}>
+                Analyse Starten
+              </button>
+            </Link>
           </div>
         </div>
       </div>
-      {/* use Link for redirecting ÜBERARBEITEN!!!!*/}
+
+      {/* Reload Button */}
       <div className="refresh-section">
-      <button className="button" onClick={() => window.location.reload()}>
-        Refresh
-      </button>
-      </div>
-      <p className="copyrightInfo">
-        Impressum!!!!!!!!!!!!!!!!!!!!!
-      </p>
-      <Modal open={isUserDataFormatOpen} onClose={handleCloseUserDataFormat}>
-            <Box className="modal-box">
-              <h1>Datenformat</h1>
-              <p>
-              <p>Zugelassen sind nur csv-Dateien. Diese müssen für die Analyse im folgenden Format vorliegen. Spalte 1-3 enthalten die demographischen Informationen, die darauffolgenden, die Antowrten der Fragebögen. 
-                Beispielhaft ist hier der SUS gelistet, die anderen Fragebögen sind analog zu beachten, nur mit angepasster Fragenanzahl.</p>
-                <table className="exampleTable">
-                  <tbody>
-                    <tr>
-                      <td>ID1</td>
-                      <td>25</td>
-                      <td>W</td>
-                      <td>1</td>
-                      <td>2</td>
-                      <td>3</td>
-                      <td>4</td>
-                      <td>5</td>
-                      <td>1</td>
-                      <td>2</td>
-                      <td>4</td>
-                      <td>2</td>
-                      <td>5</td>
-                    </tr>
-                    <tr>
-                      <td>ID2</td>
-                      <td>30</td>
-                      <td>W</td>
-                      <td>3</td>
-                      <td>3</td>
-                      <td>3</td>
-                      <td>4</td>
-                      <td>5</td>
-                      <td>2</td>
-                      <td>1</td>
-                      <td>4</td>
-                      <td>2</td>
-                      <td>1</td>
-                    </tr>
-                    <tr>
-                      <td>ID3</td>
-                      <td>22</td>
-                      <td>M</td>
-                      <td>5</td>
-                      <td>4</td>
-                      <td>3</td>
-                      <td>2</td>
-                      <td>5</td>
-                      <td>3</td>
-                      <td>2</td>
-                      <td>3</td>
-                      <td>2</td>
-                      <td>1</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </p>
-              <button onClick={handleCloseUserDataFormat} className="button">Schließen</button>
-            </Box>
-          </Modal>
-
-      {/*<p><button onClick={() => setCount((count) => count + 1)}>
-          Upload User-Data {count}
+        <button className="button" onClick={() => window.location.reload()}>
+          Seite neu laden
         </button>
-        
-          Edit <code>src/app/pages/home/Home.jsx</code> and save to test HMR
-        </p>*/}
+      </div>
 
-    
+      <p className="copyrightInfo">
+        © 2024 Reginleif Klein, Sebastian Scherübl, Ruoyu Xu
+      </p>
+
+      <Modal open={isUserDataFormatOpen} onClose={handleCloseUserDataFormat}>
+        <Box className="modal-box">
+          <h1>Datenformat</h1>
+          <p>
+            Zugelassen sind nur CSV-Dateien. Diese müssen für die Analyse im folgenden Format vorliegen. 
+            Spalte 1-3 enthalten die demografischen Informationen, die folgenden Spalten enthalten die Antworten der Fragebögen. 
+            Beispielhaft ist hier der SUS gelistet. Andere Fragebögen sind analog zu beachten, nur mit angepasster Fragenanzahl.
+          </p>
+          <table className="exampleTable">
+            <tbody>
+              <tr>
+                <td>ID1</td>
+                <td>25</td>
+                <td>W</td>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>1</td>
+                <td>2</td>
+                <td>4</td>
+                <td>2</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td>ID2</td>
+                <td>30</td>
+                <td>W</td>
+                <td>3</td>
+                <td>3</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>2</td>
+                <td>1</td>
+                <td>4</td>
+                <td>2</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>ID3</td>
+                <td>22</td>
+                <td>M</td>
+                <td>5</td>
+                <td>4</td>
+                <td>3</td>
+                <td>2</td>
+                <td>5</td>
+                <td>3</td>
+                <td>2</td>
+                <td>3</td>
+                <td>2</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+          </table>
+          <button onClick={handleCloseUserDataFormat} className="button">Schließen</button>
+        </Box>
+      </Modal>
     </>
-  )
-
-
-  
+  );
 }
 
-
-export default Home
+export default Home;
