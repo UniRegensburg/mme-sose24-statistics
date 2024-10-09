@@ -39,7 +39,7 @@ function parseTerm(tokens, dataEntity) {
 function parseFactor(tokens, dataEntity) {
   const token = peek(tokens)
   if (!token) {
-    throw new Error("Unexpected token: 'EOF'");
+    throw new Error("Unexpected token.");
   }
 
   if (token.type === TOKEN.FUNCTION) {
@@ -58,7 +58,7 @@ function parseFactor(tokens, dataEntity) {
     if (peek(tokens).value === ')') {
       consume(tokens)   // Consume ')'
     } else {
-      throw new Error("Mismatched parentheses")
+      throw new Error("Mismatched parentheses.")
     }
     return result
   }
@@ -76,7 +76,7 @@ function parseFactor(tokens, dataEntity) {
     return new Array(dataEntity.size).fill(0)
   }
     
-  throw new Error(`Unexpected token: ${token.value}`);
+  throw new Error(`Unexpected token: "${token.value}".`);
 }
 
 
@@ -163,7 +163,7 @@ export function tokenize(expr) {
       continue
     }
 
-    throw new Error(`Unrecognized character ${char}.`)
+    throw new Error(`Unrecognized character "${char}".`)
 
   }
 

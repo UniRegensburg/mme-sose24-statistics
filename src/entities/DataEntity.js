@@ -175,12 +175,12 @@ export default class DataEntity {
    */
   setResultValue(rowNr, questionNr, value) { 
     if (questionNr <= 0 || this.numOfQuestions < questionNr) {
-      throw new InvalidDataInputError(`Error at row ${rowNr}. Question number should be bewteen 
+      throw new InvalidDataInputError(`Question number should be bewteen 
         1 and ${this.numOfQuestions}. Your question number was ${questionNr}.`)
     }
-    if (value < this.type.minValue || this.type.maxValue < value) {
-        throw new InvalidDataInputError(`Error at row ${rowNr}. Input value should be between 
-          ${this.type.minValue} and ${this.type.maxValue}. Your input value was ${value}.`)
+    if (value < this.type.minValue || this.type.maxValue < value || typeof value !== "number") {
+        throw new InvalidDataInputError(`Input value for ${this.type.name} quesitonnaires must be
+          a number between ${this.type.minValue} and ${this.type.maxValue}.`)
     }
     const targetColumn = `Q${questionNr}`
     this.data[rowNr][targetColumn] = value
@@ -249,7 +249,7 @@ export default class DataEntity {
   col(colName) {
     const allColumns = this.allColumns
     if (!allColumns.includes(colName)) {
-      throw new Error(`${this} does not contain column ${colName}. Available columns are ${allColumns}`)
+      throw new Error(`Data does not contain column "${colName}".`)
     }
     return this.data.map(row => row[colName])
   }

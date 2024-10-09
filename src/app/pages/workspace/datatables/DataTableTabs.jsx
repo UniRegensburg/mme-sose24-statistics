@@ -2,7 +2,6 @@ import { useStatesContext } from "../../../../providers/StatesProvider";
 import { useWorkspaceContext } from "../../../../providers/WorkspaceProvider";
 import {
   TableContainer,
-  Typography,
   Paper,
   Stack,
 } from "@mui/material";
@@ -10,6 +9,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import TableToolbar from "./Toolbar/TableToolbar";
 import { useState } from "react";
 import InfoBar from "./InfoBar/InfoBar";
+import { useErrorContext } from "../../../../providers/ErrorProvider";
 
 
 
@@ -37,6 +37,8 @@ function _prepareColumns(dataEntity) {
   return userInfo.concat(transform, questions);
 }
 
+
+
 /**
  * A tabs component containing data tables from a workspace.
  * 
@@ -50,6 +52,7 @@ export default function DataTableTabs() {
     tableState,
     updateAll
   } = useStatesContext();
+  const { displayError } = useErrorContext()
   const [currentCol, setCurrentCol] = useState("")
 
   // ---------- Danger zone ends here ----------
@@ -94,7 +97,7 @@ export default function DataTableTabs() {
             return newRow
           }}
           onProcessRowUpdateError={(error) => {
-            console.log(error)
+            displayError(error.message)
           }}
         />
       </TableContainer>

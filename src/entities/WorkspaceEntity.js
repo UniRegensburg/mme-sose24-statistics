@@ -1,13 +1,13 @@
 export default class WorkspaceEntity {
 
   constructor(dataEntity=null, diagramEntity=null) {
-    this.dataPath = null
+    this.dataName = ""
     this.dataEntity = dataEntity
     this.diagramEntity = diagramEntity
   }
 
-  setDataPath(path) {
-    this.dataPath = path
+  setDataName(name) {
+    this.dataName = name
   }
 
   setDataEntity(dataEntity) {

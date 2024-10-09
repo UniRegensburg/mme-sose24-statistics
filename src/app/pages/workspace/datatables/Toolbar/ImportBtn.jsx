@@ -14,9 +14,9 @@ export default function ImportBtn() {
     const file = event.target.files[0]
     if (!file) { return }
     const url = URL.createObjectURL(file)
-    console.log(url)
     const dataEntity = await dataService.importData(url)
     workspace.setDataEntity(dataEntity)
+    workspace.setDataName(file.name)
     updateAll()
   }
 
