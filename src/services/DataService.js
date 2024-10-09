@@ -9,7 +9,7 @@ class DataService {
 
   async importData(filePath, type=QUESTIONNAIRE_TYPE.NONE) {
     const data = await d3.csv(filePath, d3.autoType)
-    if (type !== QUESTIONNAIRE_TYPE.NONE || 
+    if (type !== QUESTIONNAIRE_TYPE.NONE && 
       data.columns.filter(col => columnType(col) === "questions").length !== type.numOfQuestions
     ) {
       throw new QuestionnaireTypeError(`${type.name} type questionnaire must have exactly 
