@@ -20,6 +20,7 @@ import { parseColumnInput, parseList } from '../../../../../utils/DataUtils';
 import QUESTIONNAIRE_TYPE from '../../../../../constants/QuestionnaireType';
 import HelpIcon from '@mui/icons-material/Help';
 import FUNCTIONS from '../../../../../constants/SupportedFunctions';
+import { useErrorContext } from '../../../../../providers/ErrorProvider';
 
 
 
@@ -27,6 +28,7 @@ export default function SetColumnsBtn() {
   const { workspace } = useWorkspaceContext();
   const dataEntity = workspace.dataEntity;
   const { updateTable } = useStatesContext();
+  const { displayError } = useErrorContext()
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? 'set-columns-popover' : undefined;
@@ -53,16 +55,21 @@ export default function SetColumnsBtn() {
 
   const applyChanges = () => {
     handleClose();
-    if (/^\d+$/.test(questionNr)) {
-      dataEntity.setNumOfQuestions(parseInt(questionNr));
+    try {
+      if (/^\d+$/.test(questionNr)) {
+        dataEntity.setNumOfQuestions(parseInt(questionNr));
+      }
+      dataEntity.addUserInfoColumns(parseList(newUserInfo));
+      dataEntity.addTransformColumns(parseList(newTransform))
+      dataEntity.deleteColumns(
+        parseList(deleteColumn)
+          .map(col => parseColumnInput(col, dataEntity))
+      );
+      dataEntity.setType(qtnType);
+    } catch (error) {
+      displayError(error.message)
     }
-    dataEntity.addUserInfoColumns(parseList(newUserInfo));
-    dataEntity.addTransformColumns(parseList(newTransform))
-    dataEntity.deleteColumns(
-      parseList(deleteColumn)
-        .map(col => parseColumnInput(col, dataEntity))
-    );
-    dataEntity.setType(qtnType);
+
     updateTable();
     clearStates();
   };

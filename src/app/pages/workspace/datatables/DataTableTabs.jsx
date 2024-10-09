@@ -2,25 +2,22 @@ import { useStatesContext } from "../../../../providers/StatesProvider";
 import { useWorkspaceContext } from "../../../../providers/WorkspaceProvider";
 import {
   TableContainer,
-  Typography,
   Paper,
+  Stack,
 } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import TableToolbar from "./Toolbar/TableToolbar";
 import { useState } from "react";
+import InfoBar from "./InfoBar/InfoBar";
+import { useErrorContext } from "../../../../providers/ErrorProvider";
 
-function _capitalizeFirstLetter(value) {
-  if (typeof value === 'string') {
-    return value.replace(/\b\w/g, (char) => char.toUpperCase());
-  }
-  return value;
-}
+
 
 function _prepareColumns(dataEntity) {
   const prepareCol = (type) => (col) => {
     return {
       field: col,
-      headerName: _capitalizeFirstLetter(col),
+      headerName: col,
       editable: col !== "id",
       headerClassName: `${type}-header`
     }
@@ -40,6 +37,8 @@ function _prepareColumns(dataEntity) {
   return userInfo.concat(transform, questions);
 }
 
+
+
 /**
  * A tabs component containing data tables from a workspace.
  * 
@@ -51,28 +50,19 @@ export default function DataTableTabs() {
   const dataEntity = workspace.dataEntity;
   const { 
     tableState,
-    updateTable,
     updateAll
   } = useStatesContext();
+  const { displayError } = useErrorContext()
   const [currentCol, setCurrentCol] = useState("")
 
   // ---------- Danger zone ends here ----------
 
-  if (!dataEntity) {
-    return (
-      <Typography variant="h6" color="error">
-        No data available
-      </Typography>
-    );
-  }
 
   const columns = _prepareColumns(dataEntity);
 
   return (
-    <div className="App">
-      <Typography variant="h4" component="h1" gutterBottom>
-        😊 Deine Daten: 
-      </Typography>
+    <Stack className="App">
+      <InfoBar />
       <TableContainer
         component={Paper}
         elevation={3}
@@ -103,13 +93,14 @@ export default function DataTableTabs() {
             
             const rowNr = dataEntity.data.findIndex((row) => row.id === oldRow.id)
             dataEntity.setValue(rowNr, currentCol, value)
+            updateAll()
             return newRow
           }}
           onProcessRowUpdateError={(error) => {
-            console.log(error)
+            displayError(error.message)
           }}
         />
       </TableContainer>
-    </div>
+    </Stack>
   );
 }

@@ -16,19 +16,20 @@ import QUESTIONNAIRE_TYPE from "../../../constants/QuestionnaireType"
  * `Visualization` and `Modification` as sub-components.
  */
 export default function Workspace() {
-  const { workspace, setWorkspace } = useWorkspaceContext()
-  const { updateAll } = useStatesContext()
+  // const { workspace, setWorkspace } = useWorkspaceContext()
+  // const { updateAll } = useStatesContext()
 
   // Import test data. Must be deleted in production
-  useEffect(() => {
-    dataService.importData("tests/test-data/SUS-example.csv", QUESTIONNAIRE_TYPE.SUS)
-        .then(dataEntity => {
-          workspace.setDataEntity(dataEntity)
-          const diagramEntity = new DiagramEntity(DIAGRAM_TYPE.NONE, dataEntity)
-          workspace.setDiagramEntity(diagramEntity)
-          updateAll()
-        })
-  }, [])
+  // useEffect(() => {
+  //   dataService.importData("tests/test-data/SUS-example.csv", QUESTIONNAIRE_TYPE.SUS)
+  //       .then(dataEntity => {
+  //         workspace.setDataEntity(dataEntity)
+  //         workspace.setDataName("SUS-example.csv")
+  //         const diagramEntity = new DiagramEntity(DIAGRAM_TYPE.NONE, dataEntity)
+  //         workspace.setDiagramEntity(diagramEntity)
+  //         updateAll()
+  //       })
+  // }, [])
 
   return (
     <PanelGroup direction="horizontal" className="container">
