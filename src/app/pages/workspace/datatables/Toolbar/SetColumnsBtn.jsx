@@ -138,7 +138,7 @@ function QtnTypeSelect({ currentType, onChange }) {
   return (
     <>
     <FormControl fullWidth>
-      <InputLabel id="qtn-select">Fragebogen-Typ</InputLabel>
+      <InputLabel id="qtn-select">Set questionnaire type</InputLabel>
       <Select
         labelId="qtn-select"
         label="Set questionnaire type"
