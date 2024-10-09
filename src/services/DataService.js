@@ -1,12 +1,20 @@
 import * as d3 from "d3"
 import DataEntity from "../entities/DataEntity"
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
+import { columnType } from "../utils/DataUtils"
+import { QuestionnaireTypeError } from "../exceptions/DataExceptions"
 
 
 class DataService {
 
   async importData(filePath, type=QUESTIONNAIRE_TYPE.NONE) {
     const data = await d3.csv(filePath, d3.autoType)
+    if (type !== QUESTIONNAIRE_TYPE.NONE || 
+      data.columns.filter(col => columnType(col) === "questions").length !== type.numOfQuestions
+    ) {
+      throw new QuestionnaireTypeError(`${type.name} type questionnaire must have exactly 
+        ${type.numOfQuestions} question columns.`)
+    }
     const dataEntity = new DataEntity(type, data)
     this.generateId(dataEntity)
     return dataEntity
