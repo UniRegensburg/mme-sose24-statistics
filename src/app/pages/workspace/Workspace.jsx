@@ -24,6 +24,7 @@ export default function Workspace() {
     dataService.importData("tests/test-data/SUS-example.csv", QUESTIONNAIRE_TYPE.SUS)
         .then(dataEntity => {
           workspace.setDataEntity(dataEntity)
+          workspace.setDataPath("tests/test-data/SUS-example.csv")
           const diagramEntity = new DiagramEntity(DIAGRAM_TYPE.NONE, dataEntity)
           workspace.setDiagramEntity(diagramEntity)
           updateAll()

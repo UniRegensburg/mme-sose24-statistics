@@ -220,6 +220,7 @@ export default class DataEntity {
 
   setType(type) {
     this.type = type
+    if (type === QUESTIONNAIRE_TYPE.NONE) { return }
     this.setNumOfQuestions(type.numOfQuestions)
   }
 
