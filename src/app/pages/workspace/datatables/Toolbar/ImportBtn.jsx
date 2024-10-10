@@ -12,11 +12,7 @@ export default function ImportBtn() {
 
   const handleImport = async (event) => {
     const file = event.target.files[0]
-    if (!file) { return }
-    const url = URL.createObjectURL(file)
-    const dataEntity = await dataService.importData(url)
-    workspace.setDataEntity(dataEntity)
-    workspace.setDataName(file.name)
+    await dataService.loadDataFromFile(workspace, file)
     updateAll()
   }
 
