@@ -22,6 +22,21 @@ class DataService {
 
 
   /**
+   * Load data to workspace.
+   * @param {WorkspaceEntity} workspace 
+   * @param {Blob} file 
+   * @param {object} type 
+   */
+  async loadDataFromFile(workspace, file, type=QUESTIONNAIRE_TYPE.NONE) {
+    if (!file) { return }
+    const url = URL.createObjectURL(file)
+    const dataEntity = await this.importData(url, type)
+    workspace.setDataEntity(dataEntity)
+    workspace.setDataName(file.name)
+  }
+
+
+  /**
    * Generate unique id for each row of data. This is required by MUI DataGrid.
    * @param {DataEntity} dataEntity 
    */
