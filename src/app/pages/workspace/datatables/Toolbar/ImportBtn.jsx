@@ -26,7 +26,7 @@ export default function ImportBtn() {
         startIcon={<FileUploadIcon />}
         onClick={handleBtnClick}
       >
-        Import
+        Importieren
       </Button>
       <input
         ref={inputRef}

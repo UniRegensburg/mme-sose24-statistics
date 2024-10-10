@@ -104,7 +104,7 @@ function Modification() {
         
 
       <Button onClick={confirm} style={{margin: '1em'}}>
-        Änderungen speichern
+        Diagramm Erstellen
       </Button>
     </div>
   )

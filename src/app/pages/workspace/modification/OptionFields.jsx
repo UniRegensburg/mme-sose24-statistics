@@ -10,7 +10,7 @@ export default function OptionFields({
 }) {
   if (allOptions.length === 0) {
     return (
-      <Typography>Bitte wählen Sie einen Diagramtyp.</Typography>
+      <Typography>Bitte wählen Sie einen Diagrammtyp.</Typography>
     )
   }
 
