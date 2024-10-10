@@ -1,6 +1,6 @@
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 import DataEntity from "../entities/DataEntity"
-import { average, count } from "../utils/MathUtils"
+import { average, count, groupAverage } from "../utils/MathUtils"
 
 
 class DataAnalysisService {
@@ -24,6 +24,9 @@ class DataAnalysisService {
     if (dataEntity.type === QUESTIONNAIRE_TYPE.NPS) {
       return QUESTIONNAIRE_TYPE.NPS.totalScoreCalculator(dataEntity.data)
     } 
+    if (dataEntity.type === QUESTIONNAIRE_TYPE.UEQ) {
+      return groupAverage(this.calculateScores(dataEntity))
+    }
     return average(this.calculateScores(dataEntity))
   }
 

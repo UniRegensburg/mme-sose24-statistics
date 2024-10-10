@@ -7,6 +7,23 @@ function average(arr) {
   return arr.reduce((a, b) => a + b) / arr.length
 }
 
+/**
+ * Given a list of objects, calculate average for all keys.
+ * @param {Object[]} objs 
+ */
+function groupAverage(objs) {
+  const result = {}
+  const keys = Object.keys(objs[0])
+  keys.forEach(key => {
+    result[key] = 0
+    for (let obj of objs) {
+      result[key] += obj[key]
+    }
+    result[key] /= objs.length
+  })
+  return result
+}
+
 
 function count(arr) {
   return arr.reduce((count, item) => {
@@ -69,6 +86,7 @@ function apply(arr, func) {
 
 export {
   average,
+  groupAverage,
   count,
   standardDeviation,
   inplaceStandardize,
