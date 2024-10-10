@@ -58,7 +58,7 @@ QUESTIONNAIRE_TYPE.UEQ = {
       // Sum of questions pro category
       for (let i = 0; i < questionIndices.length; i++) {
         let qIndex = questionIndices[i];
-        categoryScoreUEQ += ueqResult["Q" + qIndex + 1];
+        categoryScoreUEQ += ueqResult[`Q${qIndex}`];
       }
 
       //  mean for every category
