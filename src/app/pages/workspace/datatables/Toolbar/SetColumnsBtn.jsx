@@ -84,7 +84,7 @@ export default function SetColumnsBtn() {
         startIcon={<TableChartIcon />}
         onClick={handleClick}
       >
-        Data settings
+        Daten Einstellungen
       </Button>
       <Popover
         id={id}
@@ -111,29 +111,29 @@ export default function SetColumnsBtn() {
               <TextField
                 fullWidth
                 size="small"
-                label="Set question number"
+                label="Fragen-Nr. festlegen"
                 onChange={(event) => setQuestionNr(event.target.value.trim())}
               />
             </Stack>
             <Stack direction="row" spacing={2}>
               <TextField
                 size="small"
-                label="Add user info"
+                label="Nutzerinfo hinzufügen"
                 onChange={(event) => setNewUserInfo(event.target.value.trim())}
               />
               <TextField
                 size="small"
-                label="Add transform"
+                label="Transformierung hinzufügen"
                 onChange={(event) => setNewTransform(event.target.value.trim())}
               />
             </Stack>
             <Divider />
             <TextField
               size="small"
-              label="Delete user info/transform column"
+              label="Nuterinfo/Transformierung löschen"
               onChange={(event) => setDeleteColumn(parseColumnInput(event.target.value, dataEntity))}
             />
-            <Button onClick={applyChanges}>Confirm</Button>
+            <Button onClick={applyChanges}>Bestätigen</Button>
           </Stack>
         </Box>
       </Popover>
@@ -200,10 +200,10 @@ function QtnTypeSelect({ currentType, onChange }) {
   return (
     <>
       <FormControl fullWidth>
-        <InputLabel id="qtn-select">Set questionnaire type</InputLabel>
+        <InputLabel id="qtn-select">Fragebogen-Typ auswählen</InputLabel>
         <Select
           labelId="qtn-select"
-          label="Set questionnaire type"
+          label="Fragebogen-Typ auswählen"
           size='small'
           value={currentType}
           onChange={onChange}
