@@ -65,7 +65,11 @@ function Home() {
 
       {/* Logo */}
       <div>
-        <img src="/Logo_UsabilityAnalyzer.jpeg" className="logo" alt="Usability Analyzer Logo" />
+        <img 
+          src="/Logo_UsabilityAnalyzer_black.png"
+          className="logo"
+          alt="Usability Analyzer Logo"
+        />
       </div>
 
       <h1>Usability Analyzer</h1>
