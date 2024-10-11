@@ -5,7 +5,10 @@ import { QuestionnaireTypeError } from "../exceptions/DataExceptions";
  * Contains necessary information of all available questionnaires types.
  * The following types are currently available:
  * @param {object} NONE
+ * @param {object} UEQ
  * @param {object} SUS
+ * @param {object} rawTLX
+ * @param {object} NPS
  * 
  * Each type must include following information:
  * @param {string} name Name of the type.

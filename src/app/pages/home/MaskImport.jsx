@@ -66,6 +66,12 @@ export default function NewRowMaker() {
   const [rowModesModel, setRowModesModel] = React.useState({});
   const apiRef = useGridApiRef();
 
+  const processRowUpdate = (newRow) => {
+    const updatedRow = { ...newRow, isNew: false };
+    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    return updatedRow;
+  };
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
@@ -75,6 +81,7 @@ export default function NewRowMaker() {
         apiRef={apiRef}
         rowModesModel={rowModesModel}
         onRowModesModelChange={setRowModesModel}
+        processRowUpdate={processRowUpdate}
         slots={{
           toolbar: EditToolbar,
         }}
