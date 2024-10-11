@@ -55,6 +55,18 @@ DIAGRAM_TYPE.SCATTER = {
 }
 
 
+DIAGRAM_TYPE.BOX = {
+  name: "Boxplot",
+  options: ["x", "y"],
+  requiredOptions: ["x", "y"],
+  plotOptions: (data, settings, options) => {
+    const plotOptions = commonPlotSettings(settings)
+    plotOptions.marks = [
+      Plot.boxY(data, {x: options.x, y: options.y})
+    ]
+    return plotOptions
+  }
+}
 
 
 
