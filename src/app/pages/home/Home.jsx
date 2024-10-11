@@ -34,14 +34,10 @@ function Home() {
   // File uploader
   const fileUploader = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const newURL = URL.createObjectURL(file);
-      try {
-        const importedData = await DataService.importData(newURL, selectedQuestionnaireType);
-        workspace.setDataEntity(importedData);
-      } catch (error) {
-        console.error("error");
-      }
+    try {
+      await DataService.loadDataFromFile(workspace, file, selectedQuestionnaireType);
+    } catch (error) {
+      console.error("error");
     }
   };
 
@@ -95,15 +91,15 @@ function Home() {
               name="questionnaire-type" 
               disabled={selectedSection === 'mask'} 
               onChange={(e) => {
-                setSelectedSection('upload'); 
+                setSelectedSection('upload');
                 setSelectedQuestionnaireType(QUESTIONNAIRE_TYPE[e.target.value]);
               }}
             >
-              <option value={QUESTIONNAIRE_TYPE.NONE}>-- Bitte wählen --</option>
-              <option value={QUESTIONNAIRE_TYPE.UEQ}>User Experience Questionnaire (UEQ)</option>
-              <option value={QUESTIONNAIRE_TYPE.SUS}>System Usability Scale (SUS)</option>
-              <option value={QUESTIONNAIRE_TYPE.NPS}>Net Promoter Score (NPS)</option>
-              <option value={QUESTIONNAIRE_TYPE.rawTLX}>RAW Task Load Index</option>
+              <option value={"NONE"}>-- Bitte wählen --</option>
+              <option value={"UEQ"}>User Experience Questionnaire (UEQ)</option>
+              <option value={"SUS"}>System Usability Scale (SUS)</option>
+              <option value={"NPS"}>Net Promoter Score (NPS)</option>
+              <option value={"rawTLX"}>RAW Task Load Index</option>
             </select>
             <br />
             <p>
