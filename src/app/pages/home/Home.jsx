@@ -7,6 +7,7 @@ import DataService from '../../../services/DataService';
 import QUESTIONNAIRE_TYPE from "../../../constants/QuestionnaireType";
 import NewRowMaker from "./MaskImport";
 import './Home.css';
+import FormatGuide from '../../../components/guides/FormatGuide';
 
 /**
  * Main component for home page. Landing Page.
@@ -34,14 +35,10 @@ function Home() {
   // File uploader
   const fileUploader = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const newURL = URL.createObjectURL(file);
-      try {
-        const importedData = await DataService.importData(newURL, selectedQuestionnaireType);
-        workspace.setDataEntity(importedData);
-      } catch (error) {
-        console.error("error");
-      }
+    try {
+      await DataService.loadDataFromFile(workspace, file, selectedQuestionnaireType);
+    } catch (error) {
+      console.error("error");
     }
   };
 
@@ -64,7 +61,7 @@ function Home() {
         </Box>
       </Modal>
 
-      <p className="darkmode">Darkmode Reminder</p>
+      {/* <p className="darkmode">Darkmode Reminder</p> */}
 
       {/* Logo */}
       <div>
@@ -95,15 +92,15 @@ function Home() {
               name="questionnaire-type" 
               disabled={selectedSection === 'mask'} 
               onChange={(e) => {
-                setSelectedSection('upload'); 
+                setSelectedSection('upload');
                 setSelectedQuestionnaireType(QUESTIONNAIRE_TYPE[e.target.value]);
               }}
             >
-              <option value={QUESTIONNAIRE_TYPE.NONE}>-- Bitte wählen --</option>
-              <option value={QUESTIONNAIRE_TYPE.UEQ}>User Experience Questionnaire (UEQ)</option>
-              <option value={QUESTIONNAIRE_TYPE.SUS}>System Usability Scale (SUS)</option>
-              <option value={QUESTIONNAIRE_TYPE.NPS}>Net Promoter Score (NPS)</option>
-              <option value={QUESTIONNAIRE_TYPE.rawTLX}>RAW Task Load Index</option>
+              <option value={"NONE"}>-- Bitte wählen --</option>
+              <option value={"UEQ"}>User Experience Questionnaire (UEQ)</option>
+              <option value={"SUS"}>System Usability Scale (SUS)</option>
+              <option value={"NPS"}>Net Promoter Score (NPS)</option>
+              <option value={"rawTLX"}>RAW Task Load Index</option>
             </select>
             <br />
             <p>
@@ -174,66 +171,11 @@ function Home() {
         © 2024 Reginleif Klein, Sebastian Scherübl, Ruoyu Xu
       </p>
 
-      <Modal open={isUserDataFormatOpen} onClose={handleCloseUserDataFormat}>
-        <Box className="modal-box">
-          <h1>Datenformat</h1>
-          <p>
-            Zugelassen sind nur CSV-Dateien. Diese müssen für die Analyse im folgenden Format vorliegen. 
-            Spalte 1-3 enthalten die demografischen Informationen, die folgenden Spalten enthalten die Antworten der Fragebögen. 
-            Beispielhaft ist hier der SUS gelistet. Andere Fragebögen sind analog zu beachten, nur mit angepasster Fragenanzahl.
-          </p>
-          <table className="exampleTable">
-            <tbody>
-              <tr>
-                <td>ID1</td>
-                <td>25</td>
-                <td>W</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>1</td>
-                <td>2</td>
-                <td>4</td>
-                <td>2</td>
-                <td>5</td>
-              </tr>
-              <tr>
-                <td>ID2</td>
-                <td>30</td>
-                <td>W</td>
-                <td>3</td>
-                <td>3</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>2</td>
-                <td>1</td>
-                <td>4</td>
-                <td>2</td>
-                <td>1</td>
-              </tr>
-              <tr>
-                <td>ID3</td>
-                <td>22</td>
-                <td>M</td>
-                <td>5</td>
-                <td>4</td>
-                <td>3</td>
-                <td>2</td>
-                <td>5</td>
-                <td>3</td>
-                <td>2</td>
-                <td>3</td>
-                <td>2</td>
-                <td>1</td>
-              </tr>
-            </tbody>
-          </table>
-          <button onClick={handleCloseUserDataFormat} className="button">Schließen</button>
-        </Box>
-      </Modal>
+      <FormatGuide
+        open={isUserDataFormatOpen}
+        onClose={handleCloseUserDataFormat}
+      />
+
     </>
   );
 }

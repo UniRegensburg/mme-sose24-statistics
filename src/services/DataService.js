@@ -11,10 +11,7 @@ class DataService {
     const data = await d3.csv(filePath, d3.autoType)
     if (type !== QUESTIONNAIRE_TYPE.NONE && 
       data.columns.filter(col => columnType(col) === "questions").length !== type.numOfQuestions
-    ) {
-      throw new QuestionnaireTypeError(`${type.name} type questionnaire must have exactly 
-        ${type.numOfQuestions} question columns.`)
-    }
+    ) { type = QUESTIONNAIRE_TYPE.NONE }
     const dataEntity = new DataEntity(type, data)
     this.generateId(dataEntity)
     return dataEntity
@@ -33,6 +30,13 @@ class DataService {
     const dataEntity = await this.importData(url, type)
     workspace.setDataEntity(dataEntity)
     workspace.setDataName(file.name)
+  }
+
+  loadDataFromArray(workspace, arr, type=QUESTIONNAIRE_TYPE.NONE) {
+    const dataEntity = new DataEntity(type, arr)
+    this.generateId(dataEntity)
+    workspace.setDataEntity(dataEntity)
+    workspace.setDataName("NewData")
   }
 
 
