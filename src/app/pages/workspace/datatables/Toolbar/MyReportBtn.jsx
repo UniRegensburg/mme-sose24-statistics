@@ -6,65 +6,78 @@ import {
   DialogContent,
   DialogContentText,
   Typography,
-  List,
-  ListItem,
-  ListItemText,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper
 } from "@mui/material";
 import { useWorkspaceContext } from "../../../../../providers/WorkspaceProvider";
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import dataAnalysisService from '../../../../../services/DataAnalysisService';
 
-// Function to capitalize the categories inside the report
+// Function to capitalize the data categories
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Function to format  objects/arrays to a more readable format
-function formatValue(value) {
-  if (Array.isArray(value)) {
-    return value.map(item => (
-      <ListItemText
-        key={item}
-        primary={typeof item === 'object' ? formatValue(item) : item}
-        sx={{ paddingLeft: 2 }} // Indent array items
-      />
-    ));
-  } else if (typeof value === 'object' && value !== null) {
-    return (
-      <List>
-        {Object.entries(value).map(([key, val]) => (
-          <ListItem key={key}>
-            <ListItemText
-              primary={capitalizeFirstLetter(key.replace(/_/g, ' '))}
-              secondary={typeof val === 'object' ? formatValue(val) : val}
-              sx={{ paddingLeft: 2 }} // Indent nested object values
-            />
-          </ListItem>
-        ))}
-      </List>
-    );
-  }
-  return value; // If it's not an array or object, return the value directly
+// Function to format data into a table
+function renderDataAsTable(data) {
+  return (
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell><strong>Kategorie</strong></TableCell>
+            <TableCell><strong>Wert</strong></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {Object.entries(data).map(([key, value]) => (
+            <TableRow key={key}>
+              <TableCell>{capitalizeFirstLetter(key.replace(/_/g, ' '))}</TableCell>
+              <TableCell>{typeof value === 'object' ? formatValue(value) : value}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
 }
 
-// Function to make the report more human-readable
-function formatReport(report) {
-  if (typeof report === 'object' && report !== null) {
+// Function to format objects/arrays into a human-readable format
+function formatValue(value) {
+  if (Array.isArray(value)) {
     return (
-      <List>
-        {Object.entries(report).map(([key, value]) => (
-          <ListItem key={key}>
-            <ListItemText
-              primary={capitalizeFirstLetter(key.replace(/_/g, ' '))}
-              secondary={formatValue(value)}
-            />
-          </ListItem>
+      <ul>
+        {value.map((item, index) => (
+          <li key={index}>{typeof item === 'object' ? formatValue(item) : item}</li>
         ))}
-      </List>
+      </ul>
+    );
+  } else if (typeof value === 'object' && value !== null) {
+    return (
+      <ul>
+        {Object.entries(value).map(([key, val]) => (
+          <li key={key}>
+            {capitalizeFirstLetter(key.replace(/_/g, ' '))}: {typeof val === 'object' ? formatValue(val) : val}
+          </li>
+        ))}
+      </ul>
     );
   }
+  return value;
+}
 
-  // Return a string if the report is not an object
+// Function to render the table
+function formatReport(report) {
+  if (typeof report === 'object' && report !== null) {
+    return renderDataAsTable(report);
+  }
+
+  // Return string if the data file is not an object
   return <DialogContentText>{report}</DialogContentText>;
 }
 
