@@ -13,6 +13,23 @@ export default function FormatGuide({ open, onClose }) {
         Beispielhaft ist hier der SUS gelistet. Andere Fragebögen sind analog zu beachten, nur mit angepasster Fragenanzahl.
       </p>
       <table className="exampleTable">
+      <thead>
+            <tr>
+              <th>id</th>
+              <th>gender</th>
+              <th>age</th>
+              <th>Q1</th>
+              <th>Q2</th>
+              <th>Q3</th>
+              <th>Q4</th>
+              <th>Q5</th>
+              <th>Q6</th>
+              <th>Q7</th>
+              <th>Q8</th>
+              <th>Q9</th>
+              <th>Q10</th>
+            </tr>
+          </thead>
         <tbody>
           <tr>
             <td>ID1</td>
