@@ -5,13 +5,15 @@ import AddIcon from '@mui/icons-material/Add';
 import { randomId } from '@mui/x-data-grid-generator';
 import { GridToolbarContainer, useGridApiRef, GridRowModes } from '@mui/x-data-grid';
 import { useWorkspaceContext } from '../../../providers/WorkspaceProvider';
+import DataService from '../../../services/DataService';
+import QUESTIONNAIRE_TYPE from "../../../constants/QuestionnaireType";
 
 // Start-Table
 const initialRows = [
 ];
 
 const columns = [
-  //{ field: 'id', headerName: 'ID', width: 180, editable: true },
+  { field: 'id', headerName: 'ID', width: 180, editable: true },
   { field: 'userID', headerName: 'userID', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true, align: 'left', headerAlign: 'left' },
   { field: 'gender', headerName: 'Gender', width: 180, editable: true },
@@ -45,15 +47,12 @@ function EditToolbar(props) {
   );
 }
 
-//Exports the data as CSV
-function CsvUploader({ apiRef }) {
+//Exports to workspace
+function CsvUploader({ rows }) {
   const { workspace } = useWorkspaceContext();
   const clickToExport = () => {
-    if (apiRef.current) {
-      const exportedCsvData = apiRef.current.getDataAsCsv({ onlyVisibleFields: true });
-      console.log(exportedCsvData);
-      //workspace.setDataEntity(exportedCsvData);
-    }
+    DataService.loadDataFromArray(workspace, rows);
+    console.log('Upload to workspace worked.');
   };
 
   return (
@@ -90,7 +89,7 @@ export default function NewRowMaker() {
         }}
       />
       <Box>
-        <CsvUploader apiRef={apiRef} />
+        <CsvUploader rows={rows} />
       </Box>
     </div>
   );
