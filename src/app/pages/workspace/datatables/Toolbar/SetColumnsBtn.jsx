@@ -56,6 +56,7 @@ export default function SetColumnsBtn() {
   const applyChanges = () => {
     handleClose();
     try {
+      dataEntity.setType(qtnType);
       if (/^\d+$/.test(questionNr)) {
         dataEntity.setNumOfQuestions(parseInt(questionNr));
       }
@@ -65,11 +66,9 @@ export default function SetColumnsBtn() {
         parseList(deleteColumn)
           .map(col => parseColumnInput(col, dataEntity))
       );
-      dataEntity.setType(qtnType);
     } catch (error) {
       displayError(error.message)
     }
-
     updateTable();
     clearStates();
   };
