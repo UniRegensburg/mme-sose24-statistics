@@ -141,11 +141,11 @@ function Home() {
                 setSelectedQuestionnaireType(QUESTIONNAIRE_TYPE[e.target.value]);
               }}
             >
-              <option value={QUESTIONNAIRE_TYPE.NONE}>-- Bitte wählen --</option>
-              <option value={QUESTIONNAIRE_TYPE.UEQ}>User Experience Questionnaire (UEQ)</option>
-              <option value={QUESTIONNAIRE_TYPE.SUS}>System Usability Scale (SUS)</option>
-              <option value={QUESTIONNAIRE_TYPE.NPS}>Net Promoter Score (NPS)</option>
-              <option value={QUESTIONNAIRE_TYPE.rawTLX}>RAW Task Load Index</option>
+              <option value={"NONE"}>-- Bitte wählen --</option>
+              <option value={"UEQ"}>User Experience Questionnaire (UEQ)</option>
+              <option value={"SUS"}>System Usability Scale (SUS)</option>
+              <option value={"NPS"}>Net Promoter Score (NPS)</option>
+              <option value={"rawTLX"}>RAW Task Load Index</option>
             </select>
             <br />
             <p>
@@ -153,7 +153,7 @@ function Home() {
               Für Informationen zum Datei-Format klicken Sie 
               <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}> hier</span>.
             </p>
-            <NewRowMaker />
+            <NewRowMaker selectedQuestionnaireType={selectedQuestionnaireType} />
             <br /><br />
             <Link to="/workspace">
               <button className="button" disabled={selectedSection === 'upload'}>

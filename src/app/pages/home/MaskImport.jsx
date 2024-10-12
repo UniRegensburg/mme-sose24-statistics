@@ -48,10 +48,10 @@ function EditToolbar(props) {
 }
 
 //Exports to workspace
-function CsvUploader({ rows }) {
+function CsvUploader({ rows, selectedQuestionnaireType  }) {
   const { workspace } = useWorkspaceContext();
   const clickToExport = () => {
-    DataService.loadDataFromArray(workspace, rows);
+    DataService.loadDataFromArray(workspace, rows, selectedQuestionnaireType );
     console.log('Upload to workspace worked.');
   };
 
@@ -60,10 +60,9 @@ function CsvUploader({ rows }) {
   );
 }
 
-export default function NewRowMaker() {
+export default function NewRowMaker({ selectedQuestionnaireType }) {
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState({});
-  const apiRef = useGridApiRef();
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
@@ -77,7 +76,6 @@ export default function NewRowMaker() {
         rows={rows}
         columns={columns}
         editMode="row"
-        apiRef={apiRef}
         rowModesModel={rowModesModel}
         onRowModesModelChange={setRowModesModel}
         processRowUpdate={processRowUpdate}
@@ -89,7 +87,7 @@ export default function NewRowMaker() {
         }}
       />
       <Box>
-        <CsvUploader rows={rows} />
+        <CsvUploader rows={rows} selectedQuestionnaireType={selectedQuestionnaireType} />
       </Box>
     </div>
   );
