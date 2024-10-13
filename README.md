@@ -1,5 +1,7 @@
 # mme-sose24-statistics
 
+## Video Documentation https://youtu.be/LOki-pQkASo
+
 ## About the app
 
 ## Setup
