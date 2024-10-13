@@ -8,6 +8,7 @@ import QUESTIONNAIRE_TYPE from "../../../constants/QuestionnaireType";
 import NewRowMaker from "./MaskImport";
 import './Home.css';
 import FormatGuide from '../../../components/guides/FormatGuide';
+import HelpModal from '../../../components/guides/HelpPopUp';
 
 /**
  * Main component for home page. Landing Page.
@@ -44,53 +45,10 @@ function Home() {
 
   return (
     <>
+    {/* Help-Button */}
       <IconButton onClick={handleOpenHelp} className="helpIcon">
         <HelpOutlineIcon />
       </IconButton>
-
-      {/* Modal for Help-Icon */}
-      <Modal open={isHelpOpen} onClose={handleCloseHelp}>
-        <Box className="modal-box" sx ={{maxHeight: '80vh', overflowY: 'auto'}}>
-          <h2>Hilfe</h2>
-          <p>
-            Hierbei handelt es sich um ein Tool zur Analyse Ihrer Usability-Daten. 
-            Laden Sie Ihre Daten hoch und nutzen Sie die umfassenden Auswertungsfunktionen. 
-            Bei Fragen oder Anliegen stehen wir Ihnen gerne zur Verfügung. Im folgenden werden die grundlegenden Funktionen dieser Website beschrieben.
-          </p>
-          <h3>Startseite</h3>
-          <p>Auf der Startseite können Sie wählen, ob Sie Daten aus einer externen CSV-Datei importieren (mit dem Panel auf der linken Seite) oder Ihre eigenen Daten mit der Maske auf der rechten Seite erstellen möchten. Informationen zu den unterstützten Formaten und Fragebogentypen sind direkt bei den Upload/Masken-Feldern platziert.</p>
-          <h3>Datenanalyse</h3>
-          <p>Nachdem Sie Ihre Daten hochgeladen haben, können Sie über "Analyse Starten" diese auswerten. Folgende Möglichkeiten stehen Ihnen hierfür zur Verfügung: </p>
-          <h4>Daten importieren:</h4> 
-          <p>Verwenden Sie die Schaltfläche „IMPORTIEREN“, um CSV-Daten zu importieren. Die Anwendung generiert eine eindeutige ID für jede Zeile, wenn Ihre Daten keine Spalte mit dem Namen „id“ enthalten.</p>
-          <h4>Daten bearbeiten:</h4> 
-          <p>Doppelklicken Sie auf Tabellenzellen, um deren Werte zu bearbeiten. Verwenden Sie die Schaltfläche „DATEN EINSTELLUNGEN“, um Spalten hinzuzufügen/löschen oder um den Fragebogentyp zu ändern.</p>
-          <h4>Datenumwandlung:</h4>
-          <p>Im Panel „DATEN EINSTELLUNGEN“ können Sie Ihre Tabellenwerte transformieren. Sie können Formeln eingeben, um eine Transformation zu erstellen. Unterstützt werden die folgenden Funktionen. Die gleichen Informationen finden Sie auch, wenn Sie auf die Schaltfläche „Hilfe“ im Feld „DATEN EINSTELLUNGEN“ klicken.</p>
-          <ul>
-            <li>- SCORE: Questionnaire score corresponding to its type.</li>
-            <li>- SCALE: Standardize data.</li>
-            <li>- AVG: Average value.</li>
-            <li>- SD: Standard deviation.</li>
-            <li>- MAX: Maximum value.</li>
-            <li>- MIN: Minimum value.</li>
-            <li>- ABS: Absolute value.</li>
-            <li>- FLOOR: Floor function.</li>
-            <li>- LOG: Logarithm with base e.</li>
-            <li>- EXP: Exponential function.</li>
-            <li>- SIN: Sine function.</li>
-            <li>- COS: Cosine function.</li>
-          </ul>
-          <h4>Plotten:</h4>
-          <p>Auf der rechten Seite befindet sich das Feld Diamgrammtyp. Sie können eine Art von Diagramm auswählen und die erforderlichen Informationen eingeben. Wenn Sie Ihre Daten bearbeiten, werden sich die Diagramme dynamisch ändern.</p>
-          <h4>Datenbericht:</h4>
-          <p>Klicken Sie auf die Schaltfläche „DATEN-REPORT“, um weitere Informationen über Ihre Daten zu erhalten. Wenn Sie den Typ Ihres Fragebogens festgelegt haben, wird auch der Score für Ihre Daten berechnet.
-          </p>
-          <button onClick={handleCloseHelp} className="button">Schließen</button>
-        </Box>
-      </Modal>
-
-      {/* <p className="darkmode">Darkmode Reminder</p> */}
 
       {/* Logo */}
       <div>
@@ -100,7 +58,7 @@ function Home() {
           alt="Usability Analyzer Logo"
         />
       </div>
-
+      {/* Title and Slogan */}
       <h1>Usability Analyzer</h1>
       <p>Das Tool für schnelle und unkomplizierte Auswertung von Usability-Daten</p>
 
@@ -115,7 +73,7 @@ function Home() {
         </div>
 
         {/* Choose Usability Data */}
-        <div className="buttonColumn">
+        <div className="dataUploadSection">
           {/* Upload Usability Data */}
           <div className={`fieldDataFile ${selectedSection === 'mask' ? 'disabled-section' : ''}`}>
             <h2>Hier können Sie Ihre Daten hochladen.</h2>
@@ -160,7 +118,7 @@ function Home() {
           <div className={`fieldDataFile ${selectedSection === 'upload' ? 'disabled-section' : ''}`}>
             {/* Mask for Usability Data */}
             <h2>Hier können Sie Ihre Daten über eine Maske eingeben.</h2>
-            <p>1. Wählen Sie einen Usability-Fragebogen. Kein Upload notwendig!</p>
+            <p>1. Wählen Sie einen Usability-Fragebogen.</p>
             <select 
               id="questionnaire-type" 
               name="questionnaire-type" 
@@ -206,6 +164,8 @@ function Home() {
       <p className="copyrightInfo">
         © 2024 Reginleif Klein, Sebastian Scherübl, Ruoyu Xu
       </p>
+      
+      <HelpModal open={isHelpOpen} onClose={handleCloseHelp} />
 
       <FormatGuide
         open={isUserDataFormatOpen}
