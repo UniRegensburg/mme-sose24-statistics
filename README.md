@@ -59,11 +59,11 @@ See [GUIDELINES.md](docs/tutorials-dev/GUIDELINES.md)
 
   - **Components:** React components.
 
-![architecture1](docs\imgs\architecture_1.png)
+![architecture1](docs/imgs/architecture_1.png)
 
 - **Interaction between models and components:** `WorkspaceEntity` provides the main entry point for React components. Services may act as intermediate in this interaction.
 
-![architecture2](docs\imgs\architecture_2.jpg)
+![architecture2](docs/imgs/architecture_2.jpg)
 
 ### Tutorials for developers
 
