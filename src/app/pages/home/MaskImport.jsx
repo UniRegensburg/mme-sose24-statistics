@@ -12,6 +12,7 @@ import QUESTIONNAIRE_TYPE from "../../../constants/QuestionnaireType";
 const initialRows = [
 ];
 
+//Definition of rows
 const columns = [
   { field: 'userID', headerName: 'userID', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true, align: 'left', headerAlign: 'left' },
@@ -46,7 +47,7 @@ const columns = [
 
 function EditToolbar(props) {
   const { setRows, setRowModesModel } = props;
-
+//Build new row
   const handleClick = () => {
     const id = randomId(); 
     setRows((oldRows) => [
@@ -72,7 +73,7 @@ function EditToolbar(props) {
 function CsvUploader({ rows, selectedQuestionnaireType  }) {
   const { workspace } = useWorkspaceContext();
   const clickToExport = () => {
-       // Neue Liste für gefilterte Zeilen (ohne die 'id'-Spalte)
+       // Delete standard id-row of the data grid
        const cleanedRows = [];
        for (let i = 0; i < rows.length; i++) {
          const row = rows[i];
@@ -117,7 +118,7 @@ function CsvUploader({ rows, selectedQuestionnaireType  }) {
     }}
   >
     <Button onClick={clickToExport} variant="contained" sx={{
-        backgroundColor: '#007bff', color: '#fff', fontSize: '16px', borderRadius: '8px', '&:hover': { backgroundColor: '#0056b3',},}}
+        backgroundColor: '#1976D2', color: '#fff', fontSize: '16px', borderRadius: '8px', '&:hover': { backgroundColor: '#42A5F5',},}}
     >TABELLE SICHERN</Button>
     </Box>
   );
@@ -127,6 +128,7 @@ export default function NewRowMaker({ selectedQuestionnaireType }) {
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState({});
 
+  //safe edited rows
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow};
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));

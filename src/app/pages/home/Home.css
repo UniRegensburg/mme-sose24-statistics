@@ -10,21 +10,7 @@
   height: 12em;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
+/*Upload and Mask section*/
 .fieldDataFile {
   background-color: #f9f9f9d8;
   border: 1px solid #ccc;
@@ -52,26 +38,19 @@
 }
 
 
-.buttonColumn {
-  display: flex; /*Columns*/
+.dataUploadSection {
+  display: flex;
   justify-content: center; 
   justify-content: space-between;
   margin-top: 1em; 
 }
-/*.buttonDataFile {
-  flex: 1; 
-  margin: 0 0.5em; 
-  text-align: center;
-}
-.buttonDataFile select {
-  margin: 1em 0;
-  padding: 0.5em;
-  width: 50%;
-}*/
+
+/* Space between Data Upload and Mask section*/
 .separator {
   width: 2px;
   margin: 0 1em;
 }
+
 .card {
   padding: 2em;
 }
@@ -89,7 +68,6 @@
 .helpIcon:hover {
   color: #000;
 }
-
 
 .modal-box {
   position: absolute;
