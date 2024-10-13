@@ -72,8 +72,44 @@ function EditToolbar(props) {
 function CsvUploader({ rows, selectedQuestionnaireType  }) {
   const { workspace } = useWorkspaceContext();
   const clickToExport = () => {
-    DataService.loadDataFromArray(workspace, rows, selectedQuestionnaireType );
-    console.log('Upload to workspace worked.');
+       // Neue Liste für gefilterte Zeilen (ohne die 'id'-Spalte)
+       const cleanedRows = [];
+       for (let i = 0; i < rows.length; i++) {
+         const row = rows[i];
+         const newRow = {
+            userID: row.userID,
+            age: row.age,
+            gender: row.gender,
+            Q1: row.Q1,
+            Q2: row.Q2,
+            Q3: row.Q3,
+            Q4: row.Q4,
+            Q5: row.Q5,
+            Q6: row.Q6,
+            Q7: row.Q7,
+            Q8: row.Q8,
+            Q9: row.Q9,
+            Q10: row.Q10,
+            Q11: row.Q11,
+            Q12: row.Q12,
+            Q13: row.Q13,
+            Q14: row.Q14,
+            Q15: row.Q15,
+            Q16: row.Q16,
+            Q17: row.Q17,
+            Q18: row.Q18,
+            Q19: row.Q19,
+            Q20: row.Q20,
+            Q21: row.Q21,
+            Q22: row.Q22,
+            Q23: row.Q23,
+            Q24: row.Q24,
+            Q25: row.Q25,
+            Q26: row.Q26,           
+         };
+         cleanedRows.push(newRow);
+       }
+    DataService.loadDataFromArray(workspace, cleanedRows, selectedQuestionnaireType );
   };
 
   return (
