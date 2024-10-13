@@ -1,6 +1,6 @@
 /* Css for Landing Page*/
 #root {
-  max-width: 1280px;
+  width: 80%;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -8,16 +8,7 @@
 
 .logo {
   height: 12em;
-  /*padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;*/
 }
-/*.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}*/
 
 @keyframes logo-spin {
   from {
@@ -41,6 +32,8 @@
   padding: 20px;
   margin: 5px 0;
   text-align: left;
+  flex: 1;
+  width: 48%;
 }
 
 .fieldDataFile:hover {
@@ -62,9 +55,10 @@
 .buttonColumn {
   display: flex; /*Columns*/
   justify-content: center; 
+  justify-content: space-between;
   margin-top: 1em; 
 }
-.buttonDataFile {
+/*.buttonDataFile {
   flex: 1; 
   margin: 0 0.5em; 
   text-align: center;
@@ -73,7 +67,7 @@
   margin: 1em 0;
   padding: 0.5em;
   width: 50%;
-}
+}*/
 .separator {
   width: 2px;
   margin: 0 1em;
@@ -88,7 +82,7 @@
 
 .helpIcon{
   position: absolute;
-  transform: scale(1.8);
+  transform: scale(2);
   left: 600px;
 }
 
@@ -96,9 +90,6 @@
   color: #000;
 }
 
-.darkmode{
-  margin-left: 1200px;
-}
 
 .modal-box {
   position: absolute;

@@ -77,7 +77,7 @@ function Home() {
 
       <div className="card">
         {/* Info Field */}
-        <div className="fieldDataFile" style={{ textAlign: 'center' }}>
+        <div className="fieldDataFile" style={{ textAlign: 'center', width: '96%' }}>
           <p>
             Wir bieten Ihnen ein Tool zur Analyse von Usability-Daten aus Fragebögen. 
             Diese Anwendung unterstützt die Auswertung von User Experience Questionnaire (UEQ), 
@@ -151,7 +151,9 @@ function Home() {
             <p>
               2. Befüllen Sie Ihre Maske. 
               Für Informationen zum Datei-Format klicken Sie 
-              <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}> hier</span>.
+              <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}> hier</span>. 
+              Befüllen Sie nur die erforderliche Fragenanzahl für Ihren jeweiligen Fragebogen (z.B. SUS beinhaltet 10 Fragen).  
+              <br /> <b>BEVOR SIE DEN BUTTON "ANALYSE STARTEN" KLICKEN, SICHERN SIE DIE TABELLE MIT DEM ZUGEHÖRIGEN BUTTON. "TABELLE SICHERN" funktioniert nur wenn der Bearbeitungsmodus eines Feldes mit der EIngabe-Taste beendet wurde.</b>
             </p>
             <NewRowMaker selectedQuestionnaireType={selectedQuestionnaireType} />
             <br /><br />
