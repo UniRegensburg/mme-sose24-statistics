@@ -6,6 +6,8 @@ import {
   FormControl,
   IconButton,
   InputLabel,
+  List,
+  ListItem,
   MenuItem,
   Popover,
   Select,
@@ -155,12 +157,26 @@ function HelpButton() {
   };
 
   const HelpText = () => (
-    <Box sx={{ width: '100%' }} style={{margin: 20}}>
+    <Box height="20em" width="25em" style={{margin: 20}}>
+      <h2>Daten-Einstellungen</h2>
+      <Typography>
+        Im Bereich „Daten-Einstellungen“ können Sie die Struktur Ihrer Daten ändern. Dazu gehören:
+      </Typography>
+      <List>
+        <ListItem>- Fragebogentyp/Fragennumer ändern.</ListItem>
+        <ListItem>- Nutzerinfo-Spalten hinzufügen.</ListItem>
+        <ListItem>- Mathematische Transformierungen erstellen.</ListItem>
+        <ListItem>- Spalten löschen.</ListItem>
+      </List>
+      <Typography>Unterstützte Funktionen:</Typography>
+      <table>
       {Object.values(FUNCTIONS).map(func => (
-        <Typography id={func.name}>
-          {func.name}: {func.desc}
-        </Typography>
+        <tr id={func.name}>
+          <td><code>{func.name}</code>:</td>
+          <td>{func.desc}</td>
+        </tr>
       ))}
+      </table>
     </Box>
 
   )
@@ -169,7 +185,7 @@ function HelpButton() {
   return (
     <div style={{ justifyContent: "flex-end", display: "flex" }}>
       <IconButton onClick={handleClick} sx={{ p: 0 }}>
-        <HelpIcon sx={{ fontSize: 16 }} />
+        <HelpIcon sx={{ fontSize: "1em" }} />
       </IconButton>
       <Popover
         id={id}

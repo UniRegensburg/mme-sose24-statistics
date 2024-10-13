@@ -1,26 +1,10 @@
 # mme-sose24-statistics
 
-## Video Documentation https://youtu.be/LOki-pQkASo
-
 ## About the app
 
-## Setup
+This is a statistical tool for basic data analysis on usability data. 
 
-To install the application, run
-
-```bash
-$ git clone https://github.com/UniRegensburg/mme-sose24-statistics.git
-$ cd mme-sose24-statistics
-$ npm install
-```
-
-To start, run
-
-```bash
-$ npm run dev
-```
-
-The application will then be running on `http://localhost:5174/`.
+![Screenshot_1](docs/imgs/Screenshot_1.png)
 
 ## Features
 
@@ -32,25 +16,33 @@ The application will then be running on `http://localhost:5174/`.
 - Formula parsing and evaluation for data transformation.
 - Human readable error messages.
 
+## Setup
+
+To install the application, run
+
+```bash
+$ git clone https://github.com/UniRegensburg/mme-sose24-statistics.git
+$ cd mme-sose24-statistics
+$ npm install
+```
+
+To start the application, run
+
+```bash
+$ npm run dev
+```
+
+The application will then be running on `http://localhost:5174/`.
+
 ## Usage
 
-See [tutorial](docs/user-tutorial.md)
-
-## Technologies and libraries
-
-- [Vite](https://vite.dev/)
-- [Vitest](https://vitest.dev/)
-- [React](https://react.dev/)
-- [D3.js](https://d3js.org/)
-- [Observable Plot](https://observablehq.com/plot/)
-- [Material UI](https://mui.com/material-ui/)
-- [react-resizable-panels](https://github.com/bvaughn/react-resizable-panels)
+See [tutorial](docs/user-tutorial.md). For video demonstration, see https://youtu.be/LOki-pQkASo.
 
 ## Documentations
 
 ### Developer guidelines
 
-See [GUIDELINES.md](docs/tutorials-dev/GUIDELINES.md)
+See [GUIDELINES.md](docs/tutorials-dev/GUIDELINES.md).
 
 ### Architecture
 
@@ -72,3 +64,13 @@ See [GUIDELINES.md](docs/tutorials-dev/GUIDELINES.md)
 [Tutorial on Entities](docs/tutorials-dev/tutorial-entities.md)
 
 [Tutorial on Services](docs/tutorials-dev/tutorial-services.md)
+
+## Technologies and libraries
+
+- [Vite](https://vite.dev/)
+- [Vitest](https://vitest.dev/)
+- [React](https://react.dev/)
+- [D3.js](https://d3js.org/)
+- [Observable Plot](https://observablehq.com/plot/)
+- [Material UI](https://mui.com/material-ui/)
+- [react-resizable-panels](https://github.com/bvaughn/react-resizable-panels)
