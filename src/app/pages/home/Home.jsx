@@ -58,15 +58,15 @@ function Home() {
             Bei Fragen oder Anliegen stehen wir Ihnen gerne zur Verfügung. Im folgenden werden die grundlegenden Funktionen dieser Website beschrieben.
           </p>
           <h3>Startseite</h3>
-          <p>Auf der Startseite können Sie wählen, ob Sie Daten aus einer externen CSV-Datei importieren (mit dem Panel auf der linken Seite) oder Ihre eigenen Daten mit der Maske auf der rechten Seite erstellen möchten.Die unterstützten Formate und Fragebogentypen sind wie folgt. Diese Informationen finden Sie auch auf der Startseite.</p>
+          <p>Auf der Startseite können Sie wählen, ob Sie Daten aus einer externen CSV-Datei importieren (mit dem Panel auf der linken Seite) oder Ihre eigenen Daten mit der Maske auf der rechten Seite erstellen möchten. Informationen zu den unterstützten Formaten und Fragebogentypen sind direkt bei den Upload/Masken-Feldern platziert.</p>
           <h3>Datenanalyse</h3>
-          <p>Nachdem Sie Ihre Daten hochgeladen haben, können Sie über "Analyse Starten" diese auswerten. Folgende Möglichkeiten stehen Ihnen zur Verfügung.</p>
+          <p>Nachdem Sie Ihre Daten hochgeladen haben, können Sie über "Analyse Starten" diese auswerten. Folgende Möglichkeiten stehen Ihnen hierfür zur Verfügung: </p>
           <h4>Daten importieren:</h4> 
           <p>Verwenden Sie die Schaltfläche „IMPORTIEREN“, um CSV-Daten zu importieren. Die Anwendung generiert eine eindeutige ID für jede Zeile, wenn Ihre Daten keine Spalte mit dem Namen „id“ enthalten.</p>
           <h4>Daten bearbeiten:</h4> 
           <p>Doppelklicken Sie auf Tabellenzellen, um deren Werte zu bearbeiten. Verwenden Sie die Schaltfläche „DATEN EINSTELLUNGEN“, um Spalten hinzuzufügen/löschen oder um den Fragebogentyp zu ändern.</p>
           <h4>Datenumwandlung:</h4>
-          <p>Im Panel „DATEN EINSTELLUNGEN“ finden Sie ein Feld „Transformierung hinzufügen“. Sie können Formeln eingeben, um eine Transformation zu erstellen. Unterstützt werden die folgenden Funktionen. Die gleichen Informationen finden Sie auch, wenn Sie auf die Schaltfläche „Hilfe“ im Feld „DATEN EINSTELLUNGEN“ klicken.</p>
+          <p>Im Panel „DATEN EINSTELLUNGEN“ können Sie Ihre Tabellenwerte transformieren. Sie können Formeln eingeben, um eine Transformation zu erstellen. Unterstützt werden die folgenden Funktionen. Die gleichen Informationen finden Sie auch, wenn Sie auf die Schaltfläche „Hilfe“ im Feld „DATEN EINSTELLUNGEN“ klicken.</p>
           <ul>
             <li>- SCORE: Questionnaire score corresponding to its type.</li>
             <li>- SCALE: Standardize data.</li>
@@ -180,7 +180,8 @@ function Home() {
             <p>
               2. Befüllen Sie Ihre Maske. 
               Für Informationen zum Datei-Format klicken Sie 
-              <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}> hier</span>. 
+              <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}> hier</span>.
+              <br /> 
               Befüllen Sie nur die erforderliche Fragenanzahl für Ihren jeweiligen Fragebogen (z.B. SUS beinhaltet 10 Fragen).  
               <br /> <b>BEVOR SIE DEN BUTTON "ANALYSE STARTEN" KLICKEN, SICHERN SIE DIE TABELLE MIT DEM ZUGEHÖRIGEN BUTTON. "TABELLE SICHERN" funktioniert nur wenn der Bearbeitungsmodus eines Feldes mit der Eingabe-Taste beendet wurde.</b>
             </p>
