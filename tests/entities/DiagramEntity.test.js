@@ -19,17 +19,13 @@ dataEntity.addUserInfoColumns("age")
 
 const diagramEntity = new DiagramEntity(
   DIAGRAM_TYPE.SCATTER,
-  dataEntity,
-  {
-    gridY: false
-  }
+  dataEntity
 )
 
 
 test(
   "Option getter and setter work correctly.",
   () => {
-    assert(diagramEntity.getOption("gridY") === false)
     diagramEntity.setOption("x", "age")
     assert(diagramEntity.getOption("x") === "age")
     expect(() => diagramEntity.setOption("fake-option", 0))
