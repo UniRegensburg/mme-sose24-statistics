@@ -4,7 +4,7 @@
 
 ### Logo
 
-![Screenshot1_1](public/Logo_UsabilityAnalyzer_black.png)
+<img src="public/Logo_UsabilityAnalyzer_black.png" alt="Screenshot1_1" width="200"/>
 
 Source: Logo is generated with Mircosoft Designer (https://designer.microsoft.com/image-creator)
 
