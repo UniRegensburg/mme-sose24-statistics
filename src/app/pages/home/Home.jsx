@@ -22,8 +22,11 @@ function Home() {
   // ---------- Danger zone ends here ----------
 
   // State management
+  // State for the selected section (upload or mask). Other, not selected part will be not usable and its css values changes.
   const [selectedSection, setSelectedSection] = useState(null);
+  // State for the selected questionnaire type
   const [selectedQuestionnaireType, setSelectedQuestionnaireType] = useState(QUESTIONNAIRE_TYPE.NONE);
+  // State for controlling the visibility of modals
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isUserDataFormatOpen, setIsUserDataFormatOpen] = useState(false);
 
@@ -37,6 +40,7 @@ function Home() {
   const fileUploader = async (event) => {
     const file = event.target.files[0];
     try {
+    // Pass files to workspace
       await DataService.loadDataFromFile(workspace, file, selectedQuestionnaireType);
     } catch (error) {
       console.error("error");
@@ -72,12 +76,12 @@ function Home() {
           </p>
         </div>
 
-        {/* Choose Usability Data */}
         <div className="dataUploadSection">
-          {/* Upload Usability Data */}
+          {/* Left side of data import functionality. Section to upload data. */}
           <div className={`fieldDataFile ${selectedSection === 'mask' ? 'disabled-section' : ''}`}>
             <h2>Hier können Sie Ihre Daten hochladen.</h2>
             <p>1. Wählen Sie einen Usability-Fragebogen.</p>
+            {/* Update Usability Questionaire Type */}
             <select 
               id="questionnaire-type" 
               name="questionnaire-type" 
@@ -85,8 +89,7 @@ function Home() {
               onChange={(e) => {
                 setSelectedSection('upload');
                 setSelectedQuestionnaireType(QUESTIONNAIRE_TYPE[e.target.value]);
-              }}
-            >
+              }}>
               <option value={"NONE"}>-- Bitte wählen --</option>
               <option value={"UEQ"}>User Experience Questionnaire (UEQ)</option>
               <option value={"SUS"}>System Usability Scale (SUS)</option>
@@ -94,6 +97,7 @@ function Home() {
               <option value={"rawTLX"}>RAW Task Load Index</option>
             </select>
             <br />
+            {/* Upload csv */}
             <p>
               2. Laden Sie eine CSV-Datei hoch. 
               Für Informationen zum Datei-Format klicken Sie 
@@ -106,6 +110,7 @@ function Home() {
               disabled={selectedSection === 'mask'} 
             />
             <br /><br />
+            {/* Link to workspace */}
             <Link to="/workspace">
               <button className="button" disabled={selectedSection === 'mask'}>
                 Analyse Starten
@@ -115,19 +120,18 @@ function Home() {
 
           <div className="separator"></div>
 
+          {/* Right side of data import functionality. Mask for data import */}
           <div className={`fieldDataFile ${selectedSection === 'upload' ? 'disabled-section' : ''}`}>
-            {/* Mask for Usability Data */}
             <h2>Hier können Sie Ihre Daten über eine Maske eingeben.</h2>
             <p>1. Wählen Sie einen Usability-Fragebogen.</p>
+            {/* Update Usability Questionaire Type */}
             <select 
               id="questionnaire-type" 
               name="questionnaire-type" 
               disabled={selectedSection === 'upload'} 
               onChange={(e) => {
                 setSelectedSection('mask'); 
-                setSelectedQuestionnaireType(QUESTIONNAIRE_TYPE[e.target.value]);
-              }}
-            >
+                setSelectedQuestionnaireType(QUESTIONNAIRE_TYPE[e.target.value]);}}>
               <option value={"NONE"}>-- Bitte wählen --</option>
               <option value={"UEQ"}>User Experience Questionnaire (UEQ)</option>
               <option value={"SUS"}>System Usability Scale (SUS)</option>
@@ -135,16 +139,19 @@ function Home() {
               <option value={"rawTLX"}>RAW Task Load Index</option>
             </select>
             <br />
+            {/* Fill Mask */}
             <p>
               2. Befüllen Sie Ihre Maske. 
               Für Informationen zum Datei-Format klicken Sie 
-              <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue' }}> hier</span>.
+              <span className="link" onClick={handleOpenUserDataFormat} style={{ cursor: 'pointer', color: 'blue'}}> hier</span>.
               <br /> 
               Befüllen Sie nur die erforderliche Fragenanzahl für Ihren jeweiligen Fragebogen (z.B. SUS beinhaltet 10 Fragen).  
               <br /> <b>BEVOR SIE DEN BUTTON "ANALYSE STARTEN" KLICKEN, SICHERN SIE DIE TABELLE MIT DEM ZUGEHÖRIGEN BUTTON. "TABELLE SICHERN" funktioniert nur wenn der Bearbeitungsmodus eines Feldes mit der Eingabe-Taste beendet wurde.</b>
             </p>
+            {/* Function for Mask */}
             <NewRowMaker selectedQuestionnaireType={selectedQuestionnaireType} />
             <br /><br />
+            {/* Link to workspace */}
             <Link to="/workspace">
               <button className="button" disabled={selectedSection === 'upload'}>
                 Analyse Starten
@@ -163,6 +170,8 @@ function Home() {
 
       <p className="copyrightInfo">
         © 2024 Reginleif Klein, Sebastian Scherübl, Ruoyu Xu
+        <br />
+        Logo created with Microsoft Designer (https://designer.microsoft.com/image-creator)
       </p>
       
       <HelpModal open={isHelpOpen} onClose={handleCloseHelp} />
