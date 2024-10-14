@@ -4,7 +4,7 @@
 
 ### Logo
 
-<img src="public/Logo_UsabilityAnalyzer_black.png" alt="Screenshot1_1" width="200"/>
+<img src="public/Logo_UsabilityAnalyzer_black.png" alt="Logo-Screenshot" width="200"/>
 
 Source: Logo is generated with Mircosoft Designer (https://designer.microsoft.com/image-creator)
 
@@ -15,9 +15,9 @@ Usability Analyzer
 
 This is a statistical tool for basic data analysis on usability data. 
 
-![Screenshot_2](docs/imgs/Screenshot_1.png)
+![Screenshot_1](docs/imgs/Screenshot_1.png)
 
-![Screenshot_3](docs/imgs/Screenshot_2.png)
+![Screenshot_2](docs/imgs/Screenshot_2.png)
 
 ## Features
 
