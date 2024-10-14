@@ -1,5 +1,7 @@
 
-
+/**
+ * Common settings for diagram.
+ */
 const DIAGRAM_SETTING = {}
 
 DIAGRAM_SETTING.BOOL = {

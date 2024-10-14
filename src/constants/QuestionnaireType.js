@@ -156,7 +156,7 @@ QUESTIONNAIRE_TYPE.NPS = {
   maxValue: 10,
 
   // NPS does not define score for individual
-  scoreCalculator: x => x,
+  scoreCalculator: result => result["Q1"],
 
   totalScoreCalculator: (npsresults) => {
     let promoters = 0;

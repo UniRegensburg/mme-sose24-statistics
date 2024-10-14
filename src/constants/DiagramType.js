@@ -8,6 +8,7 @@ import { commonPlotSettings } from "./DiagramSetting"
  * The following types are currently available:
  * @param {object} HIST Histogram.
  * @param {object} SCATTER Scatter plot.
+ * @param {object} BOX Boxplot
  * 
  * Each type must contain the following information:
  * @param {string} name Name of the type.

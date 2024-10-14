@@ -1,3 +1,6 @@
+/**
+ * A holder of `DataEntity` and `DiagramEntity`. Entry point for react components to logic.
+ */
 export default class WorkspaceEntity {
 
   constructor(dataEntity=null, diagramEntity=null) {

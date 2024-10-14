@@ -36,7 +36,7 @@ test(
   () => {
     const expr = "Q1*2+1"
     dataEntity.addTransformColumns(expr)
-    assert(arraysEqual(dataEntity.transformColumns, [`T:${expr}`]))
-    assert(arraysEqual(dataEntity.col(`T:${expr}`), [7, 11, 7, 11]))
+    assert(arraysEqual(dataEntity.transformColumns, [`T1:${expr}`]))
+    assert(arraysEqual(dataEntity.col(`T1:${expr}`), [7, 11, 7, 11]))
   }
 )

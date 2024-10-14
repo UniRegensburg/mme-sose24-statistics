@@ -2,11 +2,16 @@ import * as d3 from "d3"
 import DataEntity from "../entities/DataEntity"
 import QUESTIONNAIRE_TYPE from "../constants/QuestionnaireType"
 import { columnType } from "../utils/DataUtils"
-import { QuestionnaireTypeError } from "../exceptions/DataExceptions"
 
 
 class DataService {
 
+  /**
+   * Import data from url path. Should not be used from outside of this class.
+   * @param {string} filePath 
+   * @param {object} type 
+   * @returns 
+   */
   async importData(filePath, type=QUESTIONNAIRE_TYPE.NONE) {
     const data = await d3.csv(filePath, d3.autoType)
     if (type !== QUESTIONNAIRE_TYPE.NONE && 

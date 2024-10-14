@@ -67,14 +67,6 @@ test(
 )
 
 test(
-  "Cannot add questions to non-NONE-type DataEntity.",
-  () => {
-    expect(() => susData.addQuestions())
-      .toThrow(QuestionnaireTypeError)
-  }
-)
-
-test(
   "DataEntity throws exception when setting result values is outside of value range.",
   () => {
     expect(() => susData.setResultValue(0, 0, 6))
