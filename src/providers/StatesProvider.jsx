@@ -3,6 +3,11 @@ import { createContext, useContext, useState } from "react";
 
 const StatesContext = createContext(null)
 
+
+/**
+ * Provides states for 3 components in workspace: `DataTableTabs`, `Diagram` and `Modification`.
+ * Provides update functions for these 3 components to inform each other of changes.
+ */
 export function StatesProvider({ children }) {
   const [tableState, setTableState] = useState(0)
   const [diagramState, setDiagramState] = useState(0)

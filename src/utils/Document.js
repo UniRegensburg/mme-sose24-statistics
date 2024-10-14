@@ -1,5 +1,9 @@
 import { createElement as h } from "react";
 
+/**
+ * This module is copied from https://observablehq.com/plot/getting-started#plot-in-react
+*/
+
 export default class Document {
   constructor() {
     this.documentElement = new Element(this, "html");

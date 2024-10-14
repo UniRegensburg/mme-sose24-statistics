@@ -12,7 +12,15 @@ In the homepage, you can choose either to import data from an external CSV file 
 
 - **Data editing:** Double click on table cells to edit their values. Use the button "DATEN EINSTELLUNGEN" to add/delete columns, or to change type of questionnaire.
 
-- **Data transformation:** In the "DATEN EINSTELLUNGEN" panel, you can find a field "Transformierung hinzufügen". You can type in formulas to create a transformation. Supported function are as followed. You could also find the same information by click on the help button in the "DATEN EINSTELLUNGEN" panel.
+- **Data transformation:** In the "DATEN EINSTELLUNGEN" panel, you can find a field "Transformierung hinzufügen". You can type in formulas to create a transformation.
+
+  Examples: 
+
+  - `Q1/Q2`
+  - `age-AVG(age)`
+  - `SCORE + 50`
+
+  Supported function are as followed. You could also find the same information by click on the help button in the "DATEN EINSTELLUNGEN" panel.
 
   ![user-tutorial-functions](./imgs/user-tutorial-functions.png)
 

@@ -177,6 +177,11 @@ function HelpButton() {
         </tr>
       ))}
       </table>
+      <Typography>Beispiele: 
+        <code> Q1/Q2</code>, 
+        <code> age-MIN(age)</code>, 
+        <code> SCORE+50</code>.
+      </Typography>
     </Box>
 
   )
