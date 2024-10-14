@@ -1,5 +1,16 @@
 # mme-sose24-statistics
 
+## Logo and title
+
+### Logo
+
+<img src="public/Logo_UsabilityAnalyzer_black.png" alt="Logo-Screenshot" width="200"/>
+
+Source: Logo is generated with Mircosoft Designer (https://designer.microsoft.com/image-creator)
+
+### Title
+Usability Analyzer
+
 ## About the app
 
 This is a statistical tool for basic data analysis on usability data. 

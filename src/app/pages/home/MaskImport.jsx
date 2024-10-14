@@ -8,11 +8,11 @@ import { useWorkspaceContext } from '../../../providers/WorkspaceProvider';
 import DataService from '../../../services/DataService';
 import QUESTIONNAIRE_TYPE from "../../../constants/QuestionnaireType";
 
-// Start-Table
+// Empty Start-Table
 const initialRows = [
 ];
 
-//Definition of rows
+//Definition of the columns
 const columns = [
   { field: 'userID', headerName: 'userID', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true, align: 'left', headerAlign: 'left' },
@@ -118,7 +118,7 @@ function CsvUploader({ rows, selectedQuestionnaireType  }) {
     }}
   >
     <Button onClick={clickToExport} variant="contained" sx={{
-        backgroundColor: '#1976D2', color: '#fff', fontSize: '16px', borderRadius: '8px', '&:hover': { backgroundColor: '#42A5F5',},}}
+        backgroundColor: '#1976D2', color: '#fff', fontSize: '16px', borderRadius: '8px', '&:hover': { backgroundColor: '#42A5F5'}}}
     >TABELLE SICHERN</Button>
     </Box>
   );
@@ -128,7 +128,7 @@ export default function NewRowMaker({ selectedQuestionnaireType }) {
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState({});
 
-  //safe edited rows
+  //Safe edited rows
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow};
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
