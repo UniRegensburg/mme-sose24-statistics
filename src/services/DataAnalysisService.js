@@ -40,6 +40,15 @@ class DataAnalysisService {
 
     const result = {}
     result.dataSize = dataEntity.size
+    if (dataEntity.type !== QUESTIONNAIRE_TYPE.NONE) {
+      result.score = {
+        name: dataEntity.type.name,
+        value: this.calculateTotalScore(dataEntity),
+        interpretation: this.interpretTotalScore(dataEntity, result.score)
+      }
+    } else {
+      result.score = null
+    }
     result.columns = {
       userInfo: {},
       questions: {},
@@ -75,15 +84,6 @@ class DataAnalysisService {
       result.columns.transform[col] = getNumericReport(dataEntity.col(col))
     })
 
-    if (dataEntity.type !== QUESTIONNAIRE_TYPE.NONE) {
-      result.score = {
-        name: dataEntity.type.name,
-        value: this.calculateTotalScore(dataEntity),
-        interpretation: this.interpretTotalScore(dataEntity, result.score)
-      }
-    } else {
-      result.score = null
-    }
 
     return result
   }

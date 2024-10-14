@@ -6,6 +6,8 @@ This is a statistical tool for basic data analysis on usability data.
 
 ![Screenshot_1](docs/imgs/Screenshot_1.png)
 
+![Screenshot_2](docs/imgs/Screenshot_2.png)
+
 ## Features
 
 - Import/export of CSV files.

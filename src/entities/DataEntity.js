@@ -25,6 +25,10 @@ export default class DataEntity {
     this.columns.questions = Object.keys(data[0]).filter(k => columnType(k) === "questions")
     this.columns.userInfo = Object.keys(data[0]).filter(k => columnType(k) === "userInfo")
     this.columns.transform = Object.keys(data[0]).filter(k => columnType(k) === "transform")
+    if (type !== QUESTIONNAIRE_TYPE.NONE) {
+      this.setNumOfQuestions(type.numOfQuestions)
+      console.log(this.columns)
+    }
   }
 
 
