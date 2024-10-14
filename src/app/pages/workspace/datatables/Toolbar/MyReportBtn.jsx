@@ -37,8 +37,12 @@ function renderDataAsTable(data) {
         <TableBody>
           {Object.entries(data).map(([key, value]) => (
             <TableRow key={key}>
-              <TableCell>{capitalizeFirstLetter(key.replace(/_/g, ' '))}</TableCell>
-              <TableCell>{typeof value === 'object' ? formatValue(value) : value}</TableCell>
+              <TableCell style={{ verticalAlign: 'top' }}>
+                {capitalizeFirstLetter(key.replace(/_/g, ' '))}
+              </TableCell>
+              <TableCell>
+                {typeof value === 'object' ? formatValue(value) : value}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
