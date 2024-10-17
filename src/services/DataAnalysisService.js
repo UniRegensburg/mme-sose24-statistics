@@ -47,7 +47,7 @@ class DataAnalysisService {
         interpretation: this.interpretTotalScore(dataEntity, result.score)
       }
     } else {
-      result.score = null
+      result.score = "Score is not defined for NONE-type data"
     }
     result.columns = {
       userInfo: {},

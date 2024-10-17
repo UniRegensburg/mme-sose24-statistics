@@ -3,6 +3,12 @@ import { createContext, useContext, useState } from "react";
 
 const ErrorContext = createContext(null)
 
+
+/**
+ * Provides state `errorMsg` and function `displayError`. React components that display
+ * error messages should use the state `errorMsg`, meanwhile components that catch errors 
+ * use `displayError` to inform those components.
+ */
 export function ErrorProvider({ children }) {
   const [errorMsg, setErrorMsg] = useState("")
 
